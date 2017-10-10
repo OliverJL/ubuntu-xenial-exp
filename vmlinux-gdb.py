@@ -1,0 +1,1 @@
+/home/lvr/Src/ubuntu-xenial-org/ubuntu-xenial/scripts/gdb/vmlinux-gdb.py
