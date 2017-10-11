@@ -1263,6 +1263,11 @@ void get_random_bytes(void *buf, int nbytes)
 		       (void *) _RET_IP_,
 		       nonblocking_pool.entropy_total);
 #endif
+
+	/// ###########################################
+		printk(KERN_EMERG ">>>>>> get_random_bytes - YIPPPPPIE!!!!!!");
+	/// ###########################################
+
 	trace_get_random_bytes(nbytes, _RET_IP_);
 	extract_entropy(&nonblocking_pool, buf, nbytes, 0, 0);
 }
