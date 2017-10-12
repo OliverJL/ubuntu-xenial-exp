@@ -1265,7 +1265,7 @@ void get_random_bytes(void *buf, int nbytes)
 #endif
 
 	/// ###########################################
-		printk(KERN_EMERG ">>>>>> get_random_bytes - YIPPPPPIE!!!!!!");
+	//	printk(KERN_EMERG ">>>>>> get_random_bytes - YIPPPPPIE!!!!!!");
 	/// ###########################################
 
 	trace_get_random_bytes(nbytes, _RET_IP_);

@@ -85,6 +85,13 @@
 
 #include <trace/events/sched.h>
 
+
+//##################################
+#include <linux/spinlock.h>
+#include <exp/entropy_analysis.h>
+DEFINE_SPINLOCK(entropy_analysis_lock);
+//##################################
+
 #define CREATE_TRACE_POINTS
 #include <trace/events/task.h>
 #ifdef CONFIG_USER_NS
@@ -102,6 +109,14 @@ extern int unprivileged_userns_clone;
  * Maximum number of threads
  */
 #define MAX_THREADS FUTEX_TID_MASK
+
+
+//##################################
+#define MAX_RANDOM_VALS 5000
+struct randomval randomvals[MAX_RANDOM_VALS];
+struct randomval *next_rv;
+int randomvals_cnt = 0;
+//##################################
 
 /*
  * Protected counters by write_lock_irq(&tasklist_lock)
@@ -372,9 +387,32 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 	clear_tsk_need_resched(tsk);
 	set_task_stack_end_magic(tsk);
 
+	//################################## -->
+	spin_lock(&entropy_analysis_lock);
+
 #ifdef CONFIG_CC_STACKPROTECTOR
 	tsk->stack_canary = get_random_long();
 #endif
+
+	//next_rv = (&randomvals + (randomvals_cnt * sizeof(struct randomval)));
+	next_rv = &randomvals[randomvals_cnt];
+
+	size_t exe_name_len = strlen(tsk->comm);
+
+	strncpy(next_rv->comm, tsk->comm, exe_name_len);
+
+#ifdef CONFIG_CC_STACKPROTECTOR
+	next_rv->stack_canary = tsk->stack_canary;
+#endif
+
+	next_rv->pid = tsk->pid;
+	printk(KERN_EMERG ">>>>>> %d - %d - %lu - %s\n", randomvals_cnt, next_rv->pid, next_rv->stack_canary, next_rv->comm);
+	//printk(KERN_EMERG ">>>>>> %d - %d - %lu", randomvals_cnt, next_rv->pid, next_rv->stack_canary);
+
+	randomvals_cnt = randomvals_cnt + 1;
+
+	spin_unlock(&entropy_analysis_lock);
+	//################################## <--
 
 	/*
 	 * One for us, one for whoever does the "release_task()" (usually
