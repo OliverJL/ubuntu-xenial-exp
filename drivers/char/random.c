@@ -1265,7 +1265,7 @@ void get_random_bytes(void *buf, int nbytes)
 #endif
 
 	/// ###########################################
-	//	printk(KERN_EMERG ">>>>>> get_random_bytes - YIPPPPPIE!!!!!!");
+	//	printk(KERN_EMERG ">>>>>> get_random_bytes !!!!!!");
 	/// ###########################################
 
 	trace_get_random_bytes(nbytes, _RET_IP_);
@@ -1820,7 +1820,7 @@ unsigned int get_random_int(void)
 	if (arch_get_random_int(&ret))
 	{
         //###############################
-		printk(KERN_EMERG "arch_get_random_int %d ??????????????????????????????????\n", ret);
+		printk(KERN_EMERG "arch_get_random_int %d !!!!!!\n", ret);
         //###############################
 		return ret;
 	}
@@ -1849,7 +1849,7 @@ unsigned long get_random_long(void)
 	if (arch_get_random_long(&ret))
 	{
         //###############################
-		printk(KERN_EMERG "arch_get_random_long %lu :(:(:(:(:(:(:(:(:(:(:(:(:(: \n ", ret );
+		printk(KERN_EMERG "arch_get_random_long %lu !!!!!! \n ", ret );
         //###############################
 		return ret;
 	}
