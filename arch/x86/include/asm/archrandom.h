@@ -53,6 +53,9 @@ static inline int rdrand_long(unsigned long *v)
 		     "2:"
 		     : "=r" (ok), "=a" (*v)
 		     : "0" (RDRAND_RETRY_LOOPS));
+	/// ###########################################
+		printk(KERN_EMERG ">>>>>> archrandom.h  rdrand_long !!!!!!");
+	/// ###########################################
 	return ok;
 }
 
@@ -63,6 +66,9 @@ static inline bool rdseed_long(unsigned long *v)
 	asm volatile(RDSEED_LONG "\n\t"
 		     "setc %0"
 		     : "=qm" (ok), "=a" (*v));
+	/// ###########################################
+		printk(KERN_EMERG ">>>>>> archrandom.h  rdseed_long !!!!!!");
+	/// ###########################################
 	return ok;
 }
 

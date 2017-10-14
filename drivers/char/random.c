@@ -1818,7 +1818,12 @@ unsigned int get_random_int(void)
 	unsigned int ret;
 
 	if (arch_get_random_int(&ret))
+	{
+        //###############################
+		printk(KERN_EMERG "arch_get_random_int %d ??????????????????????????????????\n", ret);
+        //###############################
 		return ret;
+	}
 
 	hash = get_cpu_var(get_random_int_hash);
 
@@ -1826,6 +1831,8 @@ unsigned int get_random_int(void)
 	md5_transform(hash, random_int_secret);
 	ret = hash[0];
 	put_cpu_var(get_random_int_hash);
+
+
 
 	return ret;
 }
@@ -1840,7 +1847,12 @@ unsigned long get_random_long(void)
 	unsigned long ret;
 
 	if (arch_get_random_long(&ret))
+	{
+        //###############################
+		printk(KERN_EMERG "arch_get_random_long %lu :(:(:(:(:(:(:(:(:(:(:(:(:(: \n ", ret );
+        //###############################
 		return ret;
+	}
 
 	hash = get_cpu_var(get_random_int_hash);
 
