@@ -332,6 +332,11 @@
 323	common	userfaultfd		sys_userfaultfd
 324	common	membarrier		sys_membarrier
 325	common	mlock2			sys_mlock2
+326 common	kernel_entropy_get_size	sys_kernel_entropy_get_size
+327 common	kernel_entropy_get_recorded	sys_kernel_entropy_get_recorded
+328 common	kernel_entropy_start_recording	sys_kernel_entropy_start_recording
+329 common	kernel_entropy_stop_recording	sys_kernel_entropy_stop_recording
+330 common	kernel_entropy_is_recording	sys_kernel_entropy_is_recording
 
 #
 # x32-specific system call numbers start at 512 to avoid cache impact

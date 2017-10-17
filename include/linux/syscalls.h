@@ -79,6 +79,8 @@ union bpf_attr;
 #include <linux/quota.h>
 #include <linux/key.h>
 #include <trace/syscall.h>
+#include <linux/spinlock.h>
+#include <exp/entropy_analysis.h>
 
 /*
  * __MAP - apply a macro to syscall arguments
@@ -888,5 +890,12 @@ asmlinkage long sys_execveat(int dfd, const char __user *filename,
 asmlinkage long sys_membarrier(int cmd, int flags);
 
 asmlinkage long sys_mlock2(unsigned long start, size_t len, int flags);
+
+asmlinkage long sys_kernel_entropy_get_size(void);
+//asmlinkage long sys_kernel_entropy_get_recorded(void);
+asmlinkage bool sys_kernel_entropy_get_recorded(process_kernel_entropy * target_buffer);
+asmlinkage bool sys_kernel_entropy_start_recording(void);
+asmlinkage bool sys_kernel_entropy_stop_recording(void);
+asmlinkage bool sys_kernel_entropy_is_recording(void);
 
 #endif

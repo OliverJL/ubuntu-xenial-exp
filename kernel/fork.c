@@ -89,7 +89,7 @@
 //##################################
 #include <linux/spinlock.h>
 #include <exp/entropy_analysis.h>
-DEFINE_SPINLOCK(entropy_analysis_lock);
+bool is_kernel_entropy_recording = 1;
 //##################################
 
 #define CREATE_TRACE_POINTS
@@ -112,10 +112,13 @@ extern int unprivileged_userns_clone;
 
 
 //##################################
-#define MAX_RANDOM_VALS 5000
-struct randomval randomvals[MAX_RANDOM_VALS];
-struct randomval *next_rv;
-int randomvals_cnt = 0;
+
+DEFINE_SPINLOCK(entropy_analysis_lock);
+process_kernel_entropy * current_ke_record;
+size_t task_exe_name_len = 0;
+long kernel_entropy_record_size = 0;
+process_kernel_entropy recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
+
 //##################################
 
 /*
@@ -351,8 +354,11 @@ void set_task_stack_end_magic(struct task_struct *tsk)
 	*stackend = STACK_END_MAGIC;	/* for overflow detection */
 }
 
+size_t exe_name_len = 0;
+
 static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 {
+	//printk(KERN_EMERG "HHHHHAAAAAAAAAAAAALLLO\n" );
 	struct task_struct *tsk;
 	struct thread_info *ti;
 	int err;
@@ -389,28 +395,26 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 
 	//################################## -->
 	spin_lock(&entropy_analysis_lock);
-
 #ifdef CONFIG_CC_STACKPROTECTOR
 	tsk->stack_canary = get_random_long();
 #endif
+	if(is_kernel_entropy_recording)
+	{
+		current_ke_record = &recorded_kernel_entropy[kernel_entropy_record_size];
+		task_exe_name_len = strlen(tsk->comm);
+		strncpy(current_ke_record->comm, tsk->comm, task_exe_name_len);
 
-	//next_rv = (&randomvals + (randomvals_cnt * sizeof(struct randomval)));
-	next_rv = &randomvals[randomvals_cnt];
+	#ifdef CONFIG_CC_STACKPROTECTOR
+		current_ke_record->stack_canary = tsk->stack_canary;
+	#endif
 
-	size_t exe_name_len = strlen(tsk->comm);
+		current_ke_record->pid = tsk->pid;
+		printk(KERN_EMERG ">>>>>> %zu - %d - %lu - %s\n", kernel_entropy_record_size, current_ke_record->pid, current_ke_record->stack_canary, current_ke_record->comm);
+		kernel_entropy_record_size = kernel_entropy_record_size + 1;
 
-	strncpy(next_rv->comm, tsk->comm, exe_name_len);
-
-#ifdef CONFIG_CC_STACKPROTECTOR
-	next_rv->stack_canary = tsk->stack_canary;
-#endif
-
-	next_rv->pid = tsk->pid;
-	printk(KERN_EMERG ">>>>>> %d - %d - %lu - %s\n", randomvals_cnt, next_rv->pid, next_rv->stack_canary, next_rv->comm);
-	//printk(KERN_EMERG ">>>>>> %d - %d - %lu", randomvals_cnt, next_rv->pid, next_rv->stack_canary);
-
-	randomvals_cnt = randomvals_cnt + 1;
-
+		if(kernel_entropy_record_size >= KERNEL_ENTROPY_RECORD_MAX)
+			is_kernel_entropy_recording = 0;
+	}
 	spin_unlock(&entropy_analysis_lock);
 	//################################## <--
 
@@ -2197,3 +2201,4 @@ int sysctl_max_threads(struct ctl_table *table, int write,
 
 	return 0;
 }
+
