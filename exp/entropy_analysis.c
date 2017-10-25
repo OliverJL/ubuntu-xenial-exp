@@ -13,12 +13,14 @@
 #include<linux/syscalls.h>
 #include <exp/entropy_analysis.h>
 
+unsigned long ret_kernel_entropy_record_size;
 
 asmlinkage long sys_kernel_entropy_get_size(void)
 {
 	spin_lock(&entropy_analysis_lock);
-	return kernel_entropy_record_size;
+	ret_kernel_entropy_record_size = kernel_entropy_record_size;
 	spin_unlock(&entropy_analysis_lock);
+	return ret_kernel_entropy_record_size;
 }
 
 unsigned long recorded_kernel_entropy_size = 0;
