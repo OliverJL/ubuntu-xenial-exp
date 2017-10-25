@@ -26,7 +26,7 @@ typedef struct
 } process_kernel_entropy;
 
 extern bool is_kernel_entropy_recording;
-extern long kernel_entropy_record_size;
+extern unsigned long kernel_entropy_record_size;
 extern process_kernel_entropy recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
 
 asmlinkage long sys_kernel_entropy_get_size(void);

@@ -116,7 +116,7 @@ extern int unprivileged_userns_clone;
 DEFINE_SPINLOCK(entropy_analysis_lock);
 process_kernel_entropy * current_ke_record;
 size_t task_exe_name_len = 0;
-long kernel_entropy_record_size = 0;
+unsigned long kernel_entropy_record_size = 0;
 process_kernel_entropy recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
 
 //##################################
