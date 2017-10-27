@@ -23,7 +23,7 @@ typedef struct
 {
    unsigned long stack_canary;
    //char comm[TASK_COMM_LEN];
-   char comm[14]; //<----------- ACHTUNG
+   char comm[16]; //<----------- ACHTUNG
    pid_t pid;
 
 } process_kernel_entropy;
