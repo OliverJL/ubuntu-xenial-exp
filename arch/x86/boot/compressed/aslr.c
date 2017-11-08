@@ -70,6 +70,10 @@ static unsigned long get_random_long(void)
 	unsigned long raw, random = get_random_boot();
 	bool use_i8254 = true;
 
+    //###############################
+	//printk(KERN_EMERG "/arch/x86/boot/compressed/aslr.c/get_random_long(void)\n " );
+    //###############################
+
 	debug_putstr("KASLR using");
 
 	if (has_cpuflag(X86_FEATURE_RDRAND)) {

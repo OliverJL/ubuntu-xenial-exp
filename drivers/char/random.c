@@ -1799,6 +1799,7 @@ static u32 random_int_secret[MD5_MESSAGE_BYTES / 4] ____cacheline_aligned;
 
 int random_int_secret_init(void)
 {
+	printk(KERN_EMERG ">>>>>>>>>> - random_int_secret_init !!!!!!!!!!! \n" );
 	get_random_bytes(random_int_secret, sizeof(random_int_secret));
 	return 0;
 }
@@ -1827,12 +1828,25 @@ unsigned int get_random_int(void)
 
 	hash = get_cpu_var(get_random_int_hash);
 
-	hash[0] += current->pid + jiffies + random_get_entropy();
+	//###################################
+	// https://cyberglory.wordpress.com/2011/08/21/jiffies-in-linux-kernel/
+	// Having the discussion of tick rate in my previous post, it is therefore appropriate to introduce jiffies in linux kernel. Jiffies is a global variable declared in <linux/jiffies.h> as:
+	//    extern unsigned long volatile jiffies;
+	// Its only usage is to store the number of ticks occurred since system start-up. On kernel boot-up, jiffies is initialized to a special initial value, and it is incremented by one for each timer interrupt. As discussed in the previous post, since there are HZ ticks occurred in one second, and thus there are HZ jiffies in a second.
+	//###################################
+
+	printk(KERN_EMERG "get_random_int - current->pid : %d\n", current->pid );
+	printk(KERN_EMERG "get_random_int - jiffies : %zu\n", jiffies );
+	//hash[0] += current->pid + jiffies + random_get_entropy();
+	unsigned long re = random_get_entropy();
+	printk(KERN_EMERG "get_random_int - random_get_entropy : %zu\n", re );
+	hash[0] += current->pid + jiffies + re;
+	//printk(KERN_EMERG "get_random_int - random_int_secret : %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+	//printk(KERN_EMERG "get_random_int - random_int_secret : %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+	printk(KERN_EMERG "get_random_int - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	md5_transform(hash, random_int_secret);
 	ret = hash[0];
 	put_cpu_var(get_random_int_hash);
-
-
 
 	return ret;
 }
@@ -1853,6 +1867,10 @@ unsigned long get_random_long(void)
         //###############################
 		return ret;
 	}
+
+    //###############################
+	//printk(KERN_EMERG "/drivers/char/random.c/get_random_long(void)\n " );
+    //###############################
 
 	hash = get_cpu_var(get_random_int_hash);
 

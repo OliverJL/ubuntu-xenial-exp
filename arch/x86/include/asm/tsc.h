@@ -21,6 +21,10 @@ extern void disable_TSC(void);
 
 static inline cycles_t get_cycles(void)
 {
+    //###############################
+	//printk(KERN_EMERG "arch/x86/include/asm/tsc.h/get_cycles(void)\n" );
+    //###############################
+
 #ifndef CONFIG_X86_TSC
 	if (!cpu_has_tsc)
 		return 0;

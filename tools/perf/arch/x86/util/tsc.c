@@ -44,5 +44,9 @@ u64 rdtsc(void)
 
 	asm volatile("rdtsc" : "=a" (low), "=d" (high));
 
+    //###############################
+	printk(KERN_EMERG "rdtsc - low: %d high: %d \n", low, high );
+    //###############################
+
 	return low | ((u64)high) << 32;
 }

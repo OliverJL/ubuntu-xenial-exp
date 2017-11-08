@@ -26,5 +26,8 @@ u64 tsc_to_perf_time(u64 cyc, struct perf_tsc_conversion *tc)
 
 u64 __weak rdtsc(void)
 {
+    //###############################
+	printk(KERN_EMERG "/tools/perf/util/tsc.c\n" );
+    //###############################
 	return 0;
 }
