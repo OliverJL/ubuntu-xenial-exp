@@ -495,6 +495,7 @@ static void _mix_pool_bytes(struct entropy_store *r, const void *in,
 	unsigned long i, tap1, tap2, tap3, tap4, tap5;
 	int input_rotate;
 	int wordmask = r->poolinfo->poolwords - 1;
+	printk(KERN_EMERG ">>>>>> _mix_pool_bytes - poolname: %s - wordmask: %d - constant?\n", r->name, wordmask );
 	const char *bytes = in;
 	__u32 w;
 
@@ -506,7 +507,7 @@ static void _mix_pool_bytes(struct entropy_store *r, const void *in,
 
 	input_rotate = r->input_rotate;
 	i = r->add_ptr;
-
+	printk(KERN_EMERG ">>>>>> _mix_pool_bytes - input_rotate: %hu - i, r->add_ptr: %lu\n", input_rotate, i );
 	/* mix one byte at a time to simplify size handling and churn faster */
 	while (nbytes--) {
 		w = rol32(*bytes++, input_rotate);
@@ -759,8 +760,25 @@ struct timer_rand_state {
  * problem of the nonblocking pool having similar initial state
  * across largely identical devices.
  */
-void add_device_randomness(const void *buf, unsigned int size)
+//void add_device_randomness(const void *buf, unsigned int size)
+void add_device_randomness(const void *buf, unsigned int size, const char * caller, char * additional_info)
 {
+	printk(KERN_EMERG ">>>>>> add_device_randomness - caller: %s - info: %s !!!!!!", caller, additional_info);
+	///////////////// >>>
+	const char *bytes = buf;
+	int b;
+	for(b = 0; b <= size; b++)
+	{
+		if(b == size)
+		{
+			printk(KERN_EMERG "\n");
+		}else
+		{
+			printk(KERN_EMERG "%x ", bytes[b]);
+		}
+	}
+	///////////////// <<<
+
 	unsigned long time = random_get_entropy() ^ jiffies;
 	unsigned long flags;
 
@@ -791,6 +809,8 @@ static struct timer_rand_state input_timer_state = INIT_TIMER_RAND_STATE;
  */
 static void add_timer_randomness(struct timer_rand_state *state, unsigned num)
 {
+	printk(KERN_EMERG ">>>>>> add_timer_randomness !!!!!!");
+
 	struct entropy_store	*r;
 	struct {
 		long jiffies;
@@ -910,23 +930,32 @@ void add_interrupt_randomness(int irq, int irq_flags)
 		cycles = get_reg(fast_pool, regs);
 	c_high = (sizeof(cycles) > 4) ? cycles >> 32 : 0;
 	j_high = (sizeof(now) > 4) ? now >> 32 : 0;
+	printk(KERN_EMERG ">>>>>> add_interrupt_randomness irq: %d - irq_flags: %d !!!!!!\n", irq, irq_flags);
+	printk(KERN_EMERG ">>>>>> add_interrupt_randomness cycles: %d - now: %lu !!!!!!\n", cycles, now);
 	fast_pool->pool[0] ^= cycles ^ j_high ^ irq;
 	fast_pool->pool[1] ^= now ^ c_high;
 	ip = regs ? instruction_pointer(regs) : _RET_IP_;
+	printk(KERN_EMERG ">>>>>> add_interrupt_randomness ip: %llu !!!!!!\n", ip);
 	fast_pool->pool[2] ^= ip;
 	fast_pool->pool[3] ^= (sizeof(ip) > 4) ? ip >> 32 :
-		get_reg(fast_pool, regs);
+		get_reg(fast_pool, regs); // ???????? no usage of return value
 
 	fast_mix(fast_pool);
-	add_interrupt_bench(cycles);
+	add_interrupt_bench(cycles); // ???? No effect ?
 
 	if ((fast_pool->count < 64) &&
 	    !time_after(now, fast_pool->last + HZ))
+	{
+		printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return (fast_pool->count < 64)... !!!!!!\n", irq, irq_flags);
 		return;
+	}
 
 	r = nonblocking_pool.initialized ? &input_pool : &nonblocking_pool;
 	if (!spin_trylock(&r->lock))
+	{
+		printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return spin_trylock(&r->lock)... !!!!!!\n", irq, irq_flags);
 		return;
+	}
 
 	fast_pool->last = now;
 	__mix_pool_bytes(r, &fast_pool->pool, sizeof(fast_pool->pool));
@@ -937,10 +966,12 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	 * architectural seed generator dominate the input from the
 	 * interrupt noise.
 	 */
+
 	if (arch_get_random_seed_long(&seed)) {
 		__mix_pool_bytes(r, &seed, sizeof(seed));
 		credit = 1;
 	}
+
 	spin_unlock(&r->lock);
 
 	fast_pool->count = 0;
@@ -1375,6 +1406,8 @@ EXPORT_SYMBOL(get_random_bytes_arch);
  */
 static void init_std_data(struct entropy_store *r)
 {
+	printk(KERN_EMERG ">>>>>> init_std_data !!!!!!\n");
+
 	int i;
 	ktime_t now = ktime_get_real();
 	unsigned long rv;
@@ -1801,6 +1834,7 @@ int random_int_secret_init(void)
 {
 	printk(KERN_EMERG ">>>>>>>>>> - random_int_secret_init !!!!!!!!!!! \n" );
 	get_random_bytes(random_int_secret, sizeof(random_int_secret));
+	printk(KERN_EMERG "get_random_int - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	return 0;
 }
 
@@ -1868,13 +1902,14 @@ unsigned long get_random_long(void)
 		return ret;
 	}
 
-    //###############################
-	//printk(KERN_EMERG "/drivers/char/random.c/get_random_long(void)\n " );
-    //###############################
-
 	hash = get_cpu_var(get_random_int_hash);
-
-	hash[0] += current->pid + jiffies + random_get_entropy();
+	printk(KERN_EMERG "get_random_long - current->pid : %d\n", current->pid );
+	printk(KERN_EMERG "get_random_long - jiffies : %zu\n", jiffies );
+	unsigned long re = random_get_entropy();
+	printk(KERN_EMERG "get_random_long - random_get_entropy : %zu\n", re );
+	//hash[0] += current->pid + jiffies + random_get_entropy();
+	hash[0] += current->pid + jiffies + re;
+	printk(KERN_EMERG "get_random_long - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	md5_transform(hash, random_int_secret);
 	ret = *(unsigned long *)hash;
 	put_cpu_var(get_random_int_hash);

@@ -1341,7 +1341,7 @@ static int __dev_open(struct net_device *dev)
 		dev->flags |= IFF_UP;
 		dev_set_rx_mode(dev);
 		dev_activate(dev);
-		add_device_randomness(dev->dev_addr, dev->addr_len);
+		add_device_randomness(dev->dev_addr, dev->addr_len, "__dev_open", "dev->dev_addr");
 	}
 
 	return ret;
@@ -6162,7 +6162,7 @@ int dev_set_mac_address(struct net_device *dev, struct sockaddr *sa)
 		return err;
 	dev->addr_assign_type = NET_ADDR_SET;
 	call_netdevice_notifiers(NETDEV_CHANGEADDR, dev);
-	add_device_randomness(dev->dev_addr, dev->addr_len);
+	add_device_randomness(dev->dev_addr, dev->addr_len, "dev_set_mac_address", "dev->dev_addr");
 	return 0;
 }
 EXPORT_SYMBOL(dev_set_mac_address);
@@ -6775,7 +6775,7 @@ int register_netdevice(struct net_device *dev)
 	dev_init_scheduler(dev);
 	dev_hold(dev);
 	list_netdevice(dev);
-	add_device_randomness(dev->dev_addr, dev->addr_len);
+	add_device_randomness(dev->dev_addr, dev->addr_len, "register_netdevice", "dev->dev_addr");
 
 	/* If the device has permanent device address, driver should
 	 * set dev_addr and also addr_assign_type should be set to

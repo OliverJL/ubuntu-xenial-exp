@@ -17,7 +17,8 @@ struct random_ready_callback {
 	struct module *owner;
 };
 
-extern void add_device_randomness(const void *, unsigned int);
+//extern void add_device_randomness(const void *, unsigned int);
+extern void add_device_randomness(const void *buf, unsigned int size, const char * caller, char * additional_info);
 extern void add_input_randomness(unsigned int type, unsigned int code,
 				 unsigned int value);
 extern void add_interrupt_randomness(int irq, int irq_flags);

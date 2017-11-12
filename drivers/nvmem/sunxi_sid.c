@@ -139,7 +139,7 @@ static int sunxi_sid_probe(struct platform_device *pdev)
 	for (i = 0; i < size; i++)
 		randomness[i] = sunxi_sid_read_byte(sid, i);
 
-	add_device_randomness(randomness, size);
+	add_device_randomness(randomness, size, "sunxi_sid_probe", "");
 	kfree(randomness);
 
 	platform_set_drvdata(pdev, nvmem);

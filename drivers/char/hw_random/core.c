@@ -91,7 +91,7 @@ static void add_early_randomness(struct hwrng *rng)
 	bytes_read = rng_get_data(rng, rng_buffer, size, 1);
 	mutex_unlock(&reading_mutex);
 	if (bytes_read > 0)
-		add_device_randomness(rng_buffer, bytes_read);
+		add_device_randomness(rng_buffer, bytes_read, "add_early_randomness", "");
 }
 
 static inline void cleanup_rng(struct kref *kref)

@@ -655,7 +655,7 @@ int ath_cmn_process_fft(struct ath_spec_scan_priv *spec_priv, struct ieee80211_h
 				/* Mix the received bins to the /dev/random
 				 * pool
 				 */
-				add_device_randomness(sample_buf, num_bins);
+				add_device_randomness(sample_buf, num_bins, "ath_cmn_process_fft", "");
 			}
 
 			/* Process a normal frame */
@@ -666,7 +666,7 @@ int ath_cmn_process_fft(struct ath_spec_scan_priv *spec_priv, struct ieee80211_h
 				/* Mix the received bins to the /dev/random
 				 * pool
 				 */
-				add_device_randomness(sample_start, num_bins);
+				add_device_randomness(sample_start, num_bins, "ath_cmn_process_fft", "");
 			}
 
 			/* Short report processed, break out of the
