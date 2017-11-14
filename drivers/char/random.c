@@ -495,7 +495,7 @@ static void _mix_pool_bytes(struct entropy_store *r, const void *in,
 	unsigned long i, tap1, tap2, tap3, tap4, tap5;
 	int input_rotate;
 	int wordmask = r->poolinfo->poolwords - 1;
-	printk(KERN_EMERG ">>>>>> _mix_pool_bytes - poolname: %s - wordmask: %d - constant?\n", r->name, wordmask );
+	//printk(KERN_EMERG ">>>>>> _mix_pool_bytes - poolname: %s - wordmask: %d - constant?\n", r->name, wordmask );
 	const char *bytes = in;
 	__u32 w;
 
@@ -507,7 +507,7 @@ static void _mix_pool_bytes(struct entropy_store *r, const void *in,
 
 	input_rotate = r->input_rotate;
 	i = r->add_ptr;
-	printk(KERN_EMERG ">>>>>> _mix_pool_bytes - input_rotate: %hu - i, r->add_ptr: %lu\n", input_rotate, i );
+	//printk(KERN_EMERG ">>>>>> _mix_pool_bytes - input_rotate: %hu - i, r->add_ptr: %lu\n", input_rotate, i );
 	/* mix one byte at a time to simplify size handling and churn faster */
 	while (nbytes--) {
 		w = rol32(*bytes++, input_rotate);
