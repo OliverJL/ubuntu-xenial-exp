@@ -953,12 +953,15 @@ void add_interrupt_randomness(int irq, int irq_flags)
 		cycles = get_reg(fast_pool, regs);
 	c_high = (sizeof(cycles) > 4) ? cycles >> 32 : 0;
 	j_high = (sizeof(now) > 4) ? now >> 32 : 0;
-	//printk(KERN_EMERG ">>>>>> add_interrupt_randomness irq: %d - irq_flags: %d !!!!!!\n", irq, irq_flags);
-	//printk(KERN_EMERG ">>>>>> add_interrupt_randomness cycles: %d - now: %lu !!!!!!\n", cycles, now);
+	if(print_keent_msg)
+		printk(KERN_EMERG ">>>>>> add_interrupt_randomness irq: %d - irq_flags: %d !!!!!!\n", irq, irq_flags);
+	if(print_keent_msg)
+		printk(KERN_EMERG ">>>>>> add_interrupt_randomness cycles: %d - now: %lu !!!!!!\n", cycles, now);
 	fast_pool->pool[0] ^= cycles ^ j_high ^ irq;
 	fast_pool->pool[1] ^= now ^ c_high;
 	ip = regs ? instruction_pointer(regs) : _RET_IP_;
-	//printk(KERN_EMERG ">>>>>> add_interrupt_randomness ip: %llu !!!!!!\n", ip);
+	if(print_keent_msg)
+		printk(KERN_EMERG ">>>>>> add_interrupt_randomness ip: %llu !!!!!!\n", ip);
 	fast_pool->pool[2] ^= ip;
 	fast_pool->pool[3] ^= (sizeof(ip) > 4) ? ip >> 32 :
 		get_reg(fast_pool, regs); // ???????? no usage of return value
@@ -969,7 +972,8 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	if ((fast_pool->count < 64) &&
 	    !time_after(now, fast_pool->last + HZ))
 	{
-		//printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return (fast_pool->count < 64)... !!!!!!\n", irq, irq_flags);
+		if(print_keent_msg)
+			printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return (fast_pool->count < 64)... !!!!!!\n", irq, irq_flags);
 		return;
 	}
 
