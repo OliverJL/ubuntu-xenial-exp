@@ -306,12 +306,12 @@ unsigned char *choose_kernel_location(struct boot_params *boot_params,
 
 #ifdef CONFIG_HIBERNATION
 	if (!cmdline_find_option_bool("kaslr")) {
-		debug_putstr("KASLR disabled by default...\n");
+		//debug_putstr("KASLR disabled by default...\n");
 		goto out;
 	}
 #else
 	if (cmdline_find_option_bool("nokaslr")) {
-		debug_putstr("KASLR disabled by cmdline...\n");
+		//debug_putstr("KASLR disabled by cmdline...\n");
 		goto out;
 	}
 #endif
@@ -325,7 +325,7 @@ unsigned char *choose_kernel_location(struct boot_params *boot_params,
 	/* Walk e820 and find a random address. */
 	random = find_random_addr(choice, output_size);
 	if (!random) {
-		debug_putstr("KASLR could not find suitable E820 region...\n");
+		//debug_putstr("KASLR could not find suitable E820 region...\n");
 		goto out;
 	}
 
