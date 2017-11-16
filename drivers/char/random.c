@@ -1937,10 +1937,12 @@ unsigned long get_random_long(void)
 	if(print_keent_msg)
 		printk(KERN_EMERG "get_random_long - jiffies : %zu\n", jiffies );
 	unsigned long re = random_get_entropy();
-	printk(KERN_EMERG "get_random_long - random_get_entropy : %zu\n", re );
+	if(print_keent_msg)
+		printk(KERN_EMERG "get_random_long - random_get_entropy : %zu\n", re );
 	//hash[0] += current->pid + jiffies + random_get_entropy();
 	hash[0] += current->pid + jiffies + re;
-	printk(KERN_EMERG "get_random_long - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+	if(print_keent_msg)
+		printk(KERN_EMERG "get_random_long - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	md5_transform(hash, random_int_secret);
 	ret = *(unsigned long *)hash;
 	put_cpu_var(get_random_int_hash);
