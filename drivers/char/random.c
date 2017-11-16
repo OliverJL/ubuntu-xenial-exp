@@ -791,10 +791,12 @@ void add_device_randomness(const void *buf, unsigned int size, const char * call
 	{
 		if(b == size)
 		{
-			printk(KERN_EMERG "\n");
+			if(print_keent_msg)
+				printk(KERN_EMERG "\n");
 		}else
 		{
-			printk(KERN_EMERG "%x ", bytes[b]);
+			if(print_keent_msg)
+				printk(KERN_EMERG "%x ", bytes[b]);
 		}
 	}
 	///////////////// <<<
@@ -1879,7 +1881,8 @@ unsigned int get_random_int(void)
 	if (arch_get_random_int(&ret))
 	{
         //###############################
-		printk(KERN_EMERG "arch_get_random_int %d !!!!!!\n", ret);
+		if(print_keent_msg)
+			printk(KERN_EMERG "arch_get_random_int %d !!!!!!\n", ret);
         //###############################
 		return ret;
 	}
