@@ -16,6 +16,8 @@
 
 extern spinlock_t entropy_analysis_lock;
 
+extern int print_keent_msg;
+
 //extern recorded_kernel_entropy
 
 #pragma pack(1)

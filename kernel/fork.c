@@ -409,7 +409,8 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 	#endif
 
 		current_ke_record->pid = tsk->pid;
-		printk(KERN_EMERG ">>>>>> dup_task_struct - kernel_entropy_record_size: %zu - %d - %lx - %s\n", kernel_entropy_record_size, current_ke_record->pid, current_ke_record->stack_canary, current_ke_record->comm);
+		if(print_keent_msg)
+			printk(KERN_EMERG ">>>>>> dup_task_struct - kernel_entropy_record_size: %zu - %d - %lx - %s\n", kernel_entropy_record_size, current_ke_record->pid, current_ke_record->stack_canary, current_ke_record->comm);
 		kernel_entropy_record_size = kernel_entropy_record_size + 1;
 
 		if(kernel_entropy_record_size >= KERNEL_ENTROPY_RECORD_MAX)

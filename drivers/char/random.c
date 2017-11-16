@@ -270,6 +270,8 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/random.h>
 
+#include <exp/entropy_analysis.h>
+
 /* #define ADD_INTERRUPT_BENCH */
 
 /*
@@ -412,6 +414,8 @@ static struct fasync_struct *fasync;
 static DEFINE_SPINLOCK(random_ready_list_lock);
 static LIST_HEAD(random_ready_list);
 
+int print_keent_msg = 1;
+
 /**********************************************************************
  *
  * OS independent entropy store.   Here are the functions which handle
@@ -479,6 +483,21 @@ static __u32 const twist_table[8] = {
 	0x00000000, 0x3b6e20c8, 0x76dc4190, 0x4db26158,
 	0xedb88320, 0xd6d6a3e8, 0x9b64c2b0, 0xa00ae278 };
 
+/*
+int _printk(const char *fmt, ...)
+{
+	if(print_keent_msg)
+	{
+	   //char newMessage[1024]; // **Make sure the buffer is large enough**
+		//va_list args;
+		//va_start(args, fmt);
+		//vsnprintf(newMessage, fmt, args);
+		//printk(KERN_EMERG newMessage);
+		//printk(KERN_EMERG ">>>>>> add_device_randomness - caller: %s - info: %s !!!!!!", caller, additional_info);
+	}
+	return 0;
+}
+*/
 /*
  * This function adds bytes into the entropy "pool".  It does not
  * update the entropy estimate.  The caller should call
@@ -763,7 +782,8 @@ struct timer_rand_state {
 //void add_device_randomness(const void *buf, unsigned int size)
 void add_device_randomness(const void *buf, unsigned int size, const char * caller, char * additional_info)
 {
-	printk(KERN_EMERG ">>>>>> add_device_randomness - caller: %s - info: %s !!!!!!", caller, additional_info);
+	if(print_keent_msg)
+		printk(KERN_EMERG ">>>>>> add_device_randomness - caller: %s - info: %s !!!!!!", caller, additional_info);
 	///////////////// >>>
 	const char *bytes = buf;
 	int b;
@@ -809,7 +829,8 @@ static struct timer_rand_state input_timer_state = INIT_TIMER_RAND_STATE;
  */
 static void add_timer_randomness(struct timer_rand_state *state, unsigned num)
 {
-	printk(KERN_EMERG ">>>>>> add_timer_randomness !!!!!!");
+	if(print_keent_msg)
+		printk(KERN_EMERG ">>>>>> add_timer_randomness !!!!!!");
 
 	struct entropy_store	*r;
 	struct {
@@ -953,7 +974,8 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	r = nonblocking_pool.initialized ? &input_pool : &nonblocking_pool;
 	if (!spin_trylock(&r->lock))
 	{
-		//printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return spin_trylock(&r->lock)... !!!!!!\n", irq, irq_flags);
+		if(print_keent_msg)
+			printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return spin_trylock(&r->lock)... !!!!!!\n", irq, irq_flags);
 		return;
 	}
 
@@ -1406,6 +1428,7 @@ EXPORT_SYMBOL(get_random_bytes_arch);
  */
 static void init_std_data(struct entropy_store *r)
 {
+	//if(print_keent_msg)
 	printk(KERN_EMERG ">>>>>> init_std_data !!!!!!\n");
 
 	int i;
@@ -1421,6 +1444,7 @@ static void init_std_data(struct entropy_store *r)
 		mix_pool_bytes(r, &rv, sizeof(rv));
 	}
 	mix_pool_bytes(r, utsname(), sizeof(*(utsname())));
+	print_keent_msg = 0;
 }
 
 /*
@@ -1869,15 +1893,19 @@ unsigned int get_random_int(void)
 	// Its only usage is to store the number of ticks occurred since system start-up. On kernel boot-up, jiffies is initialized to a special initial value, and it is incremented by one for each timer interrupt. As discussed in the previous post, since there are HZ ticks occurred in one second, and thus there are HZ jiffies in a second.
 	//###################################
 
-	printk(KERN_EMERG "get_random_int - current->pid : %d\n", current->pid );
-	printk(KERN_EMERG "get_random_int - jiffies : %zu\n", jiffies );
+	if(print_keent_msg)
+		printk(KERN_EMERG "get_random_int - current->pid : %d\n", current->pid );
+	if(print_keent_msg)
+		printk(KERN_EMERG "get_random_int - jiffies : %zu\n", jiffies );
 	//hash[0] += current->pid + jiffies + random_get_entropy();
 	unsigned long re = random_get_entropy();
-	printk(KERN_EMERG "get_random_int - random_get_entropy : %zu\n", re );
+	if(print_keent_msg)
+		printk(KERN_EMERG "get_random_int - random_get_entropy : %zu\n", re );
 	hash[0] += current->pid + jiffies + re;
 	//printk(KERN_EMERG "get_random_int - random_int_secret : %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	//printk(KERN_EMERG "get_random_int - random_int_secret : %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
-	printk(KERN_EMERG "get_random_int - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+	if(print_keent_msg)
+		printk(KERN_EMERG "get_random_int - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	md5_transform(hash, random_int_secret);
 	ret = hash[0];
 	put_cpu_var(get_random_int_hash);
@@ -1897,14 +1925,17 @@ unsigned long get_random_long(void)
 	if (arch_get_random_long(&ret))
 	{
         //###############################
-		printk(KERN_EMERG "arch_get_random_long %lu !!!!!! \n ", ret );
+		if(print_keent_msg)
+			printk(KERN_EMERG "arch_get_random_long %lu !!!!!! \n ", ret );
         //###############################
 		return ret;
 	}
 
 	hash = get_cpu_var(get_random_int_hash);
-	printk(KERN_EMERG "get_random_long - current->pid : %d\n", current->pid );
-	printk(KERN_EMERG "get_random_long - jiffies : %zu\n", jiffies );
+	if(print_keent_msg)
+		printk(KERN_EMERG "get_random_long - current->pid : %d\n", current->pid );
+	if(print_keent_msg)
+		printk(KERN_EMERG "get_random_long - jiffies : %zu\n", jiffies );
 	unsigned long re = random_get_entropy();
 	printk(KERN_EMERG "get_random_long - random_get_entropy : %zu\n", re );
 	//hash[0] += current->pid + jiffies + random_get_entropy();
