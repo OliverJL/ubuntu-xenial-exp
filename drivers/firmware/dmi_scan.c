@@ -142,6 +142,7 @@ static int __init dmi_walk_early(void (*decode)(const struct dmi_header *,
 	u8 *buf;
 	u32 orig_dmi_len = dmi_len;
 
+	printk(KERN_EMERG ">>>>>> _init dmi_walk_early - dmi_base:%08x\n" );
 	buf = dmi_early_remap(dmi_base, orig_dmi_len);
 	if (buf == NULL)
 		return -1;
