@@ -27,7 +27,11 @@ early_ioremap (unsigned long phys_addr, unsigned long size)
 	u64 attr;
 	attr = kern_mem_attribute(phys_addr, size);
 	if (attr & EFI_MEMORY_WB)
+	{
+		printk(KERN_EMERG ">>>>>> early_ioremap - phys_to_virt\n" );
 		return (void __iomem *) phys_to_virt(phys_addr);
+	}
+	printk(KERN_EMERG ">>>>>> early_ioremap - __ioremap_uc\n" );
 	return __ioremap_uc(phys_addr);
 }
 
