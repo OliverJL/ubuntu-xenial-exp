@@ -796,7 +796,7 @@ void add_device_randomness(const void *buf, unsigned int size, const char * call
 		}else
 		{
 			if(print_keent_msg)
-				printk(KERN_EMERG "%x", bytes[b]);
+				printk(KERN_EMERG "%x - %c", bytes[b], bytes[b]);
 		}
 	}
 	///////////////// <<<
