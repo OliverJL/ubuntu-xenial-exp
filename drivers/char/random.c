@@ -1450,7 +1450,7 @@ static void init_std_data(struct entropy_store *r)
 		mix_pool_bytes(r, &rv, sizeof(rv));
 	}
 	mix_pool_bytes(r, utsname(), sizeof(*(utsname())));
-	print_keent_msg = 0;
+	//print_keent_msg = 0;
 }
 
 /*
@@ -1463,14 +1463,18 @@ static void init_std_data(struct entropy_store *r)
  * take care not to overwrite the precious per platform data
  * we were given.
  */
+/*
 static int rand_initialize(void)
 {
+	printk(KERN_EMERG "rand_initialize - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	init_std_data(&input_pool);
+	print_keent_msg = 0;
 	init_std_data(&blocking_pool);
 	init_std_data(&nonblocking_pool);
 	return 0;
 }
 early_initcall(rand_initialize);
+*/
 
 #ifdef CONFIG_BLOCK
 void rand_initialize_disk(struct gendisk *disk)
@@ -1864,9 +1868,30 @@ int random_int_secret_init(void)
 {
 	printk(KERN_EMERG ">>>>>>>>>> - random_int_secret_init !!!!!!!!!!! \n" );
 	get_random_bytes(random_int_secret, sizeof(random_int_secret));
-	printk(KERN_EMERG "get_random_int - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+	printk(KERN_EMERG "random_int_secret_init - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	return 0;
 }
+
+/*
+ * Note that setup_arch() may call add_device_randomness()
+ * long before we get here. This allows seeding of the pools
+ * with some platform dependent data very early in the boot
+ * process. But it limits our options here. We must use
+ * statically allocated structures that already have all
+ * initializations complete at compile time. We should also
+ * take care not to overwrite the precious per platform data
+ * we were given.
+ */
+static int rand_initialize(void)
+{
+	printk(KERN_EMERG "rand_initialize - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+	init_std_data(&input_pool);
+	print_keent_msg = 0;
+	init_std_data(&blocking_pool);
+	init_std_data(&nonblocking_pool);
+	return 0;
+}
+early_initcall(rand_initialize);
 
 static DEFINE_PER_CPU(__u32 [MD5_DIGEST_WORDS], get_random_int_hash)
 		__aligned(sizeof(unsigned long));
