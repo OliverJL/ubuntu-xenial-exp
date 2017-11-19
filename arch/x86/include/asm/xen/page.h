@@ -14,7 +14,7 @@
 #include <xen/interface/xen.h>
 #include <xen/interface/grant_table.h>
 #include <xen/features.h>
-#include <exp/entropy_analysis.h>
+//#include <exp/entropy_analysis.h>/
 
 /* Xen machine address */
 typedef struct xmaddr {
@@ -85,8 +85,8 @@ static inline int xen_safe_read_ulong(unsigned long *addr, unsigned long *val)
  */
 static inline unsigned long __pfn_to_mfn(unsigned long pfn)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> __pfn_to_mfn !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> __pfn_to_mfn !!!!!!" );
 
 	unsigned long mfn;
 
@@ -105,8 +105,8 @@ static inline unsigned long __pfn_to_mfn(unsigned long pfn)
 
 static inline unsigned long pfn_to_mfn(unsigned long pfn)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> pfn_to_mfn !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> pfn_to_mfn !!!!!!" );
 
 	unsigned long mfn;
 
@@ -128,8 +128,8 @@ static inline unsigned long pfn_to_mfn(unsigned long pfn)
 
 static inline int phys_to_machine_mapping_valid(unsigned long pfn)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> phys_to_machine_mapping_valid !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> phys_to_machine_mapping_valid !!!!!!" );
 
 	if (xen_feature(XENFEAT_auto_translated_physmap))
 		return 1;
@@ -139,8 +139,8 @@ static inline int phys_to_machine_mapping_valid(unsigned long pfn)
 
 static inline unsigned long mfn_to_pfn_no_overrides(unsigned long mfn)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> mfn_to_pfn_no_overrides !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> mfn_to_pfn_no_overrides !!!!!!" );
 
 	unsigned long pfn;
 	int ret;
@@ -165,8 +165,8 @@ static inline unsigned long mfn_to_pfn_no_overrides(unsigned long mfn)
 
 static inline unsigned long mfn_to_pfn(unsigned long mfn)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> mfn_to_pfn !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> mfn_to_pfn !!!!!!" );
 
 	unsigned long pfn;
 
@@ -194,8 +194,8 @@ static inline unsigned long mfn_to_pfn(unsigned long mfn)
 
 static inline xmaddr_t phys_to_machine(xpaddr_t phys)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> phys_to_machine !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> phys_to_machine !!!!!!" );
 
 	unsigned offset = phys.paddr & ~PAGE_MASK;
 	return XMADDR(PFN_PHYS(pfn_to_mfn(PFN_DOWN(phys.paddr))) | offset);
@@ -203,8 +203,8 @@ static inline xmaddr_t phys_to_machine(xpaddr_t phys)
 
 static inline xpaddr_t machine_to_phys(xmaddr_t machine)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> machine_to_phys !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> machine_to_phys !!!!!!" );
 
 	unsigned offset = machine.maddr & ~PAGE_MASK;
 	return XPADDR(PFN_PHYS(mfn_to_pfn(PFN_DOWN(machine.maddr))) | offset);
@@ -213,8 +213,8 @@ static inline xpaddr_t machine_to_phys(xmaddr_t machine)
 /* Pseudo-physical <-> Guest conversion */
 static inline unsigned long pfn_to_gfn(unsigned long pfn)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> pfn_to_gfn !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> pfn_to_gfn !!!!!!" );
 
 	if (xen_feature(XENFEAT_auto_translated_physmap))
 		return pfn;
@@ -224,8 +224,8 @@ static inline unsigned long pfn_to_gfn(unsigned long pfn)
 
 static inline unsigned long gfn_to_pfn(unsigned long gfn)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> gfn_to_pfn !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> gfn_to_pfn !!!!!!" );
 
 	if (xen_feature(XENFEAT_auto_translated_physmap))
 		return gfn;
@@ -259,8 +259,8 @@ static inline unsigned long gfn_to_pfn(unsigned long gfn)
  */
 static inline unsigned long bfn_to_local_pfn(unsigned long mfn)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> bfn_to_local_pfn !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> bfn_to_local_pfn !!!!!!" );
 
 	unsigned long pfn;
 
@@ -285,16 +285,16 @@ static inline unsigned long bfn_to_local_pfn(unsigned long mfn)
 
 static inline unsigned long pte_mfn(pte_t pte)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> pte_mfn !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> pte_mfn !!!!!!" );
 
 	return (pte.pte & PTE_PFN_MASK) >> PAGE_SHIFT;
 }
 
 static inline pte_t mfn_pte(unsigned long page_nr, pgprot_t pgprot)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> mfn_pte !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> mfn_pte !!!!!!" );
 
 	pte_t pte;
 
@@ -306,15 +306,15 @@ static inline pte_t mfn_pte(unsigned long page_nr, pgprot_t pgprot)
 
 static inline pteval_t pte_val_ma(pte_t pte)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> pte_val_ma !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> pte_val_ma !!!!!!" );
 	return pte.pte;
 }
 
 static inline pte_t __pte_ma(pteval_t x)
 {
-	if(print_keent_msg)
-		printk(KERN_EMERG ">>>>>> __pte_ma !!!!!!" );
+	//if(print_keent_msg)
+		//printk(KERN_EMERG ">>>>>> __pte_ma !!!!!!" );
 	return (pte_t) { .pte = x };
 }
 
