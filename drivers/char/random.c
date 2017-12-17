@@ -965,7 +965,10 @@ void add_interrupt_randomness(int irq, int irq_flags)
 		//printk(KERN_EMERG ">>>>>> add_interrupt_randomness ip: %llu !!!!!!\n", ip);
 
 	if(print_keent_msg)
+	{
+		printk(KERN_EMERG ">>>>>> add_interrupt_randomness irq: %d - irq_flags: %d !!!!!!\n", irq, irq_flags);
 		printk(KERN_EMERG ">>>>>> add_interrupt_randomness irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", irq, irq_flags, cycles, now, ip);
+	}
 
 	fast_pool->pool[2] ^= ip;
 	fast_pool->pool[3] ^= (sizeof(ip) > 4) ? ip >> 32 :
