@@ -395,10 +395,10 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 
 	//################################## -->
 	spin_lock(&entropy_analysis_lock);
+	printk(KERN_EMERG ">>>>>> tsk->comm %s\n", tsk->comm);
 #ifdef CONFIG_CC_STACKPROTECTOR
 	tsk->stack_canary = get_random_long();
 #endif
-	printk(KERN_EMERG ">>>>>> tsk->comm %s\n", tsk->comm);
 	if(is_kernel_entropy_recording)
 	{
 		current_ke_record = &recorded_kernel_entropy[kernel_entropy_record_size];
