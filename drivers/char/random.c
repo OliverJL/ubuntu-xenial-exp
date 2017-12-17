@@ -1894,7 +1894,7 @@ static int rand_initialize(void)
 {
 	printk(KERN_EMERG "rand_initialize - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	init_std_data(&input_pool);
-	//print_keent_msg = 0;
+	print_keent_msg = 0;
 	init_std_data(&blocking_pool);
 	init_std_data(&nonblocking_pool);
 	return 0;
