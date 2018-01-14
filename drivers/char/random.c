@@ -1941,7 +1941,7 @@ unsigned int get_random_int(void)
 	//hash[0] += current->pid + jiffies + random_get_entropy();
 	unsigned long re = random_get_entropy();
 	if(print_keent_msg)
-		printk(KERN_EMERG "get_random_int - random_get_entropy : %zu\n", re );
+		printk(KERN_EMERG "get_random_int - random_get_entropy : %016lX\n", re );
 	hash[0] += current->pid + jiffies + re;
 	//printk(KERN_EMERG "get_random_int - random_int_secret : %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	//printk(KERN_EMERG "get_random_int - random_int_secret : %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
@@ -1976,10 +1976,10 @@ unsigned long get_random_long(void)
 	//if(print_keent_msg)
 		printk(KERN_EMERG "get_random_long - current->pid : %d\n", current->pid );
 	//if(print_keent_msg)
-		printk(KERN_EMERG "get_random_long - jiffies : %zu\n", jiffies );
+		printk(KERN_EMERG "get_random_long - jiffies : %016lX\n", jiffies );
 	unsigned long re = random_get_entropy();
 	//if(print_keent_msg)
-		printk(KERN_EMERG "get_random_long - random_get_entropy : %zu\n", re );
+		printk(KERN_EMERG "get_random_long - random_get_entropy : %016lX\n", re );
 	//hash[0] += current->pid + jiffies + random_get_entropy();
 	hash[0] += current->pid + jiffies + re;
 	//if(print_keent_msg)

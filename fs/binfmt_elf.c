@@ -40,6 +40,7 @@
 #include <asm/param.h>
 #include <asm/page.h>
 
+
 #ifndef user_long_t
 #define user_long_t long
 #endif
@@ -146,6 +147,7 @@ static int padzero(unsigned long elf_bss)
  */
 #define ELF_BASE_PLATFORM NULL
 #endif
+
 
 static int
 create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
@@ -664,6 +666,7 @@ static unsigned long randomize_stack_top(unsigned long stack_top)
 
 static int load_elf_binary(struct linux_binprm *bprm)
 {
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s\n", bprm->filename, bprm->interp );
 
 	struct file *interpreter = NULL; /* to shut gcc up */
@@ -921,6 +924,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		elf_flags = MAP_PRIVATE | MAP_DENYWRITE | MAP_EXECUTABLE;
 
 		vaddr = elf_ppnt->p_vaddr;
+		if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - vaddr:0x%016lX\n", bprm->filename, bprm->interp, vaddr );
 		/*
 		 * If we are loading ET_EXEC or we have already performed
@@ -937,6 +941,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		it is nonportable, and its use is discouraged.
 		 */
 			elf_flags |= MAP_FIXED;
+			if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_EXEC - MAP_FIXED\n", bprm->filename, bprm->interp );
 		} else if (loc->elf_ex.e_type == ET_DYN) {
 			/*
@@ -971,16 +976,20 @@ static int load_elf_binary(struct linux_binprm *bprm)
 			 */
 			if (elf_interpreter) {
 				load_bias = ELF_ET_DYN_BASE;
+				if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 				printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_DYN - load_bias:0x%016lX\n", bprm->filename, bprm->interp, load_bias );
 				if (current->flags & PF_RANDOMIZE){
 					load_bias += arch_mmap_rnd();
+					if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 					printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_DYN - load_bias:0x%016lX\n", bprm->filename, bprm->interp, load_bias );
 					elf_flags |= MAP_FIXED;
+					if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 					printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_DYN - MAP_FIXED\n", bprm->filename, bprm->interp );
 				}
 			} else
 			{
 				load_bias = 0;
+				if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 				printk(KERN_EMERG ">>>>>>>>>> - load_elf_binary - load_bias = 0 - filename:%s - interp:%s - load_bias:0x%016lX\n", bprm->filename, bprm->interp, load_bias );
 			}
 			/*
@@ -993,6 +1002,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 			unsigned long load_bias_bak;
 			load_bias_bak = load_bias;
 			load_bias = ELF_PAGESTART(load_bias - vaddr);
+			if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 			printk(KERN_EMERG ">>>>>>>>>> - load_elf_binary - filename:%s - interp:%s - load_bias = ELF_PAGESTART(load_bias - vaddr) - 0x%016lX = ELF_PAGESTART(0x%016lX - 0x%016lX)\n", bprm->filename, bprm->interp, load_bias_bak, load_bias, vaddr );
 
 			total_size = total_mapping_size(elf_phdata,
@@ -1041,44 +1051,61 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		}
 
 		k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
+		if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz - 0x%016lX = 0x%016lX + 0x%016lX\n", bprm->filename, bprm->interp, k, elf_ppnt->p_vaddr, elf_ppnt->p_filesz );
+		if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 1 elf_bss: 0x%016lX\n", bprm->filename, bprm->interp, elf_bss );
 		if (k > elf_bss){
 			elf_bss = k;
+			if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 2 elf_bss: 0x%016lX\n", bprm->filename, bprm->interp, elf_bss );
 		}
+		if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 1 end_code: 0x%016lX\n", bprm->filename, bprm->interp, end_code );
 		if ((elf_ppnt->p_flags & PF_X) && end_code < k){
 			end_code = k;
+			if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 2 end_code: 0x%016lX\n", bprm->filename, bprm->interp, end_code );
 		}
+		if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 1 end_data: 0x%016lX\n", bprm->filename, bprm->interp, end_data );
 		if (end_data < k){
 			end_data = k;
+			if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 2 end_data: 0x%016lX\n", bprm->filename, bprm->interp, end_data );
 		}
 		k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
+		if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 1 elf_brk: 0x%016lX\n", bprm->filename, bprm->interp, elf_brk );
 		if (k > elf_brk){
 			elf_brk = k;
+			if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 2 elf_brk: 0x%016lX\n", bprm->filename, bprm->interp, elf_brk );
 		}
 	}
 
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - load_bias: 0x%016lX - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, load_bias, loc->elf_ex.e_entry );
 	loc->elf_ex.e_entry += load_bias;
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, loc->elf_ex.e_entry );
 	elf_bss += load_bias;
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final elf_bss: 0x%016lX\n", bprm->filename, bprm->interp, elf_bss );
 	elf_brk += load_bias;
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final elf_brk: 0x%016lX\n", bprm->filename, bprm->interp, elf_brk );
 	start_code += load_bias;
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final start_code: 0x%016lX\n", bprm->filename, bprm->interp, start_code );
 	end_code += load_bias;
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final end_code: 0x%016lX\n", bprm->filename, bprm->interp, end_code );
 	start_data += load_bias;
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final start_data: 0x%016lX\n", bprm->filename, bprm->interp, start_data );
 	end_data += load_bias;
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final end_data: 0x%016lX\n", bprm->filename, bprm->interp, end_data );
 
 
@@ -1152,13 +1179,16 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	current->mm->end_data = end_data;
 	current->mm->start_stack = bprm->p;
 
-	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->end_code: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->end_code );
-	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->start_code: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->start_code );
-	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->start_data: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->start_data );
-	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->end_data: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->end_data );
-	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->start_stack: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->start_stack );
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server")){
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->end_code: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->end_code );
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->start_code: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->start_code );
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->start_data: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->start_data );
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->end_data: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->end_data );
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->start_stack: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->start_stack );
+	}
 
 	if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
+		if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - randomize_brk - current->mm: 0x%016lX\n", bprm->filename, bprm->interp, current->mm );
 		current->mm->brk = current->mm->start_brk = arch_randomize_brk(current->mm);
 #ifdef compat_brk_randomized
