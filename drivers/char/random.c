@@ -1876,7 +1876,8 @@ int random_int_secret_init(void)
 {
 	printk(KERN_EMERG ">>>>>>>>>> - random_int_secret_init !!!!!!!!!!! \n" );
 	get_random_bytes(random_int_secret, sizeof(random_int_secret));
-	printk(KERN_EMERG "random_int_secret_init - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+	//printk(KERN_EMERG "random_int_secret_init - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+	printk(KERN_EMERG "random_int_secret_init - random_int_secret : %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	return 0;
 }
 
@@ -1892,7 +1893,7 @@ int random_int_secret_init(void)
  */
 static int rand_initialize(void)
 {
-	printk(KERN_EMERG "rand_initialize - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+	printk(KERN_EMERG "rand_initialize - random_int_secret : %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	init_std_data(&input_pool);
 	print_keent_msg = 0;
 	init_std_data(&blocking_pool);
@@ -1919,7 +1920,7 @@ unsigned int get_random_int(void)
 	{
         //###############################
 		if(print_keent_msg)
-			printk(KERN_EMERG "arch_get_random_int %d !!!!!!\n", ret);
+			printk(KERN_EMERG "arch_get_random_int %08X !!!!!!\n", ret);
         //###############################
 		return ret;
 	}
@@ -1936,7 +1937,7 @@ unsigned int get_random_int(void)
 	if(print_keent_msg)
 		printk(KERN_EMERG "get_random_int - current->pid : %d\n", current->pid );
 	if(print_keent_msg)
-		printk(KERN_EMERG "get_random_int - jiffies : %zu\n", jiffies );
+		printk(KERN_EMERG "get_random_int - jiffies : %016lX\n", jiffies );
 	//hash[0] += current->pid + jiffies + random_get_entropy();
 	unsigned long re = random_get_entropy();
 	if(print_keent_msg)
@@ -1945,7 +1946,7 @@ unsigned int get_random_int(void)
 	//printk(KERN_EMERG "get_random_int - random_int_secret : %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	//printk(KERN_EMERG "get_random_int - random_int_secret : %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	if(print_keent_msg)
-		printk(KERN_EMERG "get_random_int - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+		printk(KERN_EMERG "get_random_int - random_int_secret : %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	md5_transform(hash, random_int_secret);
 	ret = hash[0];
 	put_cpu_var(get_random_int_hash);
@@ -1966,7 +1967,7 @@ unsigned long get_random_long(void)
 	{
         //###############################
 		if(print_keent_msg)
-			printk(KERN_EMERG "arch_get_random_long %lu !!!!!! \n ", ret );
+			printk(KERN_EMERG "arch_get_random_long %016lX !!!!!! \n ", ret );
         //###############################
 		return ret;
 	}
@@ -1982,7 +1983,7 @@ unsigned long get_random_long(void)
 	//hash[0] += current->pid + jiffies + random_get_entropy();
 	hash[0] += current->pid + jiffies + re;
 	//if(print_keent_msg)
-		printk(KERN_EMERG "get_random_long - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+		printk(KERN_EMERG "get_random_long - random_int_secret : %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	md5_transform(hash, random_int_secret);
 	ret = *(unsigned long *)hash;
 	put_cpu_var(get_random_int_hash);
@@ -2004,10 +2005,21 @@ unsigned long
 randomize_range(unsigned long start, unsigned long end, unsigned long len)
 {
 	unsigned long range = end - len - start;
-
+	printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - range = end - len - start - 0x%016lX = 0x%016lX - 0x%016lX - 0x%016lX \n", range, end, len, start );
 	if (end <= start + len)
+	{
+		printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - return 0; \n" );
 		return 0;
-	return PAGE_ALIGN(get_random_int() % range + start);
+	}
+
+	printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - range = end - len - start - 0x%016lX = 0x%016lX - 0x%016lX - 0x%016lX \n", range, end, len, start );
+	unsigned int rnd = get_random_int();
+	unsigned long add_range_start = range + start;
+	unsigned long mod_rnd_add_range_start = rnd % add_range_start;
+	unsigned long ret = PAGE_ALIGN(mod_rnd_add_range_start);
+	printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - PAGE_ALIGN(rnd MOD add_range_start) - mod_rnd_add_range_start =  0x%016lX - 0x%016lX = PAGE_ALIGN(%x MOD 0x%016lX)\n", mod_rnd_add_range_start, ret, rnd, add_range_start );
+	return ret;
+	// org: return PAGE_ALIGN(get_random_int() % range + start);
 }
 
 /* Interface for in-kernel drivers of true hardware RNGs.

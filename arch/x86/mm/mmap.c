@@ -73,12 +73,25 @@ unsigned long arch_mmap_rnd(void)
 	 *  8 bits of randomness in 32bit mmaps, 20 address space bits
 	 * 28 bits of randomness in 64bit mmaps, 40 address space bits
 	 */
-	if (mmap_is_ia32())
-		rnd = (unsigned long)get_random_int() % (1<<8);
-	else
-		rnd = (unsigned long)get_random_int() % (1<<28);
-
-	return rnd << PAGE_SHIFT;
+	unsigned long get_random_int_value = 0;
+	if (mmap_is_ia32()){
+		get_random_int_value = (unsigned long)get_random_int();
+		printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - mmap_is_ia32 - get_random_int:%lx\n", get_random_int_value );
+		rnd = get_random_int_value % (1<<8);
+		printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - mmap_is_ia32 - rnd:%lx\n", rnd );
+		//org: rnd = (unsigned long)get_random_int() % (1<<8);
+	}
+	else{
+		get_random_int_value = (unsigned long)get_random_int();
+		printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - !mmap_is_ia32 - get_random_int:%lx\n", get_random_int_value );
+		rnd = get_random_int_value % (1<<28);
+		printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - !mmap_is_ia32 - rnd:%lx\n", rnd );
+		//rnd = (unsigned long)get_random_int() % (1<<28);
+	}
+	rnd = rnd << PAGE_SHIFT;
+	printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - rnd:%lx\n", rnd );
+	return rnd;
+	//org: return rnd << PAGE_SHIFT;
 }
 
 static unsigned long mmap_base(unsigned long rnd)

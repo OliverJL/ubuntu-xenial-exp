@@ -664,6 +664,8 @@ static unsigned long randomize_stack_top(unsigned long stack_top)
 
 static int load_elf_binary(struct linux_binprm *bprm)
 {
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s\n", bprm->filename, bprm->interp );
+
 	struct file *interpreter = NULL; /* to shut gcc up */
  	unsigned long load_addr = 0, load_bias = 0;
 	int load_addr_set = 0;
@@ -710,6 +712,12 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		goto out;
 
 	elf_ppnt = elf_phdata;
+/* OJ:
+  In computer programming, the name .bss or bss is used by many compilers
+  and linkers for a part of the data segment containing statically-allocated
+  variables that are not explicitly initialized to any value. It is often
+  referred to as the "bss section" or "bss segment".
+ */
 	elf_bss = 0;
 	elf_brk = 0;
 
@@ -718,7 +726,15 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	start_data = 0;
 	end_data = 0;
 
+	/* e_phnum;	Program header table entry count */
 	for (i = 0; i < loc->elf_ex.e_phnum; i++) {
+		/* p_type = Segment type */
+/*
+ The kernel loads the executable into the process, and looks for a PT_INTERP entry
+ in its ELF Program Headers; this specifies the filename of the dynamic linker
+ (/lib/ld-linux.so.2 for glibc on Linux). If there is a PT_INTERP entry,
+ the kernel loads this file too.
+ */
 		if (elf_ppnt->p_type == PT_INTERP) {
 			/* This is the program interpreter used for
 			 * shared libraries - for now assume that this
@@ -905,12 +921,23 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		elf_flags = MAP_PRIVATE | MAP_DENYWRITE | MAP_EXECUTABLE;
 
 		vaddr = elf_ppnt->p_vaddr;
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - vaddr:0x%016lX\n", bprm->filename, bprm->interp, vaddr );
 		/*
 		 * If we are loading ET_EXEC or we have already performed
 		 * the ET_DYN load_addr calculations, proceed normally.
 		 */
 		if (loc->elf_ex.e_type == ET_EXEC || load_addr_set) {
+		/* OJ:
+		MAP_FIXED
+		Instructs mmap( ) to treat addr as a requirement, not a hint.
+		If the kernel is unable to place the mapping at the given address,
+		the call fails. If the address and length parameters overlap an existing
+		mapping, the overlapped pages are discarded and replaced by the new mapping.
+		As this option requires intimate knowledge of the process address space,
+		it is nonportable, and its use is discouraged.
+		 */
 			elf_flags |= MAP_FIXED;
+			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_EXEC - MAP_FIXED\n", bprm->filename, bprm->interp );
 		} else if (loc->elf_ex.e_type == ET_DYN) {
 			/*
 			 * This logic is run once for the first LOAD Program
@@ -944,12 +971,18 @@ static int load_elf_binary(struct linux_binprm *bprm)
 			 */
 			if (elf_interpreter) {
 				load_bias = ELF_ET_DYN_BASE;
-				if (current->flags & PF_RANDOMIZE)
+				printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_DYN - load_bias:0x%016lX\n", bprm->filename, bprm->interp, load_bias );
+				if (current->flags & PF_RANDOMIZE){
 					load_bias += arch_mmap_rnd();
-				elf_flags |= MAP_FIXED;
+					printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_DYN - load_bias:0x%016lX\n", bprm->filename, bprm->interp, load_bias );
+					elf_flags |= MAP_FIXED;
+					printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_DYN - MAP_FIXED\n", bprm->filename, bprm->interp );
+				}
 			} else
+			{
 				load_bias = 0;
-
+				printk(KERN_EMERG ">>>>>>>>>> - load_elf_binary - load_bias = 0 - filename:%s - interp:%s - load_bias:0x%016lX\n", bprm->filename, bprm->interp, load_bias );
+			}
 			/*
 			 * Since load_bias is used for all subsequent loading
 			 * calculations, we must lower it by the first vaddr
@@ -957,7 +990,10 @@ static int load_elf_binary(struct linux_binprm *bprm)
 			 * ELF vaddrs will be correctly offset. The result
 			 * is then page aligned.
 			 */
+			unsigned long load_bias_bak;
+			load_bias_bak = load_bias;
 			load_bias = ELF_PAGESTART(load_bias - vaddr);
+			printk(KERN_EMERG ">>>>>>>>>> - load_elf_binary - filename:%s - interp:%s - load_bias = ELF_PAGESTART(load_bias - vaddr) - 0x%016lX = ELF_PAGESTART(0x%016lX - 0x%016lX)\n", bprm->filename, bprm->interp, load_bias_bak, load_bias, vaddr );
 
 			total_size = total_mapping_size(elf_phdata,
 							loc->elf_ex.e_phnum);
@@ -1005,25 +1041,47 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		}
 
 		k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
-
-		if (k > elf_bss)
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz - 0x%016lX = 0x%016lX + 0x%016lX\n", bprm->filename, bprm->interp, k, elf_ppnt->p_vaddr, elf_ppnt->p_filesz );
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 1 elf_bss: 0x%016lX\n", bprm->filename, bprm->interp, elf_bss );
+		if (k > elf_bss){
 			elf_bss = k;
-		if ((elf_ppnt->p_flags & PF_X) && end_code < k)
+			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 2 elf_bss: 0x%016lX\n", bprm->filename, bprm->interp, elf_bss );
+		}
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 1 end_code: 0x%016lX\n", bprm->filename, bprm->interp, end_code );
+		if ((elf_ppnt->p_flags & PF_X) && end_code < k){
 			end_code = k;
-		if (end_data < k)
+			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 2 end_code: 0x%016lX\n", bprm->filename, bprm->interp, end_code );
+		}
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 1 end_data: 0x%016lX\n", bprm->filename, bprm->interp, end_data );
+		if (end_data < k){
 			end_data = k;
+			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 2 end_data: 0x%016lX\n", bprm->filename, bprm->interp, end_data );
+		}
 		k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
-		if (k > elf_brk)
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 1 elf_brk: 0x%016lX\n", bprm->filename, bprm->interp, elf_brk );
+		if (k > elf_brk){
 			elf_brk = k;
+			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 2 elf_brk: 0x%016lX\n", bprm->filename, bprm->interp, elf_brk );
+		}
 	}
 
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - load_bias: 0x%016lX - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, load_bias, loc->elf_ex.e_entry );
 	loc->elf_ex.e_entry += load_bias;
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, loc->elf_ex.e_entry );
 	elf_bss += load_bias;
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final elf_bss: 0x%016lX\n", bprm->filename, bprm->interp, elf_bss );
 	elf_brk += load_bias;
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final elf_brk: 0x%016lX\n", bprm->filename, bprm->interp, elf_brk );
 	start_code += load_bias;
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final start_code: 0x%016lX\n", bprm->filename, bprm->interp, start_code );
 	end_code += load_bias;
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final end_code: 0x%016lX\n", bprm->filename, bprm->interp, end_code );
 	start_data += load_bias;
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final start_data: 0x%016lX\n", bprm->filename, bprm->interp, start_data );
 	end_data += load_bias;
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - final end_data: 0x%016lX\n", bprm->filename, bprm->interp, end_data );
+
+
 
 	/* Calling set_brk effectively mmaps the pages that we need
 	 * for the bss and break sections.  We must do this before
@@ -1094,9 +1152,15 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	current->mm->end_data = end_data;
 	current->mm->start_stack = bprm->p;
 
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->end_code: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->end_code );
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->start_code: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->start_code );
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->start_data: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->start_data );
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->end_data: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->end_data );
+	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->start_stack: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->start_stack );
+
 	if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
-		current->mm->brk = current->mm->start_brk =
-			arch_randomize_brk(current->mm);
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - randomize_brk - current->mm: 0x%016lX\n", bprm->filename, bprm->interp, current->mm );
+		current->mm->brk = current->mm->start_brk = arch_randomize_brk(current->mm);
 #ifdef compat_brk_randomized
 		current->brk_randomized = 1;
 #endif
