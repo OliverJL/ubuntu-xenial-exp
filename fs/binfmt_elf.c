@@ -664,6 +664,7 @@ static unsigned long randomize_stack_top(unsigned long stack_top)
 #endif
 }
 
+
 static int load_elf_binary(struct linux_binprm *bprm)
 {
 	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
@@ -979,7 +980,10 @@ static int load_elf_binary(struct linux_binprm *bprm)
 				if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 				printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_DYN - load_bias:0x%016lX\n", bprm->filename, bprm->interp, load_bias );
 				if (current->flags & PF_RANDOMIZE){
-					load_bias += arch_mmap_rnd();
+					if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
+						load_bias += arch_mmap_rnd(1);
+					else
+						load_bias += arch_mmap_rnd(0);
 					if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 					printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_DYN - load_bias:0x%016lX\n", bprm->filename, bprm->interp, load_bias );
 					elf_flags |= MAP_FIXED;

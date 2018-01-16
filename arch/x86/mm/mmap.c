@@ -65,7 +65,7 @@ static int mmap_is_legacy(void)
 	return sysctl_legacy_va_layout;
 }
 
-unsigned long arch_mmap_rnd(void)
+unsigned long arch_mmap_rnd(int log)
 {
 	unsigned long rnd;
 
@@ -76,20 +76,25 @@ unsigned long arch_mmap_rnd(void)
 	unsigned long get_random_int_value = 0;
 	if (mmap_is_ia32()){
 		get_random_int_value = (unsigned long)get_random_int();
-		printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - mmap_is_ia32 - get_random_int:%016lX\n", get_random_int_value );
+		if(log)
+			printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - mmap_is_ia32 - get_random_int:%016lX\n", get_random_int_value );
 		rnd = get_random_int_value % (1<<8);
-		printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - mmap_is_ia32 - rnd:%016lX\n", rnd );
+		if(log)
+			printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - mmap_is_ia32 - rnd:%016lX\n", rnd );
 		//org: rnd = (unsigned long)get_random_int() % (1<<8);
 	}
 	else{
 		get_random_int_value = (unsigned long)get_random_int();
-		printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - !mmap_is_ia32 - get_random_int:%016lX\n", get_random_int_value );
+		if(log)
+			printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - !mmap_is_ia32 - get_random_int:%016lX\n", get_random_int_value );
 		rnd = get_random_int_value % (1<<28);
-		printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - !mmap_is_ia32 - rnd:%016lX\n", rnd );
+		if(log)
+			printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - !mmap_is_ia32 - rnd:%016lX\n", rnd );
 		//rnd = (unsigned long)get_random_int() % (1<<28);
 	}
 	rnd = rnd << PAGE_SHIFT;
-	printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - rnd:%016lX\n", rnd );
+	if(log)
+		printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - rnd:%016lX\n", rnd );
 	return rnd;
 	//org: return rnd << PAGE_SHIFT;
 }
@@ -115,7 +120,7 @@ void arch_pick_mmap_layout(struct mm_struct *mm)
 	unsigned long random_factor = 0UL;
 
 	if (current->flags & PF_RANDOMIZE)
-		random_factor = arch_mmap_rnd();
+		random_factor = arch_mmap_rnd(0);
 
 	mm->mmap_legacy_base = TASK_UNMAPPED_BASE + random_factor;
 
