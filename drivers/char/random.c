@@ -2005,19 +2005,19 @@ unsigned long
 randomize_range(unsigned long start, unsigned long end, unsigned long len)
 {
 	unsigned long range = end - len - start;
-	printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - range = end - len - start - 0x%016lX = 0x%016lX - 0x%016lX - 0x%016lX \n", range, end, len, start );
+	//printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - range = end - len - start - 0x%016lX = 0x%016lX - 0x%016lX - 0x%016lX \n", range, end, len, start );
 	if (end <= start + len)
 	{
-		printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - return 0; \n" );
+		//printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - return 0; \n" );
 		return 0;
 	}
 
-	printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - range = end - len - start - 0x%016lX = 0x%016lX - 0x%016lX - 0x%016lX \n", range, end, len, start );
+	//printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - range = end - len - start - 0x%016lX = 0x%016lX - 0x%016lX - 0x%016lX \n", range, end, len, start );
 	unsigned int rnd = get_random_int();
 	unsigned long add_range_start = range + start;
 	unsigned long mod_rnd_add_range_start = rnd % add_range_start;
 	unsigned long ret = PAGE_ALIGN(mod_rnd_add_range_start);
-	printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - PAGE_ALIGN(rnd MOD add_range_start) - mod_rnd_add_range_start =  0x%016lX - 0x%016lX = PAGE_ALIGN(%x MOD 0x%016lX)\n", mod_rnd_add_range_start, ret, rnd, add_range_start );
+	//printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - PAGE_ALIGN(rnd MOD add_range_start) - mod_rnd_add_range_start =  0x%016lX - 0x%016lX = PAGE_ALIGN(%x MOD 0x%016lX)\n", mod_rnd_add_range_start, ret, rnd, add_range_start );
 	return ret;
 	// org: return PAGE_ALIGN(get_random_int() % range + start);
 }
