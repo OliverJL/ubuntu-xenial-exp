@@ -55,12 +55,12 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 		case KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE:
 		case KEETYPE__ADD_INT_RND__FAST_POOL_LT_64:
 		case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
-			rec->event_details = kernel_entropy_malloc_interrupt();
+			//rec->event_details = kernel_entropy_malloc_interrupt();
 			break;
 		case KEETYPE__RND_INT_SECRET_INIT:
 			break;
 		case KEETYPE__STACK_CANARY_SET:
-			rec->event_details = kernel_entropy_malloc_stack_canary();
+			//rec->event_details = kernel_entropy_malloc_stack_canary();
 			break;
 		case KEETYPE__ASLR_RND_SET:
 			break;
@@ -71,6 +71,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 
 void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, bool print_dmesg)
 {
+	/*
 	kernel_entropy_event * ke_event;
 	kee_add_interrupt_rnd * int_rnd_event;
 
@@ -81,10 +82,12 @@ void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t 
 	int_rnd_event->cycles = cycles;
 	int_rnd_event->now_jiffies = now_jiffies;
 	int_rnd_event->ip = ip;
+	*/
 }
 
 void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pid_t pid, bool print_dmesg)
 {
+	/*
 	kernel_entropy_event * ke_event;
 	kee_stack_canary_set * stc_set_event;
 	size_t task_exe_name_len;
@@ -97,6 +100,7 @@ void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pi
 
 	if(print_dmesg)
 		printk(KERN_EMERG ">>>>>> dup_task_struct - kernel_entropy_record_size: %zu - %d - %lx - %s\n", ke_rec_info.kee_stack_canary_set_id, pid, stack_canary, comm);
+		*/
 }
 
 kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void)
