@@ -984,7 +984,7 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	{
 		if(print_keent_msg)
 			printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return (fast_pool->count < 64)... !!!!!!\n", irq, irq_flags);
-		if(is_kernel_entropy_recording)
+		//if(is_kernel_entropy_recording)
 			kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__FAST_POOL_LT_64, irq, irq_flags, cycles, now, ip, print_keent_msg);
 		return;
 	}
@@ -994,7 +994,7 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	{
 		if(print_keent_msg)
 			printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return spin_trylock(&r->lock)... !!!!!!\n", irq, irq_flags);
-		if(is_kernel_entropy_recording)
+		//if(is_kernel_entropy_recording)
 			kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__SPIN_TRYLOCK, irq, irq_flags, cycles, now, ip, print_keent_msg);
 		return;
 	}
@@ -1021,7 +1021,7 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	/* award one bit for the contents of the fast pool */
 	credit_entropy_bits(r, credit + 1);
 
-	if(is_kernel_entropy_recording)
+	//if(is_kernel_entropy_recording)
 		kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE, irq, irq_flags, cycles, now, ip, print_keent_msg);
 }
 EXPORT_SYMBOL_GPL(add_interrupt_randomness);
