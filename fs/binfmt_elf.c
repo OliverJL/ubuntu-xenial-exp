@@ -926,7 +926,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 
 		vaddr = elf_ppnt->p_vaddr;
 		if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
-		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - vaddr:0x%016lX\n", bprm->filename, bprm->interp, vaddr );
+			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - vaddr:0x%016lX\n", bprm->filename, bprm->interp, vaddr );
 		/*
 		 * If we are loading ET_EXEC or we have already performed
 		 * the ET_DYN load_addr calculations, proceed normally.

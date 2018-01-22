@@ -17,7 +17,7 @@ extern spinlock_t entropy_analysis_lock;
 
 //extern recorded_kernel_entropy
 
-typedef struct
+typedef struct // NOT USED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 {
    unsigned long stack_canary;
    char comm[TASK_COMM_LEN];

@@ -89,7 +89,9 @@
 //##################################
 #include <linux/spinlock.h>
 #include <exp/entropy_analysis.h>
+//bool is_kernel_entropy_recording = 1;
 bool is_kernel_entropy_recording = 1;
+//kee_stack_canary_set rec_ke_stack_canary[KE_RECORD_MAX__STACK_CANARY_SET];
 //##################################
 
 #define CREATE_TRACE_POINTS
@@ -114,10 +116,11 @@ extern int unprivileged_userns_clone;
 //##################################
 
 DEFINE_SPINLOCK(entropy_analysis_lock);
-process_kernel_entropy * current_ke_record;
+//process_kernel_entropy * current_ke_record;
+kernel_entropy_event  * current_ke_record;
 size_t task_exe_name_len = 0;
-unsigned long kernel_entropy_record_size = 0;
-process_kernel_entropy recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
+//unsigned long kernel_entropy_record_size = 0;
+//process_kernel_entropy recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
 
 //##################################
 
@@ -398,25 +401,9 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 	printk(KERN_EMERG ">>>>>> tsk->comm %s\n", tsk->comm);
 #ifdef CONFIG_CC_STACKPROTECTOR
 	tsk->stack_canary = get_random_long();
+	kernel_entropy_rec_stack_canary(tsk->stack_canary, tsk->comm, tsk->pid, print_keent_msg);
 #endif
-	if(is_kernel_entropy_recording)
-	{
-		current_ke_record = &recorded_kernel_entropy[kernel_entropy_record_size];
-		task_exe_name_len = strlen(tsk->comm);
-		strncpy(current_ke_record->comm, tsk->comm, task_exe_name_len);
 
-	#ifdef CONFIG_CC_STACKPROTECTOR
-		current_ke_record->stack_canary = tsk->stack_canary;
-	#endif
-
-		current_ke_record->pid = tsk->pid;
-		if(print_keent_msg)
-			printk(KERN_EMERG ">>>>>> dup_task_struct - kernel_entropy_record_size: %zu - %d - %lx - %s\n", kernel_entropy_record_size, current_ke_record->pid, current_ke_record->stack_canary, current_ke_record->comm);
-		kernel_entropy_record_size = kernel_entropy_record_size + 1;
-
-		if(kernel_entropy_record_size >= KERNEL_ENTROPY_RECORD_MAX)
-			is_kernel_entropy_recording = 0;
-	}
 	spin_unlock(&entropy_analysis_lock);
 	//################################## <--
 

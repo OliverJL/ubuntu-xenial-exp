@@ -13,30 +13,186 @@
 #include<linux/syscalls.h>
 #include <exp/entropy_analysis.h>
 
-unsigned long ret_kernel_entropy_record_size;
+//unsigned long ret_kernel_entropy_record_size;
+//unsigned long kernel_entropy_record_size = 0;
 
-asmlinkage long sys_kernel_entropy_get_size(void)
+kernel_entropy_event recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
+kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
+kee_stack_canary_set rec_ke_stack_canary[KE_RECORD_MAX__STACK_CANARY_SET];
+
+
+kernel_entropy_rec_info ke_rec_info;
+
+
+asmlinkage long sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer)
 {
-	spin_lock(&entropy_analysis_lock);
-	ret_kernel_entropy_record_size = kernel_entropy_record_size;
-	spin_unlock(&entropy_analysis_lock);
-	return ret_kernel_entropy_record_size;
+
+	copy_to_user(target_buffer, &ke_rec_info, sizeof(kernel_entropy_rec_info));
+	return 0;
 }
 
 unsigned long recorded_kernel_entropy_size = 0;
 int ret_kernel_entropy_copy_to_user = 0;
 
-asmlinkage long sys_kernel_entropy_get_recorded(process_kernel_entropy * target_buffer)
+kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 {
-	if(target_buffer == NULL)
+	kernel_entropy_event * rec = NULL;
+
+	if(ke_rec_info.kee_rec_id >= KERNEL_ENTROPY_RECORD_MAX)
+	{
+		is_kernel_entropy_recording = 0;
+		printk(KERN_EMERG ">>>>>> KERNEL_ENTROPY_RECORD_MAX reached!!!");
+	}
+	else
+	{
+		kernel_entropy_event * rec;
+		rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
+		rec->id = kernel_entropy_rec_id ++;
+		rec->event_type = event_type;
+
+		switch(event_type)
+		{
+		case KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE:
+		case KEETYPE__ADD_INT_RND__FAST_POOL_LT_64:
+		case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
+			rec->event_details = kernel_entropy_malloc_interrupt();
+			break;
+		case KEETYPE__RND_INT_SECRET_INIT:
+			break;
+		case KEETYPE__STACK_CANARY_SET:
+			rec->event_details = kernel_entropy_malloc_stack_canary();
+			break;
+		case KEETYPE__ASLR_RND_SET:
+			break;
+		}
+	}
+	return rec;
+}
+
+void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, bool print_dmesg)
+{
+	kernel_entropy_event * ke_event;
+	kee_add_interrupt_rnd * int_rnd_event;
+
+	ke_event = kernel_entropy_malloc_event(event);
+	int_rnd_event = (kee_add_interrupt_rnd *)ke_event->event_details;
+	int_rnd_event->irq = irq;
+	int_rnd_event->irq_flags;
+	int_rnd_event->cycles = cycles;
+	int_rnd_event->now_jiffies = now_jiffies;
+	int_rnd_event->ip = ip;
+}
+
+void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pid_t pid, bool print_dmesg)
+{
+	kernel_entropy_event * ke_event;
+	kee_stack_canary_set * stc_set_event;
+	size_t task_exe_name_len;
+
+	stc_set_event = (kee_stack_canary_set *)kernel_entropy_malloc_event(KEETYPE__STACK_CANARY_SET);
+	stc_set_event->stack_canary = stack_canary;
+	task_exe_name_len = strlen(comm);
+	strncpy(stc_set_event->comm, comm, task_exe_name_len);
+	stc_set_event->pid = pid;
+
+	if(print_dmesg)
+		printk(KERN_EMERG ">>>>>> dup_task_struct - kernel_entropy_record_size: %zu - %d - %lx - %s\n", ke_rec_info.kee_stack_canary_set_id, pid, stack_canary, comm);
+}
+
+kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void)
+{
+	kee_add_interrupt_rnd * rec = NULL;
+	if(ke_rec_info.kee_add_interrupt_rnd_id >= KE_RECORD_MAX__ADD_INT_RND)
+	{
+		is_kernel_entropy_recording = 0;
+		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__ADD_INT_RND reached!!!");
+	}
+	else
+	{
+		rec = &rec_ke_add_interrupt_rnd[ke_rec_info.kee_add_interrupt_rnd_id++];
+	}
+	return rec;
+}
+
+kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void)
+{
+	kee_stack_canary_set * rec = NULL;
+	if(ke_rec_info.kee_stack_canary_set_id >= KE_RECORD_MAX__STACK_CANARY_SET)
+	{
+		is_kernel_entropy_recording = 0;
+		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__STACK_CANARY_SET reached!!!");
+	}
+	else
+	{
+		rec = &rec_ke_stack_canary[ke_rec_info.kee_stack_canary_set_id++];
+	}
+	return rec;
+}
+
+/*
+void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char comm[16], pid_t pid, bool print_dmesg)
+{
+// if(is_kernel_entropy_recording)
+
+ // STACK_CANARY_SET
+	/*
+		task_exe_name_len = strlen(tsk->comm);
+		strncpy(current_ke_record->comm, tsk->comm, task_exe_name_len);
+	 * /
+	// printk(KERN_EMERG ">>>>>> dup_task_struct - kernel_entropy_record_size: %zu - %d - %lx - %s\n", kernel_entropy_record_size, current_ke_record->pid, current_ke_record->stack_canary, current_ke_record->comm);
+}
+ */
+
+
+asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set)
+{
+	int kee_rec_cntr = 0;
+	int kee_add_int_rnd_cntr = 0;
+	int tb_kee_stc_set_cntr = 0;
+	kernel_entropy_event * ke_event;
+
+	if(tb_ke_event == NULL)
 		return -1;
+	if(tb_kee_add_int_rnd == NULL)
+		return -2;
+	if(tb_kee_stc_set == NULL)
+		return -3;
+
+	while(kee_rec_cntr < ke_rec_info.kee_rec_id )
+	{
+		ke_event = &recorded_kernel_entropy[kee_rec_cntr];
+		copy_to_user(&tb_ke_event[kee_rec_cntr], ke_event, sizeof(kernel_entropy_event));
+
+		switch(ke_event->event_type)
+		{
+			case KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE:
+			case KEETYPE__ADD_INT_RND__FAST_POOL_LT_64:
+			case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
+				copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], ke_event->event_details, sizeof(kee_add_interrupt_rnd));
+				kee_add_int_rnd_cntr ++;
+				tb_ke_event[kee_rec_cntr].event_details = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
+				break;
+			case KEETYPE__RND_INT_SECRET_INIT:
+				break;
+			case KEETYPE__STACK_CANARY_SET:
+
+				break;
+			case KEETYPE__ASLR_RND_SET:
+				break;
+		}
+
+		kee_rec_cntr ++;
+	}
+
+	/*
 	spin_lock(&entropy_analysis_lock);
-	printk(KERN_EMERG ">>>>>> sizeof(process_kernel_entropy): %zu \n", sizeof(process_kernel_entropy));
-	recorded_kernel_entropy_size = ((kernel_entropy_record_size + 1) * sizeof(process_kernel_entropy));
+	printk(KERN_EMERG ">>>>>> sizeof(process_kernel_entropy): %zu \n", sizeof(kernel_entropy_event));
+	recorded_kernel_entropy_size = ((kernel_entropy_record_size + 1) * sizeof(kernel_entropy_event));
 	printk(KERN_EMERG ">>>>>> recorded_kernel_entropy_size: %zu \n", recorded_kernel_entropy_size);
 	ret_kernel_entropy_copy_to_user = copy_to_user (target_buffer, &recorded_kernel_entropy, recorded_kernel_entropy_size);
 	printk(KERN_EMERG ">>>>>> ret_kernel_entropy_copy_to_user: %zu \n", ret_kernel_entropy_copy_to_user);
     spin_unlock(&entropy_analysis_lock);
+    */
 	return 0;
 }
 
