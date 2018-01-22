@@ -168,7 +168,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 	while(kee_rec_cntr < ke_rec_info.kee_rec_id )
 	{
 		ke_event = &recorded_kernel_entropy[kee_rec_cntr];
-		printk(KERN_EMERG ">>>>>> kernel_entropy_malloc_event rec->id:%zu - rec->event_type:%zu", rec->id, rec->event_type);
+		printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recorded ke_event->id:%zu - ke_event->event_type:%zu", ke_event->id, ke_event->event_type);
 		copy_to_user(&tb_ke_event[kee_rec_cntr], ke_event, sizeof(kernel_entropy_event));
 
 		switch(ke_event->event_type)
