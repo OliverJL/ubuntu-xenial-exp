@@ -26,7 +26,7 @@ kernel_entropy_rec_info ke_rec_info;
 
 asmlinkage long sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer)
 {
-
+	printk(KERN_EMERG ">>>>>> sys_kernel_entropy_rec_info kee_rec_id:%zu - kee_add_interrupt_rnd_id:%zu - kee_stack_canary_set_id:%zu!!!", ke_rec_info.kee_rec_id, ke_rec_info.kee_add_interrupt_rnd_id, ke_rec_info.kee_stack_canary_set_id);
 	copy_to_user(target_buffer, &ke_rec_info, sizeof(kernel_entropy_rec_info));
 	return 0;
 }
@@ -47,8 +47,10 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 	{
 		kernel_entropy_event * rec;
 		rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
-		rec->id = kernel_entropy_rec_id ++;
+		rec->id = ke_rec_info.kee_rec_id ++;
 		rec->event_type = event_type;
+
+		printk(KERN_EMERG ">>>>>> kernel_entropy_malloc_event rec->id:%zu - rec->event_type:%zu", rec->id, rec->event_type);
 
 		switch(event_type)
 		{
@@ -71,11 +73,12 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 
 void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, bool print_dmesg)
 {
-	/*
+
 	kernel_entropy_event * ke_event;
 	kee_add_interrupt_rnd * int_rnd_event;
 
 	ke_event = kernel_entropy_malloc_event(event);
+	/*
 	int_rnd_event = (kee_add_interrupt_rnd *)ke_event->event_details;
 	int_rnd_event->irq = irq;
 	int_rnd_event->irq_flags;
@@ -165,6 +168,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 	while(kee_rec_cntr < ke_rec_info.kee_rec_id )
 	{
 		ke_event = &recorded_kernel_entropy[kee_rec_cntr];
+		printk(KERN_EMERG ">>>>>> kernel_entropy_malloc_event rec->id:%zu - rec->event_type:%zu", rec->id, rec->event_type);
 		copy_to_user(&tb_ke_event[kee_rec_cntr], ke_event, sizeof(kernel_entropy_event));
 
 		switch(ke_event->event_type)
@@ -173,8 +177,8 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			case KEETYPE__ADD_INT_RND__FAST_POOL_LT_64:
 			case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
 				copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], ke_event->event_details, sizeof(kee_add_interrupt_rnd));
-				kee_add_int_rnd_cntr ++;
 				tb_ke_event[kee_rec_cntr].event_details = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
+				kee_add_int_rnd_cntr ++;
 				break;
 			case KEETYPE__RND_INT_SECRET_INIT:
 				break;
