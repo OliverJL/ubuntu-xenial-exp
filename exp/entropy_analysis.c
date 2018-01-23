@@ -157,6 +157,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 	int kee_add_int_rnd_cntr = 0;
 	int tb_kee_stc_set_cntr = 0;
 	kernel_entropy_event * ke_event;
+	kernel_entropy_event * tb_kee;
 
 	if(tb_ke_event == NULL)
 		return -1;
@@ -168,6 +169,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 	while(kee_rec_cntr < ke_rec_info.kee_rec_id )
 	{
 		ke_event = &recorded_kernel_entropy[kee_rec_cntr];
+		tb_kee = &tb_ke_event[kee_rec_cntr];
 		printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recorded ke_event->id:%zu - ke_event->event_type:%zu", ke_event->id, ke_event->event_type);
 		copy_to_user(&tb_ke_event[kee_rec_cntr], &ke_event, sizeof(kernel_entropy_event));
 
@@ -179,7 +181,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ????????");
 				copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], &ke_event->event_details, sizeof(kee_add_interrupt_rnd));
 				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ !!!!!!!!");
-				tb_ke_event[kee_rec_cntr].event_details = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
+				tb_kee->event_details = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
 				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ $$$$$$$$");
 				kee_add_int_rnd_cntr ++;
 				break;
