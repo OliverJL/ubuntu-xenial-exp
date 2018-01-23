@@ -181,7 +181,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ????????");
 				copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], &ke_event->event_details, sizeof(kee_add_interrupt_rnd));
 				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ !!!!!!!!");
-				tb_kee->event_details = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
+				//tb_kee->event_details = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
 				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ $$$$$$$$");
 				kee_add_int_rnd_cntr ++;
 				break;
@@ -193,7 +193,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			case KEETYPE__ASLR_RND_SET:
 				break;
 		}
-
+		printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ kee_rec_cntr++");
 		kee_rec_cntr ++;
 	}
 
