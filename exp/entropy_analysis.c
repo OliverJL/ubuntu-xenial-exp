@@ -176,6 +176,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			case KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE:
 			case KEETYPE__ADD_INT_RND__FAST_POOL_LT_64:
 			case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
+				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ????????");
 				copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], ke_event->event_details, sizeof(kee_add_interrupt_rnd));
 				tb_ke_event[kee_rec_cntr].event_details = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
 				kee_add_int_rnd_cntr ++;
