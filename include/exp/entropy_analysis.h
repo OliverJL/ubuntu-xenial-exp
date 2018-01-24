@@ -77,8 +77,8 @@ extern unsigned long kernel_entropy_record_size;
 #define KERNEL_ENTROPY_RECORD_MAX 1000000
 extern kernel_entropy_event recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
 
-#define KE_RECORD_MAX__ADD_INT_RND 1000
-#define KE_RECORD_MAX__STACK_CANARY_SET 50000
+#define KE_RECORD_MAX__ADD_INT_RND 1000000
+#define KE_RECORD_MAX__STACK_CANARY_SET 1000000
 
 extern kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
 extern kee_stack_canary_set rec_ke_stack_canary[KE_RECORD_MAX__STACK_CANARY_SET];
