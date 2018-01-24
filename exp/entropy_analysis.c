@@ -155,7 +155,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 {
 	int kee_rec_cntr = 0;
 	int kee_add_int_rnd_cntr = 0;
-	int tb_kee_stc_set_cntr = 0;
+	//int tb_kee_stc_set_cntr = 0;
 	kernel_entropy_event * ke_event;
 	kernel_entropy_event * tb_kee;
 	kee_add_interrupt_rnd * trg_add_int_rnd_event;
@@ -171,7 +171,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 	{
 		ke_event = &recorded_kernel_entropy[kee_rec_cntr];
 		tb_kee = &tb_ke_event[kee_rec_cntr];
-		printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recorded ke_event->id:%zu - ke_event->event_type:%zu", ke_event->id, ke_event->event_type);
+		//printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recorded ke_event->id:%zu - ke_event->event_type:%zu", ke_event->id, ke_event->event_type);
 		copy_to_user(&tb_ke_event[kee_rec_cntr], &ke_event, sizeof(kernel_entropy_event));
 
 		switch(ke_event->event_type)
@@ -179,27 +179,31 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			case KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE:
 			case KEETYPE__ADD_INT_RND__FAST_POOL_LT_64:
 			case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ????????");
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ????????");
 				copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], &ke_event->event_details, sizeof(kee_add_interrupt_rnd));
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ !!!!!!!!");
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee_add_int_rnd[kee_add_int_rnd_cntr]: 0x%08X", &tb_kee_add_int_rnd[kee_add_int_rnd_cntr]);
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ tb_kee: 0x%08X", tb_kee);
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee: 0x%08X", &tb_kee);
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ !!!!!!!!");
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee_add_int_rnd[kee_add_int_rnd_cntr]: 0x%08X", &tb_kee_add_int_rnd[kee_add_int_rnd_cntr]);
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ tb_kee: 0x%08X", tb_kee);
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee: 0x%08X", &tb_kee);
 /*
-				 [613553.913504] >>>>>> KEETYPE__ADD_INT_RND__ ????????
-				[613553.914018] >>>>>> KEETYPE__ADD_INT_RND__ !!!!!!!!
-				[613553.914520] >>>>>> KEETYPE__ADD_INT_RND__ &tb_kee_add_int_rnd[kee_add_int_rnd_cntr]: 0x00602100
-				[613553.915046] >>>>>> KEETYPE__ADD_INT_RND__ tb_kee: 0x006020E0
-				[613553.915541] >>>>>> KEETYPE__ADD_INT_RND__ &tb_kee: 0x97553F10
-				[613553.916018] >>>>>> KEETYPE__ADD_INT_RND__ trg_add_int_rnd_event: 0x00602100
+			[614644.261435] >>>>>> KEETYPE__ADD_INT_RND__ ????????
+			[614644.261987] >>>>>> KEETYPE__ADD_INT_RND__ !!!!!!!!
+			[614644.261996] >>>>>> KEETYPE__ADD_INT_RND__ &tb_kee_add_int_rnd[kee_add_int_rnd_cntr]: 0x00602100
+			[614644.262562] >>>>>> KEETYPE__ADD_INT_RND__ tb_kee: 0x006020E0
+			[614644.263180] >>>>>> KEETYPE__ADD_INT_RND__ &tb_kee: 0x9601BF10
+			[614644.263758] >>>>>> KEETYPE__ADD_INT_RND__ trg_add_int_rnd_event:  0x00602100
+			[614644.264380] >>>>>> KEETYPE__ADD_INT_RND__ &tb_kee->event_details: 0x006020E6
+			[614644.264959] BUG: unable to handle kernel paging request at 00000000006020e6
+			[614644.266094] IP: [<ffffffff813fb428>] sys_kernel_entropy_get_recorded+0x1a8/0x1d0
+			[614644.266675] PGD 95abf067 PUD 376a0067 PMD 97a88067 PTE 8000000093ab0867
  */
 				trg_add_int_rnd_event = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ trg_add_int_rnd_event: 0x%08X", trg_add_int_rnd_event);
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ trg_add_int_rnd_event: 0x%08X", trg_add_int_rnd_event);
 				//tb_kee->event_details = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee->event_details: 0x%08X", &tb_kee->event_details);
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ tb_kee->event_details: 0x%08X", tb_kee->event_details);
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee->event_details: 0x%08X", &tb_kee->event_details);
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ tb_kee->event_details: 0x%08X", tb_kee->event_details);
 				tb_kee->event_details = trg_add_int_rnd_event;
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ $$$$$$$$");
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ $$$$$$$$");
 				kee_add_int_rnd_cntr ++;
 				break;
 			case KEETYPE__RND_INT_SECRET_INIT:
@@ -210,7 +214,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			case KEETYPE__ASLR_RND_SET:
 				break;
 		}
-		printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ kee_rec_cntr++");
+		//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ kee_rec_cntr++");
 		kee_rec_cntr ++;
 	}
 
