@@ -57,7 +57,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 		case KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE:
 		case KEETYPE__ADD_INT_RND__FAST_POOL_LT_64:
 		case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
-			//rec->event_details = kernel_entropy_malloc_interrupt();
+			rec->event_details = kernel_entropy_malloc_interrupt();
 			break;
 		case KEETYPE__RND_INT_SECRET_INIT:
 			break;
@@ -155,7 +155,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 {
 	int kee_rec_cntr = 0;
 	int kee_add_int_rnd_cntr = 0;
-	//int tb_kee_stc_set_cntr = 0;
+	int tb_kee_stc_set_cntr = 0;
 	kernel_entropy_event * ke_event;
 	kernel_entropy_event * tb_kee;
 	kee_add_interrupt_rnd * trg_add_int_rnd_event;
