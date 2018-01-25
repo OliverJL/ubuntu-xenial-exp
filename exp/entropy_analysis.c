@@ -46,7 +46,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 	}
 	else
 	{
-		kernel_entropy_event * rec;
+		//kernel_entropy_event * rec;
 		rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
 		rec->id = ke_rec_info.kee_rec_id ++;
 		rec->event_type = event_type;
