@@ -82,12 +82,16 @@ void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t 
 
 	if(ke_event != NULL)
 	{
+		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_interrupt - ke_event->event_details: 0x%08X", ke_event->event_details);
 		int_rnd_event = (kee_add_interrupt_rnd *)ke_event->event_details;
 		int_rnd_event->irq = irq;
 		int_rnd_event->irq_flags;
 		int_rnd_event->cycles = cycles;
 		int_rnd_event->now_jiffies = now_jiffies;
 		int_rnd_event->ip = ip;
+	}else
+	{
+		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_interrupt - ke_event == NULL!!!");
 	}
 }
 
