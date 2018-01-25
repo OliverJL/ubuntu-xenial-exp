@@ -118,7 +118,7 @@ kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void)
 	else
 	{
 		rec = &rec_ke_add_interrupt_rnd[ke_rec_info.kee_add_interrupt_rnd_id++];
-		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__ADD_INT_RND kee_add_interrupt_rnd_id: %d - 0x%08X !!!", (ke_rec_info.kee_add_interrupt_rnd_id - 1), rec);
+		//printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__ADD_INT_RND kee_add_interrupt_rnd_id: %d - 0x%08X !!!", (ke_rec_info.kee_add_interrupt_rnd_id - 1), rec);
 	}
 	return rec;
 }
