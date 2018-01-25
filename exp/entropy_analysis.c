@@ -51,7 +51,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 		rec->id = ke_rec_info.kee_rec_id ++;
 		rec->event_type = event_type;
 
-		//printk(KERN_EMERG ">>>>>> kernel_entropy_malloc_event rec->id:%zu - rec->event_type:%zu", rec->id, rec->event_type);
+		printk(KERN_EMERG ">>>>>> kernel_entropy_malloc_event rec->id:%zu - rec->event_type:%zu", rec->id, rec->event_type);
 
 		switch(event_type)
 		{
@@ -80,12 +80,15 @@ void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t 
 
 	ke_event = kernel_entropy_malloc_event(event);
 
-	int_rnd_event = (kee_add_interrupt_rnd *)ke_event->event_details;
-	int_rnd_event->irq = irq;
-	int_rnd_event->irq_flags;
-	int_rnd_event->cycles = cycles;
-	int_rnd_event->now_jiffies = now_jiffies;
-	int_rnd_event->ip = ip;
+	if(ke_event != NULL)
+	{
+		int_rnd_event = (kee_add_interrupt_rnd *)ke_event->event_details;
+		int_rnd_event->irq = irq;
+		int_rnd_event->irq_flags;
+		int_rnd_event->cycles = cycles;
+		int_rnd_event->now_jiffies = now_jiffies;
+		int_rnd_event->ip = ip;
+	}
 }
 
 void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pid_t pid, bool print_dmesg)
@@ -117,7 +120,7 @@ kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void)
 	else
 	{
 		rec = &rec_ke_add_interrupt_rnd[ke_rec_info.kee_add_interrupt_rnd_id++];
-		//printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__ADD_INT_RND kee_add_interrupt_rnd_id: %d - 0x%08X !!!", (ke_rec_info.kee_add_interrupt_rnd_id - 1), rec);
+		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__ADD_INT_RND kee_add_interrupt_rnd_id: %d - 0x%08X !!!", (ke_rec_info.kee_add_interrupt_rnd_id - 1), rec);
 	}
 	return rec;
 }
