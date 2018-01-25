@@ -51,7 +51,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 		rec->id = ke_rec_info.kee_rec_id ++;
 		rec->event_type = event_type;
 
-		printk(KERN_EMERG ">>>>>> kernel_entropy_malloc_event rec->id:%zu - rec->event_type:%zu", rec->id, rec->event_type);
+		//printk(KERN_EMERG ">>>>>> kernel_entropy_malloc_event rec->id:%zu - rec->event_type:%zu", rec->id, rec->event_type);
 
 		switch(event_type)
 		{
