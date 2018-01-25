@@ -210,8 +210,9 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				//tb_kee->detail_index = kee_add_int_rnd_cntr;
 				//tb_kee->event_details = trg_add_int_rnd_event;
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ tb_kee->event_details: 0x%08X", tb_kee->event_details);
-				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ $$$$$$$$");
+				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ $$$$$$$$");
 				tb_kee->detail_index = kee_add_int_rnd_cntr;
+				printk(KERN_EMERG ">>>>>> kee_add_int_rnd_cntr ++");
 				kee_add_int_rnd_cntr ++;
 				break;
 			case KEETYPE__RND_INT_SECRET_INIT:
