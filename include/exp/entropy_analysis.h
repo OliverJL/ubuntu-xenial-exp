@@ -43,6 +43,7 @@ typedef struct
 {
 	   short event_type;
 	   unsigned int id;
+	   int detail_index;
 	   void * event_details;
 
 }kernel_entropy_event;
@@ -89,6 +90,7 @@ extern kernel_entropy_rec_info ke_rec_info;
 //asmlinkage kernel_entropy_rec_info sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer);
 asmlinkage long sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer);
 asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set);
+//asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event);
 asmlinkage long sys_kernel_entropy_start_recording(void);
 asmlinkage long sys_kernel_entropy_stop_recording(void);
 asmlinkage long sys_kernel_entropy_is_recording(void);
