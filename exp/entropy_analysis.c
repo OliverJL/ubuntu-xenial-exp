@@ -170,8 +170,6 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 	//kee_add_interrupt_rnd * trg_add_int_rnd_event;
 	kee_add_interrupt_rnd * kee_add_int_rnd;
 
-	return 0;
-
 	while(kee_rec_cntr < ke_rec_info.kee_rec_id )
 	{
 		ke_event = &recorded_kernel_entropy[kee_rec_cntr];
