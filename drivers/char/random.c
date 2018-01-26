@@ -414,7 +414,7 @@ static struct fasync_struct *fasync;
 static DEFINE_SPINLOCK(random_ready_list_lock);
 static LIST_HEAD(random_ready_list);
 
-int print_keent_msg = 0;
+int print_keent_msg = 1;
 
 //kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
 
@@ -966,11 +966,13 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	//if(print_keent_msg)
 		//printk(KERN_EMERG ">>>>>> add_interrupt_randomness ip: %llu !!!!!!\n", ip);
 
+	/*
 	if(print_keent_msg)
 	{
 		printk(KERN_EMERG ">>>>>> add_interrupt_randomness irq: %d - irq_flags: %d !!!!!!\n", irq, irq_flags);
 		printk(KERN_EMERG ">>>>>> add_interrupt_randomness irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", irq, irq_flags, cycles, now, ip);
 	}
+	*/
 
 	fast_pool->pool[2] ^= ip;
 	fast_pool->pool[3] ^= (sizeof(ip) > 4) ? ip >> 32 :
@@ -983,7 +985,8 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	    !time_after(now, fast_pool->last + HZ))
 	{
 		if(print_keent_msg)
-			printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return (fast_pool->count < 64)... !!!!!!\n", irq, irq_flags);
+			//printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return (fast_pool->count < 64)... !!!!!!\n", irq, irq_flags);
+			printk(KERN_EMERG ">>>>>> add_interrupt_randomness 1 irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", irq, irq_flags, cycles, now, ip);
 		if(is_kernel_entropy_recording)
 			kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__FAST_POOL_LT_64, irq, irq_flags, cycles, now, ip, print_keent_msg);
 		return;
@@ -993,7 +996,8 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	if (!spin_trylock(&r->lock))
 	{
 		if(print_keent_msg)
-			printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return spin_trylock(&r->lock)... !!!!!!\n", irq, irq_flags);
+			//printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return spin_trylock(&r->lock)... !!!!!!\n", irq, irq_flags);
+			printk(KERN_EMERG ">>>>>> add_interrupt_randomness 2 irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", irq, irq_flags, cycles, now, ip);
 		if(is_kernel_entropy_recording)
 			kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__SPIN_TRYLOCK, irq, irq_flags, cycles, now, ip, print_keent_msg);
 		return;
@@ -1020,6 +1024,9 @@ void add_interrupt_randomness(int irq, int irq_flags)
 
 	/* award one bit for the contents of the fast pool */
 	credit_entropy_bits(r, credit + 1);
+
+	if(print_keent_msg)
+		printk(KERN_EMERG ">>>>>> add_interrupt_randomness 2 irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", irq, irq_flags, cycles, now, ip);
 
 	if(is_kernel_entropy_recording)
 		kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE, irq, irq_flags, cycles, now, ip, print_keent_msg);
