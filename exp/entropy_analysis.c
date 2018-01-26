@@ -344,23 +344,23 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 
 asmlinkage long sys_kernel_entropy_start_recording(void)
 {
-	spin_lock(&entropy_analysis_lock);
+	//spin_lock(&entropy_analysis_lock);
 	is_kernel_entropy_recording = 1;
-	spin_unlock(&entropy_analysis_lock);
+	//spin_unlock(&entropy_analysis_lock);
 	return 0;
 }
 
 asmlinkage long sys_kernel_entropy_stop_recording(void)
 {
-	spin_lock(&entropy_analysis_lock);
+	//spin_lock(&entropy_analysis_lock);
 	is_kernel_entropy_recording = 0;
-	spin_unlock(&entropy_analysis_lock);
+	//spin_unlock(&entropy_analysis_lock);
 	return 0;
 }
 
 asmlinkage long sys_kernel_entropy_is_recording(void)
 {
-	spin_lock(&entropy_analysis_lock);
+	//spin_lock(&entropy_analysis_lock);
 	return is_kernel_entropy_recording;
-	spin_unlock(&entropy_analysis_lock);
+	//spin_unlock(&entropy_analysis_lock);
 }
