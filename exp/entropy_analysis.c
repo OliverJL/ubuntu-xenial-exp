@@ -200,13 +200,13 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ kee_add_int_rnd_cntr:%d", kee_add_int_rnd_cntr);
 				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND ke_event->detail_index = kee_add_int_rnd_cntr;");
-				//ke_event->detail_index = kee_add_int_rnd_cntr;
+				ke_event->detail_index = kee_add_int_rnd_cntr;
 				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND copy_to_user");
 				//copy_to_user(&tb_ke_event[kee_rec_cntr], ke_event, sizeof(kernel_entropy_event));
 				//copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND tb_ke_event[kee_rec_cntr]->id:%d, ke_event->id:%d", tb_ke_event[kee_rec_cntr].id, ke_event->id);
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND tb_ke_event[kee_rec_cntr]->event_type:%d, ke_event->event_type:%d", tb_ke_event[kee_rec_cntr].event_type, ke_event->event_type);
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ????????");
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ????????");
 				copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], &ke_event->event_details, sizeof(kee_add_interrupt_rnd));
 
 				//copy_to_user(&tb_kee->event_details, &ke_event->event_details, sizeof(kee_add_interrupt_rnd));
@@ -226,18 +226,18 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			[614644.266094] IP: [<ffffffff813fb428>] sys_kernel_entropy_get_recorded+0x1a8/0x1d0
 			[614644.266675] PGD 95abf067 PUD 376a0067 PMD 97a88067 PTE 8000000093ab0867
  */
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ YYYYYYYYYYY");
-				trg_add_int_rnd_event = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ YYYYYYYYYYY");
+				//trg_add_int_rnd_event = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ trg_add_int_rnd_event: 0x%08X", trg_add_int_rnd_event);
 				//tb_kee->event_details = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee->event_details: 0x%08X", &tb_kee->event_details);
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ tb_kee->event_details = trg_add_int_rnd_event");
 				//tb_kee->detail_index = kee_add_int_rnd_cntr;
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ZZZZZZZZZZZ");
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ trg_add_int_rnd_event: 0x%08X", trg_add_int_rnd_event);
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee: 0x%08X", tb_kee);
-				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee->event_details: 0x%08X", &(tb_kee->event_details));
-				tb_kee->event_details = trg_add_int_rnd_event;
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ZZZZZZZZZZZ");
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ trg_add_int_rnd_event: 0x%08X", trg_add_int_rnd_event);
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee: 0x%08X", tb_kee);
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee->event_details: 0x%08X", &(tb_kee->event_details));
+				//tb_kee->event_details = trg_add_int_rnd_event;
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ tb_kee->event_details: 0x%08X", tb_kee->event_details);
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ $$$$$$$$");
 				//tb_kee->detail_index = kee_add_int_rnd_cntr;
