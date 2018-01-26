@@ -26,10 +26,9 @@ kernel_entropy_rec_info ke_rec_info;
 
 asmlinkage long sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer)
 {
-	printk(KERN_EMERG ">>>>>> sys_kernel_entropy_rec_info kee_rec_id:%zu - kee_add_interrupt_rnd_id:%zu - kee_stack_canary_set_id:%zu!!!", ke_rec_info.kee_rec_id, ke_rec_info.kee_add_interrupt_rnd_id, ke_rec_info.kee_stack_canary_set_id);
-	copy_to_user(target_buffer, &ke_rec_info, sizeof(kernel_entropy_rec_info));
-	printk(KERN_EMERG ">>>>>> sys_kernel_entropy_rec_info - return 0");
-	return 0;
+	//printk(KERN_EMERG ">>>>>> sys_kernel_entropy_rec_info kee_rec_id:%zu - kee_add_interrupt_rnd_id:%zu - kee_stack_canary_set_id:%zu!!!", ke_rec_info.kee_rec_id, ke_rec_info.kee_add_interrupt_rnd_id, ke_rec_info.kee_stack_canary_set_id);
+	return copy_to_user(target_buffer, &ke_rec_info, sizeof(kernel_entropy_rec_info));
+	//printk(KERN_EMERG ">>>>>> sys_kernel_entropy_rec_info - return 0");
 }
 
 unsigned long recorded_kernel_entropy_size = 0;
