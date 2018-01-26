@@ -200,7 +200,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ kee_add_int_rnd_cntr:%d", kee_add_int_rnd_cntr);
 				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND ke_event->detail_index = kee_add_int_rnd_cntr;");
-				ke_event->detail_index = kee_add_int_rnd_cntr;
+				//ke_event->detail_index = kee_add_int_rnd_cntr;
 				printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND copy_to_user");
 				//copy_to_user(&tb_ke_event[kee_rec_cntr], ke_event, sizeof(kernel_entropy_event));
 				//copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
