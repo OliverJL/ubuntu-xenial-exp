@@ -71,6 +71,9 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 	return rec;
 }
 
+int print_rec_interrupt_max = 30;
+int print_rec_interrupt_cntr = 0;
+
 void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, bool print_dmesg)
 {
 
@@ -84,10 +87,18 @@ void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t 
 		//printk(KERN_EMERG ">>>>>> kernel_entropy_rec_interrupt - ke_event->event_details: 0x%08X", ke_event->event_details);
 		int_rnd_event = (kee_add_interrupt_rnd *)ke_event->event_details;
 		int_rnd_event->irq = irq;
-		int_rnd_event->irq_flags;
+		int_rnd_event->irq_flags = irq_flags;
 		int_rnd_event->cycles = cycles;
 		int_rnd_event->now_jiffies = now_jiffies;
 		int_rnd_event->ip = ip;
+
+		if(print_rec_interrupt_cntr < print_rec_interrupt_max)
+		{
+			printk(KERN_EMERG ">>>>>> kernel_entropy_rec_interrupt [%d] irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", print_rec_interrupt_cntr, irq, irq_flags, cycles, now_jiffies, ip);
+			printk(KERN_EMERG ">>>>>> kernel_entropy_rec_interrupt [%d] irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", print_rec_interrupt_cntr, int_rnd_event->irq, int_rnd_event->irq_flags, int_rnd_event->cycles, int_rnd_event->now_jiffies, int_rnd_event->ip);
+			print_rec_interrupt_cntr ++;
+		}
+
 	}else
 	{
 		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_interrupt - ke_event == NULL!!!");
@@ -158,6 +169,9 @@ void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char comm[16], 
  */
 
 
+int print_get_recorded_max = 30;
+int print_get_recorded_cntr = 0;
+
 asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set)
 //asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event)
 {
@@ -208,6 +222,12 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ????????");
 				copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], &ke_event->event_details, sizeof(kee_add_interrupt_rnd));
 
+				if(print_get_recorded_cntr < print_get_recorded_max)
+				{
+					printk(KERN_EMERG ">>>>>> print_get_recorded src [%d] evnt:%d Addr:0x%08X - irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", print_get_recorded_cntr, tb_ke_event->id, ((kee_add_interrupt_rnd *)ke_event->event_details)->irq, ((kee_add_interrupt_rnd *)ke_event->event_details)->irq_flags, ((kee_add_interrupt_rnd *)ke_event->event_details)->cycles, ((kee_add_interrupt_rnd *)ke_event->event_details)->now_jiffies, ((kee_add_interrupt_rnd *)ke_event->event_details)->ip);
+					printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] evnt:%d Addr:0x%08X - irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", print_get_recorded_cntr, tb_ke_event->id, &tb_kee_add_int_rnd[kee_add_int_rnd_cntr], tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq_flags, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].cycles, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].now_jiffies, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].ip);
+					print_get_recorded_cntr ++;
+				}
 				//copy_to_user(&tb_kee->event_details, &ke_event->event_details, sizeof(kee_add_interrupt_rnd));
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ !!!!!!!!");
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ &tb_kee_add_int_rnd[kee_add_int_rnd_cntr]: 0x%08X", &tb_kee_add_int_rnd[kee_add_int_rnd_cntr]);
