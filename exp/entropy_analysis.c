@@ -231,6 +231,8 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 					//printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] Addr:0x%08X - irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", print_get_recorded_cntr, &tb_kee_add_int_rnd[kee_add_int_rnd_cntr], tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq_flags, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].cycles, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].now_jiffies, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].ip);
 					//printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] Addr:0x%08X - irq: 0x%08X\n", print_get_recorded_cntr, &tb_kee_add_int_rnd[kee_add_int_rnd_cntr], tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq);
 					printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] Addr:0x%08X\n", print_get_recorded_cntr, &tb_kee_add_int_rnd[kee_add_int_rnd_cntr] );
+					int irq = tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq;
+					printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] irq: 0x%08X \n", print_get_recorded_cntr, irq );
 					//kee_add_interrupt_rnd * kei = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
 
 					//printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] Addr:0x%08X - irq: 0x%08X\n", print_get_recorded_cntr, kei, kei->irq );
