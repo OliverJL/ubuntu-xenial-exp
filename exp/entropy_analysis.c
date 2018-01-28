@@ -268,6 +268,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ $$$$$$$$");
 				//tb_kee->detail_index = kee_add_int_rnd_cntr;
 				//printk(KERN_EMERG ">>>>>> kee_add_int_rnd_cntr ++");
+				printk(KERN_EMERG ">>>>>> kee_add_int_rnd_cntr ++: %d", kee_add_int_rnd_cntr );
 				kee_add_int_rnd_cntr ++;
 				break;
 			case KEETYPE__RND_INT_SECRET_INIT:
