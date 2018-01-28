@@ -224,7 +224,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 
 				if(print_get_recorded_cntr < print_get_recorded_max)
 				{
-					//printk(KERN_EMERG ">>>>>> print_get_recorded src [%d] evnt:%d Addr:0x%08X - irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", print_get_recorded_cntr, tb_ke_event->id, ((kee_add_interrupt_rnd *)ke_event->event_details)->irq, ((kee_add_interrupt_rnd *)ke_event->event_details)->irq_flags, ((kee_add_interrupt_rnd *)ke_event->event_details)->cycles, ((kee_add_interrupt_rnd *)ke_event->event_details)->now_jiffies, ((kee_add_interrupt_rnd *)ke_event->event_details)->ip);
+					printk(KERN_EMERG ">>>>>> print_get_recorded src [%d] evnt:%d Addr:0x%08X - irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", print_get_recorded_cntr, tb_ke_event->id, ((kee_add_interrupt_rnd *)ke_event->event_details)->irq, ((kee_add_interrupt_rnd *)ke_event->event_details)->irq_flags, ((kee_add_interrupt_rnd *)ke_event->event_details)->cycles, ((kee_add_interrupt_rnd *)ke_event->event_details)->now_jiffies, ((kee_add_interrupt_rnd *)ke_event->event_details)->ip);
 					//printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] evnt:%d Addr:0x%08X - irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", print_get_recorded_cntr, tb_ke_event->id, &tb_kee_add_int_rnd[kee_add_int_rnd_cntr], tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq_flags, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].cycles, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].now_jiffies, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].ip);
 					print_get_recorded_cntr ++;
 				}
