@@ -221,7 +221,10 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND tb_ke_event[kee_rec_cntr]->id:%d, ke_event->id:%d", tb_ke_event[kee_rec_cntr].id, ke_event->id);
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND tb_ke_event[kee_rec_cntr]->event_type:%d, ke_event->event_type:%d", tb_ke_event[kee_rec_cntr].event_type, ke_event->event_type);
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ ????????");
-				copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], &ke_event->event_details, sizeof(kee_add_interrupt_rnd));
+				// rec_ke_add_interrupt_rnd
+				//copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], &ke_event->event_details, sizeof(kee_add_interrupt_rnd));
+				printk(KERN_EMERG ">>>>>> copy_to_user src [%d] &rec_ke_add_interrupt_rnd[kee_add_int_rnd_cntr]: 0x%08X - ke_event->event_details: 0x%08X", &rec_ke_add_interrupt_rnd[kee_add_int_rnd_cntr], &ke_event->event_details);
+				copy_to_user(&tb_kee_add_int_rnd[kee_add_int_rnd_cntr], &rec_ke_add_interrupt_rnd[kee_add_int_rnd_cntr], sizeof(kee_add_interrupt_rnd));
 
 				if(print_get_recorded_cntr < print_get_recorded_max)
 				{
@@ -231,8 +234,8 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 					//printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] Addr:0x%08X - irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", print_get_recorded_cntr, &tb_kee_add_int_rnd[kee_add_int_rnd_cntr], tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq_flags, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].cycles, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].now_jiffies, tb_kee_add_int_rnd[kee_add_int_rnd_cntr].ip);
 					//printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] Addr:0x%08X - irq: 0x%08X\n", print_get_recorded_cntr, &tb_kee_add_int_rnd[kee_add_int_rnd_cntr], tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq);
 					printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] Addr:0x%08X\n", print_get_recorded_cntr, &tb_kee_add_int_rnd[kee_add_int_rnd_cntr] );
-					int irq = tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq;
-					printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] irq: 0x%08X \n", print_get_recorded_cntr, irq );
+					//int irq = tb_kee_add_int_rnd[kee_add_int_rnd_cntr].irq;
+					//printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] irq: 0x%08X \n", print_get_recorded_cntr, irq );
 					//kee_add_interrupt_rnd * kei = &tb_kee_add_int_rnd[kee_add_int_rnd_cntr];
 
 					//printk(KERN_EMERG ">>>>>> print_get_recorded trg [%d] Addr:0x%08X - irq: 0x%08X\n", print_get_recorded_cntr, kei, kei->irq );
