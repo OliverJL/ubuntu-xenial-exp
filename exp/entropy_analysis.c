@@ -125,6 +125,7 @@ void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pi
 		task_exe_name_len = strlen(comm);
 		strncpy(stc_set_event->comm, comm, task_exe_name_len);
 		stc_set_event->pid = pid;
+		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_stack_canary - %s" stc_set_event->comm);
 	}else
 	{
 		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_stack_canary - ke_event == NULL!!!");
