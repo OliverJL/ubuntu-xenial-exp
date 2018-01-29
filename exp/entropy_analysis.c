@@ -62,7 +62,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 		case KEETYPE__RND_INT_SECRET_INIT:
 			break;
 		case KEETYPE__STACK_CANARY_SET:
-			//rec->event_details = kernel_entropy_malloc_stack_canary();
+			rec->event_details = kernel_entropy_malloc_stack_canary();
 			break;
 		case KEETYPE__ASLR_RND_SET:
 			break;
@@ -120,12 +120,12 @@ void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pi
 
 	if(ke_event != NULL)
 	{
-		stc_set_event = (kee_stack_canary_set *)kernel_entropy_malloc_event(KEETYPE__STACK_CANARY_SET);
+		stc_set_event = (kee_stack_canary_set *)ke_event->event_details;
 		stc_set_event->stack_canary = stack_canary;
 		task_exe_name_len = strlen(comm);
 		strncpy(stc_set_event->comm, comm, task_exe_name_len);
 		stc_set_event->pid = pid;
-		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_stack_canary - %s", stc_set_event->comm);
+		//printk(KERN_EMERG ">>>>>> kernel_entropy_rec_stack_canary - %s", stc_set_event->comm);
 	}else
 	{
 		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_stack_canary - ke_event == NULL!!!");
