@@ -1891,6 +1891,7 @@ static u32 random_int_secret[MD5_MESSAGE_BYTES / 4] ____cacheline_aligned;
 int random_int_secret_init(void)
 {
 	printk(KERN_EMERG ">>>>>>>>>> - random_int_secret_init !!!!!!!!!!! \n" );
+	printk(KERN_EMERG ">>>>>>>>>> - sizeof(random_int_secret): %d !!!!!!!!!!! \n", sizeof(random_int_secret) );
 	get_random_bytes(random_int_secret, sizeof(random_int_secret));
 	kernel_entropy_rec_random_int_secret_set(&random_int_secret);
 	//printk(KERN_EMERG "random_int_secret_init - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
