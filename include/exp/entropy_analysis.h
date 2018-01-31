@@ -19,6 +19,7 @@
 #define KEETYPE__RND_INT_SECRET_INIT	 				3
 #define KEETYPE__STACK_CANARY_SET		 				4
 #define KEETYPE__ASLR_RND_SET			 				5
+#define KEETYPE__RANDOM_INT_SECRET_SET					6
 
 extern spinlock_t entropy_analysis_lock;
 
@@ -34,6 +35,7 @@ typedef struct
 	   unsigned int kee_rec_id;
 	   unsigned int kee_add_interrupt_rnd_id;
 	   unsigned int kee_stack_canary_set_id;
+	   bool random_int_secret_set;
 
 }kernel_entropy_rec_info;
 #pragma pack()
@@ -70,6 +72,30 @@ typedef struct
 } kee_stack_canary_set;
 #pragma pack()
 
+#pragma pack(1)
+typedef struct
+{
+   const char * filename;
+   char * elf_interpreter;
+   int elf_prot;
+   int elf_flags;
+   unsigned long load_addr;
+   unsigned long load_bias;
+   unsigned long entry_point;
+   unsigned long mmap_rnd;
+   unsigned long vaddr;
+} kee_aslr_set;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct
+{
+ u32 random_int_secret[16];
+} kee_rnd_int_secret_set;
+#pragma pack()
+
+
+
 
 
 extern bool is_kernel_entropy_recording;
@@ -89,7 +115,7 @@ extern kernel_entropy_rec_info ke_rec_info;
 
 //asmlinkage kernel_entropy_rec_info sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer);
 asmlinkage long sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer);
-asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set);
+asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set);
 //asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event);
 asmlinkage long sys_kernel_entropy_start_recording(void);
 asmlinkage long sys_kernel_entropy_stop_recording(void);
@@ -100,7 +126,8 @@ kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void);
 kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void);
 void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, bool print_dmesg);
 void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pid_t pid, bool print_dmesg);
-
+void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret);
+//ke_rec_info
 //asmlinkage long sys_kernel_entropy_rec_aslr(process_kernel_entropy rec);
 
 /*
