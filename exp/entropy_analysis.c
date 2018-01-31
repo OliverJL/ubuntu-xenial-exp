@@ -317,6 +317,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			case KEETYPE__ASLR_RND_SET:
 				break;
 			case KEETYPE__RANDOM_INT_SECRET_SET:
+				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
 				copy_to_user(tb_kee_rnd_int_secret_set, &rec_ke_rnd_int_secret, sizeof(kee_rnd_int_secret_set));
 				break;
 		}
