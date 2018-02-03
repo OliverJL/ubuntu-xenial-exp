@@ -126,8 +126,8 @@ extern kernel_entropy_event recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
 
 #define KE_RECORD_MAX__ADD_INT_RND 100000
 #define KE_RECORD_MAX__STACK_CANARY_SET 100000
-#define KE_RECORD_MAX__GET_RANDOM_INT 1000000
-#define KE_RECORD_MAX__GET_RANDOM_LONG 1000000
+#define KE_RECORD_MAX__GET_RANDOM_INT 100000
+#define KE_RECORD_MAX__GET_RANDOM_LONG 100000
 
 
 extern kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
