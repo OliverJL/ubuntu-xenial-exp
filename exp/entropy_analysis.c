@@ -54,6 +54,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 		rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
 		rec->id = ke_rec_info.kee_rec_id ++;
 		rec->event_type = event_type;
+		/*
 
 		//printk(KERN_EMERG ">>>>>> kernel_entropy_malloc_event rec->id:%zu - rec->event_type:%zu", rec->id, rec->event_type);
 
@@ -81,6 +82,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 			rec->event_details = kernel_entropy_malloc_get_rnd_long();
 			break;
 		}
+		*/
 	}
 	return rec;
 }
@@ -108,7 +110,7 @@ void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int
 	kernel_entropy_event * ke_event;
 	kee_get_rnd_int * get_rnd_int;
 
-	//ke_event = kernel_entropy_malloc_event(KEETYPE__GET_RANDOM_INT);
+	ke_event = kernel_entropy_malloc_event(KEETYPE__GET_RANDOM_INT);
 
 	if(ke_event != NULL)
 	{
