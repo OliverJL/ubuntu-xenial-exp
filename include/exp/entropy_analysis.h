@@ -121,7 +121,7 @@ typedef struct
 extern bool is_kernel_entropy_recording;
 extern unsigned long kernel_entropy_record_size;
 
-#define KERNEL_ENTROPY_RECORD_MAX 100000
+#define KERNEL_ENTROPY_RECORD_MAX 1000000
 extern kernel_entropy_event recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
 
 #define KE_RECORD_MAX__ADD_INT_RND 100000
