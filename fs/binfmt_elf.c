@@ -985,7 +985,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 					//else
 					//	load_bias += arch_mmap_rnd(0);
 					unsigned long mmap_rnd;
-					mmap_rnd = arch_mmap_rnd(0);
+					mmap_rnd = arch_mmap_rnd(0); // !!!!!!!!!!! RRRRRNNNNDDDDD
 					load_bias += mmap_rnd;
 					//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 					//printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_DYN - load_bias:0x%016lX\n", bprm->filename, bprm->interp, load_bias );

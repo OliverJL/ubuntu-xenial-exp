@@ -1931,6 +1931,7 @@ static DEFINE_PER_CPU(__u32 [MD5_DIGEST_WORDS], get_random_int_hash)
  * depleting entropy is too high
  */
 unsigned int get_random_int(void)
+//unsigned int get_random_int(char * req_src)
 {
 	__u32 *hash;
 	unsigned int ret;
@@ -1958,20 +1959,24 @@ unsigned int get_random_int(void)
 	if(print_keent_msg)
 		printk(KERN_EMERG "get_random_int - jiffies : %016lX\n", jiffies );
 	//hash[0] += current->pid + jiffies + random_get_entropy();
-	unsigned long re = random_get_entropy();
+	// random_get_entropy()	returns get_cycles() !!!!!!!!!!
+	unsigned long rnd_raw = random_get_entropy();// #define random_get_entropy()	get_cycles() /include/linux/timex.h
+	unsigned long rnd_final = rnd_raw;
 	if(print_keent_msg)
-		printk(KERN_EMERG "get_random_int - random_get_entropy : %016lX\n", re );
-	hash[0] += current->pid + jiffies + re;
+		printk(KERN_EMERG "get_random_int - random_get_entropy : %016lX\n", rnd_raw );
+	hash[0] += current->pid + jiffies + rnd_raw;
 	//printk(KERN_EMERG "get_random_int - random_int_secret : %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	//printk(KERN_EMERG "get_random_int - random_int_secret : %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	if(print_keent_msg)
 		printk(KERN_EMERG "get_random_int - random_int_secret : %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	md5_transform(hash, random_int_secret);
-	ret = hash[0];
+	rnd_final = hash[0];
 	put_cpu_var(get_random_int_hash);
+	kernel_entropy_rec_get_rnd_int(current->pid, jiffies, rnd_raw, rnd_final);
 
 	return ret;
 }
+
 EXPORT_SYMBOL(get_random_int);
 
 /*
@@ -1996,13 +2001,14 @@ unsigned long get_random_long(void)
 		printk(KERN_EMERG "get_random_long - current->pid : %d\n", current->pid );
 	//if(print_keent_msg)
 		printk(KERN_EMERG "get_random_long - jiffies : %016lX\n", jiffies );
+	// random_get_entropy()	returns get_cycles() !!!!!!!!!!
 	unsigned long re = random_get_entropy();
 	//if(print_keent_msg)
 		printk(KERN_EMERG "get_random_long - random_get_entropy : %016lX\n", re );
 	//hash[0] += current->pid + jiffies + random_get_entropy();
 	hash[0] += current->pid + jiffies + re;
 	//if(print_keent_msg)
-		printk(KERN_EMERG "get_random_long - random_int_secret : %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+		//printk(KERN_EMERG "get_random_long - random_int_secret : %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	md5_transform(hash, random_int_secret);
 	ret = *(unsigned long *)hash;
 	put_cpu_var(get_random_int_hash);
