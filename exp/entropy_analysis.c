@@ -75,7 +75,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 			rec->event_details = &rec_ke_rnd_int_secret;
 			break;
 		case KEETYPE__GET_RANDOM_INT:
-			rec->event_details = kernel_entropy_malloc_get_rnd_int();
+			//rec->event_details = kernel_entropy_malloc_get_rnd_int();
 			break;
 		case KEETYPE__GET_RANDOM_LONG:
 			rec->event_details = kernel_entropy_malloc_get_rnd_long();
