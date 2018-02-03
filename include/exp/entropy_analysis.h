@@ -24,6 +24,7 @@
 #define KEETYPE__GET_RANDOM_LONG						8
 
 extern spinlock_t entropy_analysis_lock;
+extern spinlock_t kernel_entropy_malloc_event_lock;
 
 extern int print_keent_msg;
 

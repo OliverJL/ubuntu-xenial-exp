@@ -17,6 +17,8 @@
 //unsigned long ret_kernel_entropy_record_size;
 //unsigned long kernel_entropy_record_size = 0;
 
+DEFINE_SPINLOCK(kernel_entropy_malloc_event_lock);
+
 kernel_entropy_event recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
 kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
 kee_stack_canary_set rec_ke_stack_canary[KE_RECORD_MAX__STACK_CANARY_SET];
@@ -41,6 +43,8 @@ int ret_kernel_entropy_copy_to_user = 0;
 
 kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 {
+
+	//spin_lock(&kernel_entropy_malloc_event_lock);
 	kernel_entropy_event * rec = NULL;
 
 	if(ke_rec_info.kee_rec_id >= KERNEL_ENTROPY_RECORD_MAX)
@@ -51,11 +55,11 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 	else
 	{
 		//kernel_entropy_event * rec;
-
+		/*
 		rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
 		rec->id = ke_rec_info.kee_rec_id ++;
 		rec->event_type = event_type;
-
+		*/
 
 		//printk(KERN_EMERG ">>>>>> kernel_entropy_malloc_event rec->id:%zu - rec->event_type:%zu", rec->id, rec->event_type);
 
@@ -64,11 +68,17 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 		case KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE:
 		case KEETYPE__ADD_INT_RND__FAST_POOL_LT_64:
 		case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
+			rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
+			rec->id = ke_rec_info.kee_rec_id ++;
+			rec->event_type = event_type;
 			rec->event_details = kernel_entropy_malloc_interrupt();
 			break;
 //		case KEETYPE__RND_INT_SECRET_INIT:
 //			break;
 		case KEETYPE__STACK_CANARY_SET:
+			rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
+			rec->id = ke_rec_info.kee_rec_id ++;
+			rec->event_type = event_type;
 			rec->event_details = kernel_entropy_malloc_stack_canary();
 			break;
 		case KEETYPE__ASLR_RND_SET:
@@ -80,10 +90,11 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 			//rec->event_details = kernel_entropy_malloc_get_rnd_int();
 			break;
 		case KEETYPE__GET_RANDOM_LONG:
-			rec->event_details = kernel_entropy_malloc_get_rnd_long();
+			//rec->event_details = kernel_entropy_malloc_get_rnd_long();
 			break;
 		}
 	}
+	//spin_unlock(&kernel_entropy_malloc_event_lock);
 	return rec;
 }
 
@@ -138,7 +149,7 @@ void kernel_entropy_rec_get_rnd_long(int pid, unsigned long jiffies, unsigned lo
 	kernel_entropy_event * ke_event;
 	kee_get_rnd_long * get_rnd_long;
 
-	//ke_event = kernel_entropy_malloc_event(KEETYPE__GET_RANDOM_LONG);
+	ke_event = kernel_entropy_malloc_event(KEETYPE__GET_RANDOM_LONG);
 
 	if(ke_event != NULL)
 	{
