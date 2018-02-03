@@ -1974,7 +1974,7 @@ unsigned int get_random_int(void)
 	rnd_final = hash[0];
 	put_cpu_var(get_random_int_hash);
 	//kernel_entropy_rec_get_rnd_int(current->pid, jiffies, rnd_raw, rnd_final);
-	kernel_entropy_rec_get_rnd_int(0,0,0,0);
+	//kernel_entropy_rec_get_rnd_int(0,0,0,0);
 
 	return rnd_final;
 }
