@@ -84,6 +84,9 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 		case KEETYPE__ASLR_RND_SET:
 			break;
 		case KEETYPE__RANDOM_INT_SECRET_SET:
+			rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
+			rec->id = ke_rec_info.kee_rec_id ++;
+			rec->event_type = event_type;
 			rec->event_details = &rec_ke_rnd_int_secret;
 			break;
 		case KEETYPE__GET_RANDOM_INT:
