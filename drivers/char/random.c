@@ -1972,7 +1972,7 @@ unsigned int get_random_int(void)
 	md5_transform(hash, random_int_secret);
 	rnd_final = hash[0];
 	put_cpu_var(get_random_int_hash);
-	kernel_entropy_rec_get_rnd_int(current->pid, jiffies, rnd_raw, rnd_final);
+	//kernel_entropy_rec_get_rnd_int(current->pid, jiffies, rnd_raw, rnd_final);
 
 	return ret;
 }
