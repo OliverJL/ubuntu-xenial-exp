@@ -212,7 +212,7 @@ kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void)
 	}
 	else
 	{
-		rec = &rec_ke_get_rnd_int[ke_rec_info.kee_get_random_int++];
+		//rec = &rec_ke_get_rnd_int[ke_rec_info.kee_get_random_int++];
 	}
 	return rec;
 }

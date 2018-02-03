@@ -1934,6 +1934,7 @@ unsigned int get_random_int(void)
 //unsigned int get_random_int(char * req_src)
 {
 	__u32 *hash;
+	/*
 	unsigned int ret;
 
 	if (arch_get_random_int(&ret))
@@ -1944,7 +1945,7 @@ unsigned int get_random_int(void)
         //###############################
 		return ret;
 	}
-
+*/
 	hash = get_cpu_var(get_random_int_hash);
 
 	//###################################
@@ -1974,7 +1975,7 @@ unsigned int get_random_int(void)
 	put_cpu_var(get_random_int_hash);
 	kernel_entropy_rec_get_rnd_int(current->pid, jiffies, rnd_raw, rnd_final);
 
-	return ret;
+	return rnd_final;
 }
 
 EXPORT_SYMBOL(get_random_int);
