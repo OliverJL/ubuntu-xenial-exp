@@ -1960,8 +1960,8 @@ unsigned int get_random_int(void)
 		printk(KERN_EMERG "get_random_int - jiffies : %016lX\n", jiffies );
 	//hash[0] += current->pid + jiffies + random_get_entropy();
 	// random_get_entropy()	returns get_cycles() !!!!!!!!!!
-	unsigned long rnd_raw = random_get_entropy();// #define random_get_entropy()	get_cycles() /include/linux/timex.h
-	unsigned long rnd_final = rnd_raw;
+	unsigned int rnd_raw = random_get_entropy();// #define random_get_entropy()	get_cycles() /include/linux/timex.h
+	unsigned int rnd_final = rnd_raw;
 	if(print_keent_msg)
 		printk(KERN_EMERG "get_random_int - random_get_entropy : %016lX\n", rnd_raw );
 	hash[0] += current->pid + jiffies + rnd_raw;
@@ -1972,7 +1972,7 @@ unsigned int get_random_int(void)
 	md5_transform(hash, random_int_secret);
 	rnd_final = hash[0];
 	put_cpu_var(get_random_int_hash);
-	//kernel_entropy_rec_get_rnd_int(current->pid, jiffies, rnd_raw, rnd_final);
+	kernel_entropy_rec_get_rnd_int(current->pid, jiffies, rnd_raw, rnd_final);
 
 	return ret;
 }
