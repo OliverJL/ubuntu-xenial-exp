@@ -128,11 +128,12 @@ void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret)
 
 void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int rnd_raw, unsigned int rnd_final)
 {
-	/*
-	//
+
+
 	kernel_entropy_event * ke_event;
 	kee_get_rnd_int * get_rnd_int;
 
+	/*
 	ke_event = kernel_entropy_malloc_event(KEETYPE__GET_RANDOM_INT);
 
 	if(ke_event != NULL)
