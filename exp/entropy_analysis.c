@@ -165,7 +165,8 @@ void kernel_entropy_rec_get_rnd_long(int pid, unsigned long jiffies, unsigned lo
 		get_rnd_long->rnd_raw = rnd_raw;
 		get_rnd_long->rnd_final = rnd_final;
 
-		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_get_rnd_long pid:%05d - jiffies:0x%016X - rnd_raw:0x%016X - rnd_final:0x%016X\n", pid, jiffies, rnd_raw, rnd_final);
+		printk(KERN_EMERG ">>>>>>!! kernel_entropy_rec_get_rnd_long pid:%05d - jiffies:0x%016X - rnd_raw:0x%016X - rnd_final:0x%016X\n", pid, jiffies, rnd_raw, rnd_final);
+		printk(KERN_EMERG ">>>>>>?? kernel_entropy_rec_get_rnd_long pid:%05d - jiffies:0x%016X - rnd_raw:0x%016X - rnd_final:0x%016X\n", get_rnd_long->pid, get_rnd_long->jiffies, get_rnd_long->rnd_raw, get_rnd_long->rnd_final);
 	}else
 	{
 		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_get_rnd_long - ke_event == NULL!!!");
