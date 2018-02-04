@@ -228,7 +228,7 @@ void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pi
 kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void)
 {
 	kee_get_rnd_int * rec = NULL;
-	if(ke_rec_info.kee_get_random_int >= KEETYPE__GET_RANDOM_INT)
+	if(ke_rec_info.kee_get_random_int >= KE_RECORD_MAX__GET_RANDOM_INT)
 	{
 		is_kernel_entropy_recording = 0;
 		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__GET_RANDOM_INT reached!!!");
@@ -243,7 +243,7 @@ kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void)
 kee_get_rnd_long * kernel_entropy_malloc_get_rnd_long(void)
 {
 	kee_get_rnd_long * rec = NULL;
-	if(ke_rec_info.kee_get_random_long >= KEETYPE__GET_RANDOM_LONG)
+	if(ke_rec_info.kee_get_random_long >= KE_RECORD_MAX__GET_RANDOM_LONG)
 	{
 		is_kernel_entropy_recording = 0;
 		printk(KERN_EMERG ">>>>>> KEETYPE__GET_RANDOM_LONG reached!!!");
