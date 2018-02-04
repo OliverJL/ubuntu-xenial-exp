@@ -133,9 +133,9 @@ void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int
 	kernel_entropy_event * ke_event;
 	kee_get_rnd_int * get_rnd_int;
 
-	/*
-	ke_event = kernel_entropy_malloc_event(KEETYPE__GET_RANDOM_INT);
 
+	ke_event = kernel_entropy_malloc_event(KEETYPE__GET_RANDOM_INT);
+	/*
 	if(ke_event != NULL)
 	{
 		get_rnd_int = (kee_get_rnd_int *)ke_event->event_details;
