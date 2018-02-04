@@ -414,7 +414,7 @@ static struct fasync_struct *fasync;
 static DEFINE_SPINLOCK(random_ready_list_lock);
 static LIST_HEAD(random_ready_list);
 
-int print_keent_msg = 1;
+int print_keent_msg = 0;
 
 //kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
 
@@ -1973,8 +1973,7 @@ unsigned int get_random_int(void)
 	md5_transform(hash, random_int_secret);
 	rnd_final = hash[0];
 	put_cpu_var(get_random_int_hash);
-	//kernel_entropy_rec_get_rnd_int(current->pid, jiffies, rnd_raw, rnd_final);
-	kernel_entropy_rec_get_rnd_int(0,0,0,0);
+	kernel_entropy_rec_get_rnd_int(current->pid, jiffies, rnd_raw, rnd_final);
 
 	return rnd_final;
 }
@@ -1987,8 +1986,9 @@ EXPORT_SYMBOL(get_random_int);
 unsigned long get_random_long(void)
 {
 	__u32 *hash;
-	unsigned long ret;
+	//unsigned long ret;
 
+	/*
 	if (arch_get_random_long(&ret))
 	{
         //###############################
@@ -1997,25 +1997,29 @@ unsigned long get_random_long(void)
         //###############################
 		return ret;
 	}
+	*/
 
 	hash = get_cpu_var(get_random_int_hash);
-	//if(print_keent_msg)
+	if(print_keent_msg)
 		printk(KERN_EMERG "get_random_long - current->pid : %d\n", current->pid );
-	//if(print_keent_msg)
+	if(print_keent_msg)
 		printk(KERN_EMERG "get_random_long - jiffies : %016lX\n", jiffies );
 	// random_get_entropy()	returns get_cycles() !!!!!!!!!!
-	unsigned long re = random_get_entropy();
-	//if(print_keent_msg)
-		printk(KERN_EMERG "get_random_long - random_get_entropy : %016lX\n", re );
+	//unsigned long re = random_get_entropy();
+	unsigned long rnd_raw = random_get_entropy();// #define random_get_entropy()	get_cycles() /include/linux/timex.h
+	unsigned long rnd_final = rnd_raw;
+	if(print_keent_msg)
+		printk(KERN_EMERG "get_random_long - random_get_entropy : %016lX\n", rnd_raw );
 	//hash[0] += current->pid + jiffies + random_get_entropy();
-	hash[0] += current->pid + jiffies + re;
+	hash[0] += current->pid + jiffies + rnd_raw;
 	//if(print_keent_msg)
 		//printk(KERN_EMERG "get_random_long - random_int_secret : %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 	md5_transform(hash, random_int_secret);
-	ret = *(unsigned long *)hash;
+	rnd_final = *(unsigned long *)hash;
 	put_cpu_var(get_random_int_hash);
+	kernel_entropy_rec_get_rnd_long(current->pid, jiffies, rnd_raw, rnd_final);
 
-	return ret;
+	return rnd_final;
 }
 EXPORT_SYMBOL(get_random_long);
 
