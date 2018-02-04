@@ -357,13 +357,13 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			case KEETYPE__GET_RANDOM_INT:
 				ke_event->detail_index = tb_kee_get_rnd_int_cntr;
 				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
-				copy_to_user(tb_kee_get_rnd_int, &rec_ke_get_rnd_int[tb_kee_get_rnd_int_cntr], sizeof(kee_get_rnd_int));
+				copy_to_user(&tb_kee_get_rnd_int[tb_kee_get_rnd_int_cntr], &rec_ke_get_rnd_int[tb_kee_get_rnd_int_cntr], sizeof(kee_get_rnd_int));
 				tb_kee_get_rnd_int_cntr ++;
 				break;
 			case KEETYPE__GET_RANDOM_LONG:
 				ke_event->detail_index = tb_kee_get_rnd_long_cntr;
 				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
-				copy_to_user(tb_kee_get_rnd_long, &rec_ke_get_rnd_long[tb_kee_get_rnd_long_cntr], sizeof(kee_get_rnd_long));
+				copy_to_user(&tb_kee_get_rnd_long[tb_kee_get_rnd_long_cntr], &rec_ke_get_rnd_long[tb_kee_get_rnd_long_cntr], sizeof(kee_get_rnd_long));
 				tb_kee_get_rnd_long_cntr ++;
 				break;
 		}
