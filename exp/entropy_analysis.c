@@ -110,6 +110,10 @@ int print_rec_interrupt_max = 30;
 int print_rec_interrupt_cntr = 0;
 int print_rec_stack_canary_max = 100;
 int print_rec_stack_canary_cntr = 0;
+int print_rec_rec_get_rnd_int_cntr = 0;
+int print_rec_rec_get_rnd_int_max = 300;
+int print_rec_rec_get_rnd_long_cntr = 0;
+int print_rec_rec_get_rnd_long_max = 300;
 
 void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret)
 {
@@ -143,8 +147,12 @@ void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int
 		get_rnd_int->rnd_raw = rnd_raw;
 		get_rnd_int->rnd_final = rnd_final;
 		//spin_unlock(&kernel_entropy_malloc_event_lock);
-		printk(KERN_EMERG ">>>>>>!! kernel_entropy_rec_get_rnd_int pid:%05d - jiffies:0x%016X - rnd_raw:0x%08X - rnd_final:0x%08X\n", pid, jiffies, rnd_raw, rnd_final);
-		printk(KERN_EMERG ">>>>>>?? kernel_entropy_rec_get_rnd_int pid:%05d - jiffies:0x%016X - rnd_raw:0x%08X - rnd_final:0x%08X\n", get_rnd_int->pid, get_rnd_int->jiffies, get_rnd_int->rnd_raw, get_rnd_int->rnd_final);
+		if(print_rec_rec_get_rnd_int_cntr < print_rec_rec_get_rnd_int_max)
+		{
+			printk(KERN_EMERG ">>>>>>!! kernel_entropy_rec_get_rnd_int pid:%05d - jiffies:0x%016X - rnd_raw:0x%08X - rnd_final:0x%08X\n", pid, jiffies, rnd_raw, rnd_final);
+			printk(KERN_EMERG ">>>>>>?? kernel_entropy_rec_get_rnd_int pid:%05d - jiffies:0x%016X - rnd_raw:0x%08X - rnd_final:0x%08X\n", get_rnd_int->pid, get_rnd_int->jiffies, get_rnd_int->rnd_raw, get_rnd_int->rnd_final);
+			print_rec_rec_get_rnd_int_cntr ++;
+		}
 	}else
 	{
 		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_get_rnd_int - ke_event == NULL!!!");
@@ -167,8 +175,12 @@ void kernel_entropy_rec_get_rnd_long(int pid, unsigned long jiffies, unsigned lo
 		get_rnd_long->rnd_raw = rnd_raw;
 		get_rnd_long->rnd_final = rnd_final;
 
-		printk(KERN_EMERG ">>>>>>!! kernel_entropy_rec_get_rnd_long pid:%05d - jiffies:0x%016X - rnd_raw:0x%016X - rnd_final:0x%016X\n", pid, jiffies, rnd_raw, rnd_final);
-		printk(KERN_EMERG ">>>>>>?? kernel_entropy_rec_get_rnd_long pid:%05d - jiffies:0x%016X - rnd_raw:0x%016X - rnd_final:0x%016X\n", get_rnd_long->pid, get_rnd_long->jiffies, get_rnd_long->rnd_raw, get_rnd_long->rnd_final);
+		if(print_rec_rec_get_rnd_long_cntr < print_rec_rec_get_rnd_long_max)
+		{
+			printk(KERN_EMERG ">>>>>>!! kernel_entropy_rec_get_rnd_long pid:%05d - jiffies:0x%016X - rnd_raw:0x%016X - rnd_final:0x%016X\n", pid, jiffies, rnd_raw, rnd_final);
+			printk(KERN_EMERG ">>>>>>?? kernel_entropy_rec_get_rnd_long pid:%05d - jiffies:0x%016X - rnd_raw:0x%016X - rnd_final:0x%016X\n", get_rnd_long->pid, get_rnd_long->jiffies, get_rnd_long->rnd_raw, get_rnd_long->rnd_final);
+			print_rec_rec_get_rnd_long_cntr ++;
+		}
 	}else
 	{
 		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_get_rnd_long - ke_event == NULL!!!");
