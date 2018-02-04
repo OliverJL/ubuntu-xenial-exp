@@ -94,7 +94,7 @@ typedef struct
 #pragma pack(1)
 typedef struct
 {
- u32 random_int_secret[16];
+	unsigned int random_int_secret[16];
 } kee_rnd_int_secret_set;
 #pragma pack()
 
