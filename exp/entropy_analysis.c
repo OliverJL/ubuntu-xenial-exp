@@ -133,7 +133,7 @@ void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int
 
 	if(ke_event != NULL)
 	{
-		spin_lock(&kernel_entropy_malloc_event_lock);
+		//spin_lock(&kernel_entropy_malloc_event_lock);
 		get_rnd_int = (kee_get_rnd_int *)ke_event->event_details;
 		get_rnd_int->pid = pid;
 		/*
@@ -141,7 +141,7 @@ void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int
 		get_rnd_int->rnd_raw = rnd_raw;
 		get_rnd_int->rnd_final = rnd_final;
 		*/
-		spin_unlock(&kernel_entropy_malloc_event_lock);
+		//spin_unlock(&kernel_entropy_malloc_event_lock);
 	}else
 	{
 		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_get_rnd_int - ke_event == NULL!!!");
