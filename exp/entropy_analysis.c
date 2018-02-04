@@ -44,7 +44,7 @@ int ret_kernel_entropy_copy_to_user = 0;
 kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 {
 
-	//spin_lock(&kernel_entropy_malloc_event_lock);
+
 	kernel_entropy_event * rec = NULL;
 
 	if(ke_rec_info.kee_rec_id >= KERNEL_ENTROPY_RECORD_MAX)
@@ -100,7 +100,6 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 			break;
 		}
 	}
-	//spin_unlock(&kernel_entropy_malloc_event_lock);
 	return rec;
 }
 
@@ -128,12 +127,9 @@ void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret)
 
 void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int rnd_raw, unsigned int rnd_final)
 {
-
-
+	spin_lock(&kernel_entropy_malloc_event_lock);
 	kernel_entropy_event * ke_event;
 	kee_get_rnd_int * get_rnd_int;
-
-
 	ke_event = kernel_entropy_malloc_event(KEETYPE__GET_RANDOM_INT);
 
 	if(ke_event != NULL)
@@ -149,7 +145,7 @@ void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int
 	{
 		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_get_rnd_int - ke_event == NULL!!!");
 	}
-
+	spin_unlock(&kernel_entropy_malloc_event_lock);
 }
 
 
