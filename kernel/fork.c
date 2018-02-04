@@ -398,7 +398,7 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 
 	//################################## -->
 	//spin_lock(&entropy_analysis_lock);
-	printk(KERN_EMERG ">>>>>> tsk->comm %s\n", tsk->comm);
+	//printk(KERN_EMERG ">>>>>> tsk->comm %s\n", tsk->comm);
 #ifdef CONFIG_CC_STACKPROTECTOR
 	tsk->stack_canary = get_random_long();
 	kernel_entropy_rec_stack_canary(tsk->stack_canary, tsk->comm, tsk->pid, print_keent_msg);
