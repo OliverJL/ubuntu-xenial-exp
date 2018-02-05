@@ -80,8 +80,8 @@ typedef struct
 #pragma pack(1)
 typedef struct
 {
-   char filename[20];
-   char elf_interpreter[20];
+   char filename[100];
+   char elf_interpreter[100];
    int elf_prot;
    int elf_flags;
    unsigned long load_addr;
