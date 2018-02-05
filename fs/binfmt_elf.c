@@ -1212,7 +1212,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	//unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr,
 	//unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data )
 	// unsigned long error;
-	//kernel_entropy_rec_aslr_set(bprm->filename, elf_interpreter, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
+	kernel_entropy_rec_aslr_set(bprm->filename, elf_interpreter, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
 
 #ifdef ELF_PLAT_INIT
 	/*
