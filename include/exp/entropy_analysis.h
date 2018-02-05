@@ -38,9 +38,10 @@ typedef struct
 	   unsigned int kee_rec_id;
 	   unsigned int kee_add_interrupt_rnd_id;
 	   unsigned int kee_stack_canary_set_id;
-	   bool random_int_secret_set;
-	   unsigned int kee_get_random_int;
-	   unsigned int kee_get_random_long;
+	   bool random_int_secret_set_id;
+	   unsigned int kee_get_random_int_id;
+	   unsigned int kee_get_random_long_id;
+	   unsigned int kee_aslr_set_id;
 }kernel_entropy_rec_info;
 #pragma pack()
 
@@ -79,8 +80,8 @@ typedef struct
 #pragma pack(1)
 typedef struct
 {
-   const char * filename;
-   char * elf_interpreter;
+   char filename[20];
+   char elf_interpreter[20];
    int elf_prot;
    int elf_flags;
    unsigned long load_addr;
@@ -88,6 +89,11 @@ typedef struct
    unsigned long entry_point;
    unsigned long mmap_rnd;
    unsigned long vaddr;
+   unsigned long start_code;
+   unsigned long end_code;
+   unsigned long start_data;
+   unsigned long end_data;
+   unsigned long error;
 } kee_aslr_set;
 #pragma pack()
 
@@ -129,6 +135,7 @@ extern kernel_entropy_event recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
 #define KE_RECORD_MAX__STACK_CANARY_SET 3000
 #define KE_RECORD_MAX__GET_RANDOM_INT 10000
 #define KE_RECORD_MAX__GET_RANDOM_LONG 3000
+#define KE_RECORD_MAX__ASLR_SET 3000
 
 
 extern kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
@@ -139,11 +146,8 @@ extern kee_get_rnd_long rec_ke_get_rnd_long[KE_RECORD_MAX__GET_RANDOM_LONG];
 
 extern kernel_entropy_rec_info ke_rec_info;
 
-//asmlinkage kernel_entropy_rec_info sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer);
 asmlinkage long sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer);
-//asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set);
-asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long);
-//asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event);
+asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long, kee_aslr_set * tb_kee_aslr_set);
 asmlinkage long sys_kernel_entropy_start_recording(void);
 asmlinkage long sys_kernel_entropy_stop_recording(void);
 asmlinkage long sys_kernel_entropy_is_recording(void);
@@ -153,11 +157,15 @@ kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void);
 kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void);
 kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void);
 kee_get_rnd_long * kernel_entropy_malloc_get_rnd_long(void);
+kee_aslr_set * kernel_entropy_malloc_aslr_set(void);
 void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, bool print_dmesg);
 void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pid_t pid, bool print_dmesg);
 void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret);
 void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int rnd_raw, unsigned int rnd_final);
 void kernel_entropy_rec_get_rnd_long(int pid, unsigned long jiffies, unsigned long rnd_raw, unsigned long rnd_final);
+//void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr );
+//void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data );
+void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data, unsigned long error );
 //ke_rec_info
 //asmlinkage long sys_kernel_entropy_rec_aslr(process_kernel_entropy rec);
 

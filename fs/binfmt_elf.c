@@ -39,6 +39,7 @@
 #include <asm/uaccess.h>
 #include <asm/param.h>
 #include <asm/page.h>
+#include <exp/entropy_analysis.h>
 
 
 #ifndef user_long_t
@@ -667,8 +668,6 @@ static unsigned long randomize_stack_top(unsigned long stack_top)
 
 static int load_elf_binary(struct linux_binprm *bprm)
 {
-//	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
-//	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s\n", bprm->filename, bprm->interp );
 
 	struct file *interpreter = NULL; /* to shut gcc up */
  	unsigned long load_addr = 0, load_bias = 0;
@@ -683,6 +682,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	unsigned long start_code, end_code, start_data, end_data;
 	unsigned long reloc_func_desc __maybe_unused = 0;
 	int executable_stack = EXSTACK_DEFAULT;
+	unsigned long mmap_rnd;
 	struct pt_regs *regs = current_pt_regs();
 	struct {
 		struct elfhdr elf_ex;
@@ -925,8 +925,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		elf_flags = MAP_PRIVATE | MAP_DENYWRITE | MAP_EXECUTABLE;
 
 		vaddr = elf_ppnt->p_vaddr;
-		if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
-			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - vaddr:0x%016lX\n", bprm->filename, bprm->interp, vaddr );
 		/*
 		 * If we are loading ET_EXEC or we have already performed
 		 * the ET_DYN load_addr calculations, proceed normally.
@@ -942,8 +940,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		it is nonportable, and its use is discouraged.
 		 */
 			elf_flags |= MAP_FIXED;
-			if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
-			printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - ET_EXEC - MAP_FIXED\n", bprm->filename, bprm->interp );
 		} else if (loc->elf_ex.e_type == ET_DYN) {
 			/*
 			 * This logic is run once for the first LOAD Program
@@ -984,7 +980,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
 					//	load_bias += arch_mmap_rnd(1);
 					//else
 					//	load_bias += arch_mmap_rnd(0);
-					unsigned long mmap_rnd;
 					mmap_rnd = arch_mmap_rnd(0); // !!!!!!!!!!! RRRRRNNNNDDDDD
 					load_bias += mmap_rnd;
 					//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
@@ -996,8 +991,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
 			} else
 			{
 				load_bias = 0;
-				//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
-				//printk(KERN_EMERG ">>>>>>>>>> - load_elf_binary - load_bias = 0 - filename:%s - interp:%s - load_bias:0x%016lX\n", bprm->filename, bprm->interp, load_bias );
 			}
 			/*
 			 * Since load_bias is used for all subsequent loading
@@ -1009,8 +1002,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 			unsigned long load_bias_bak;
 			load_bias_bak = load_bias;
 			load_bias = ELF_PAGESTART(load_bias - vaddr);
-			//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
-			//printk(KERN_EMERG ">>>>>>>>>> - load_elf_binary - filename:%s - interp:%s - load_bias = ELF_PAGESTART(load_bias - vaddr) - 0x%016lX = ELF_PAGESTART(0x%016lX - 0x%016lX)\n", bprm->filename, bprm->interp, load_bias_bak, load_bias, vaddr );
+
 
 			total_size = total_mapping_size(elf_phdata,
 							loc->elf_ex.e_phnum);
@@ -1089,7 +1081,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 			//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 			//printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - 2 elf_brk: 0x%016lX\n", bprm->filename, bprm->interp, elf_brk );
 		}
-	}
+	}// for ende
 
 	//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	//printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - load_bias: 0x%016lX - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, load_bias, loc->elf_ex.e_entry );
@@ -1186,6 +1178,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	current->mm->end_data = end_data;
 	current->mm->start_stack = bprm->p;
 
+	// mmap_rnd
 	/*
 	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server")){
 		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - current->mm->end_code: 0x%016lX\n", bprm->filename, bprm->interp, current->mm->end_code );
@@ -1213,6 +1206,13 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		error = vm_mmap(NULL, 0, PAGE_SIZE, PROT_READ | PROT_EXEC,
 				MAP_FIXED | MAP_PRIVATE, 0);
 	}
+
+	//void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter,
+	//int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias,
+	//unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr,
+	//unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data )
+	// unsigned long error;
+	kernel_entropy_rec_aslr_set(bprm->filename, elf_interpreter, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
 
 #ifdef ELF_PLAT_INIT
 	/*

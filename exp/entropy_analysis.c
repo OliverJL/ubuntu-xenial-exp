@@ -24,6 +24,7 @@ kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
 kee_stack_canary_set rec_ke_stack_canary[KE_RECORD_MAX__STACK_CANARY_SET];
 kee_get_rnd_int rec_ke_get_rnd_int[KE_RECORD_MAX__GET_RANDOM_INT];
 kee_get_rnd_long rec_ke_get_rnd_long[KE_RECORD_MAX__GET_RANDOM_LONG];
+kee_aslr_set rec_ke_aslr_set[KE_RECORD_MAX__ASLR_SET];
 
 
 kee_rnd_int_secret_set rec_ke_rnd_int_secret;
@@ -73,6 +74,10 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 			rec->event_details = kernel_entropy_malloc_stack_canary();
 			break;
 		case KEETYPE__ASLR_RND_SET:
+			rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
+			rec->id = ke_rec_info.kee_rec_id ++;
+			rec->event_type = event_type;
+			rec->event_details = kernel_entropy_malloc_aslr_set();
 			break;
 		case KEETYPE__RANDOM_INT_SECRET_SET:
 			rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
@@ -118,12 +123,43 @@ void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret)
 	{
 		rnd_int_secret_set = (kee_rnd_int_secret_set *)ke_event->event_details;
 		memcpy(rnd_int_secret_set, random_int_secret, 16);
-		ke_rec_info.random_int_secret_set = 1;
+		ke_rec_info.random_int_secret_set_id = 1;
 	}else{
 		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_random_int_secret_set - ke_event == NULL!!!");
 	}
 }
 
+void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data, unsigned long error )
+{
+	kernel_entropy_event * ke_event;
+	kee_aslr_set * aslr_set;
+	int len;
+	ke_event = kernel_entropy_malloc_event(KEETYPE__ASLR_RND_SET);
+
+	if(ke_event != NULL)
+	{
+		len = strlen(filename);
+		strncpy(aslr_set->filename, filename, len);
+		len = strlen(elf_interpreter);
+		strncpy(aslr_set->elf_interpreter, elf_interpreter, len);
+		aslr_set->elf_prot = elf_prot;
+		aslr_set->elf_flags = elf_flags;
+		aslr_set->load_addr = load_addr;
+		aslr_set->load_bias = load_bias;
+		aslr_set->entry_point = entry_point;
+		aslr_set->mmap_rnd = mmap_rnd;
+		aslr_set->vaddr = vaddr;
+		aslr_set->start_code = start_code;
+		aslr_set->end_code = end_code;
+		aslr_set->start_data = start_data;
+		aslr_set->end_data = end_data;
+		aslr_set->error = error;
+
+	}else
+	{
+		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_aslr_set - ke_event == NULL!!!");
+	}
+}
 
 void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int rnd_raw, unsigned int rnd_final)
 {
@@ -239,14 +275,14 @@ void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pi
 kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void)
 {
 	kee_get_rnd_int * rec = NULL;
-	if(ke_rec_info.kee_get_random_int >= KE_RECORD_MAX__GET_RANDOM_INT)
+	if(ke_rec_info.kee_get_random_int_id >= KE_RECORD_MAX__GET_RANDOM_INT)
 	{
 		is_kernel_entropy_recording = 0;
 		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__GET_RANDOM_INT reached!!!");
 	}
 	else
 	{
-		rec = &rec_ke_get_rnd_int[ke_rec_info.kee_get_random_int++];
+		rec = &rec_ke_get_rnd_int[ke_rec_info.kee_get_random_int_id++];
 	}
 	return rec;
 }
@@ -254,18 +290,32 @@ kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void)
 kee_get_rnd_long * kernel_entropy_malloc_get_rnd_long(void)
 {
 	kee_get_rnd_long * rec = NULL;
-	if(ke_rec_info.kee_get_random_long >= KE_RECORD_MAX__GET_RANDOM_LONG)
+	if(ke_rec_info.kee_get_random_long_id >= KE_RECORD_MAX__GET_RANDOM_LONG)
 	{
 		is_kernel_entropy_recording = 0;
-		printk(KERN_EMERG ">>>>>> KEETYPE__GET_RANDOM_LONG reached!!!");
+		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__GET_RANDOM_LONG reached!!!");
 	}
 	else
 	{
-		rec = &rec_ke_get_rnd_long[ke_rec_info.kee_get_random_long++];
+		rec = &rec_ke_get_rnd_long[ke_rec_info.kee_get_random_long_id++];
 	}
 	return rec;
 }
 
+kee_aslr_set * kernel_entropy_malloc_aslr_set(void)
+{
+	kee_aslr_set * rec = NULL;
+	if(ke_rec_info.kee_aslr_set_id >= KE_RECORD_MAX__ASLR_SET)
+	{
+		is_kernel_entropy_recording = 0;
+		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__ASLR_SET reached!!!");
+	}
+	else
+	{
+		rec = &rec_ke_aslr_set[ke_rec_info.kee_aslr_set_id++];
+	}
+	return rec;
+}
 
 kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void)
 {
@@ -298,13 +348,14 @@ kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void)
 	return rec;
 }
 
-asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long)
+asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long, kee_aslr_set * tb_kee_aslr_set)
 {
 	int kee_rec_cntr = 0;
 	int kee_add_int_rnd_cntr = 0;
 	int tb_kee_stc_set_cntr = 0;
 	int tb_kee_get_rnd_int_cntr = 0;
 	int tb_kee_get_rnd_long_cntr = 0;
+	int tb_kee_aslr_set_cntr = 0;
 
 	kernel_entropy_event * ke_event;
 	kernel_entropy_event * tb_kee;
@@ -336,6 +387,10 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				tb_kee_stc_set_cntr ++;
 				break;
 			case KEETYPE__ASLR_RND_SET:
+				ke_event->detail_index = tb_kee_aslr_set_cntr;
+				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
+				copy_to_user(&tb_kee_aslr_set[tb_kee_aslr_set_cntr], &rec_ke_aslr_set[tb_kee_aslr_set_cntr], sizeof(kee_aslr_set));
+				tb_kee_aslr_set_cntr ++;
 				break;
 			case KEETYPE__RANDOM_INT_SECRET_SET:
 				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
