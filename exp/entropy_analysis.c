@@ -138,9 +138,10 @@ void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, 
 
 	if(ke_event != NULL)
 	{
-		/*
+
 		len = strlen(filename);
 		strncpy(aslr_set->filename, filename, len);
+		/*
 		len = strlen(elf_interpreter);
 		strncpy(aslr_set->elf_interpreter, elf_interpreter, len);
 		aslr_set->elf_prot = elf_prot;
