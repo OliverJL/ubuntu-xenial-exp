@@ -165,7 +165,7 @@ void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int
 void kernel_entropy_rec_get_rnd_long(int pid, unsigned long jiffies, unsigned long rnd_raw, unsigned long rnd_final);
 //void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr );
 //void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data );
-void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data, unsigned long error );
+void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data, unsigned long error );
 //ke_rec_info
 //asmlinkage long sys_kernel_entropy_rec_aslr(process_kernel_entropy rec);
 
