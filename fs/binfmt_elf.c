@@ -1083,8 +1083,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		}
 	}// for ende
 
-	//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
-	//printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - load_bias: 0x%016lX - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, load_bias, loc->elf_ex.e_entry );
+	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
+		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - load_bias: 0x%016lX - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, load_bias, loc->elf_ex.e_entry );
 	loc->elf_ex.e_entry += load_bias;
 	//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	//printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, loc->elf_ex.e_entry );
