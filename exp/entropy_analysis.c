@@ -129,6 +129,9 @@ void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret)
 	}
 }
 
+extern int rec_aslr_set_filename_max;
+extern int rec_aslr_set_elf_interpreter_max;
+
 void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data, unsigned long error )
 {
 	kernel_entropy_event * ke_event;
@@ -138,17 +141,33 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 
 	if(ke_event != NULL)
 	{
-		if(filename == NULL)
-		{
-			len = strlen("filename=NULL");
-			strncpy("filename=NULL", filename, len);
-		}else
+		if(filename != NULL)
 		{
 			len = strlen(filename);
+			if(len > rec_aslr_set_filename_max)
+			{
+				rec_aslr_set_filename_max = len;
+			}
+			//len = strlen("filename=NULL");
+			//strncpy("filename=NULL", filename, len);
+		}else
+		{
+			//len = strlen(filename);
 			//strncpy(aslr_set->filename, filename, len);
 		}
 		/*
 		len = strlen(elf_interpreter);
+		len = strlen(elf_interpreter);
+		*/
+		if(elf_interpreter != NULL)
+		{
+			len = strlen(elf_interpreter);
+			if(len > rec_aslr_set_elf_interpreter_max)
+			{
+				rec_aslr_set_elf_interpreter_max = len;
+			}
+		}
+/*
 		strncpy(aslr_set->elf_interpreter, elf_interpreter, len);
 		aslr_set->elf_prot = elf_prot;
 		aslr_set->elf_flags = elf_flags;

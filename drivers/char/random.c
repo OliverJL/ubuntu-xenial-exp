@@ -416,6 +416,9 @@ static LIST_HEAD(random_ready_list);
 
 int print_keent_msg = 0;
 
+int rec_aslr_set_filename_max = 0;
+int rec_aslr_set_elf_interpreter_max = 0;
+
 //kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
 
 /**********************************************************************
@@ -1917,6 +1920,10 @@ static int rand_initialize(void)
 	print_keent_msg = 0;
 	init_std_data(&blocking_pool);
 	init_std_data(&nonblocking_pool);
+
+	printk(KERN_EMERG ">>>>>>>>>>>>>>> rec_aslr_set_filename_max: %d", rec_aslr_set_filename_max );
+	printk(KERN_EMERG ">>>>>>>>>>>>>>> rec_aslr_set_elf_interpreter_max: %d", rec_aslr_set_elf_interpreter_max );
+
 	return 0;
 }
 early_initcall(rand_initialize);
