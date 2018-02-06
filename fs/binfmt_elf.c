@@ -669,6 +669,9 @@ static unsigned long randomize_stack_top(unsigned long stack_top)
 static int load_elf_binary(struct linux_binprm *bprm)
 {
 
+	char * bprm_filename = NULL;
+	char * bprm_interp = NULL;
+
 	struct file *interpreter = NULL; /* to shut gcc up */
  	unsigned long load_addr = 0, load_bias = 0;
 	int load_addr_set = 0;
@@ -1083,8 +1086,12 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		}
 	}// for ende
 
-	if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
-		printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - load_bias: 0x%016lX - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, load_bias, loc->elf_ex.e_entry );
+	//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
+	//	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - load_bias: 0x%016lX - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, load_bias, loc->elf_ex.e_entry );
+
+	bprm_filename = bprm->filename;
+	bprm_interp = bprm->interp;
+
 	loc->elf_ex.e_entry += load_bias;
 	//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	//printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, loc->elf_ex.e_entry );
@@ -1212,7 +1219,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	//unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr,
 	//unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data )
 	// unsigned long error;
-	kernel_entropy_rec_aslr_set(bprm->filename, elf_interpreter, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
+	kernel_entropy_rec_aslr_set(bprm_filename, bprm_interp, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
 
 #ifdef ELF_PLAT_INIT
 	/*
