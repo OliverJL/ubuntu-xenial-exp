@@ -669,8 +669,8 @@ static unsigned long randomize_stack_top(unsigned long stack_top)
 static int load_elf_binary(struct linux_binprm *bprm)
 {
 
-	char * bprm_filename = NULL;
-	char * bprm_interp = NULL;
+	char bprm_filename[100];
+	char bprm_interp[100];
 
 	struct file *interpreter = NULL; /* to shut gcc up */
  	unsigned long load_addr = 0, load_bias = 0;
@@ -1089,8 +1089,17 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	//	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - load_bias: 0x%016lX - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, load_bias, loc->elf_ex.e_entry );
 
-	bprm_filename = bprm->filename;
-	bprm_interp = bprm->interp;
+	int len;
+	if(bprm->filename != NULL)
+	{
+		len = strlen(bprm->filename);
+		strncpy(&bprm_filename[0], bprm->filename, len);
+	}
+	if(bprm->interp != NULL)
+	{
+		len = strlen(bprm->interp);
+		strncpy(&bprm_interp[0], bprm->interp, len);
+	}
 
 	loc->elf_ex.e_entry += load_bias;
 	//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
@@ -1219,7 +1228,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	//unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr,
 	//unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data )
 	// unsigned long error;
-	kernel_entropy_rec_aslr_set(bprm_filename, bprm_interp, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
+	kernel_entropy_rec_aslr_set(&bprm_filename[0], &bprm_interp[0], 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
 
 #ifdef ELF_PLAT_INIT
 	/*
