@@ -178,10 +178,16 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 			}
 		}
 		*/
-		len = strlen(filename);
-		strncpy(aslr_set->filename, filename, len);
-		/*
-		//strncpy(aslr_set->elf_interpreter, elf_interpreter, len);
+		if(filename != NULL)
+		{
+			len = strlen(filename);
+			strncpy(aslr_set->filename, filename, len);
+		}
+		if(elf_interpreter != NULL)
+		{
+			len = strlen(elf_interpreter);
+			strncpy(aslr_set->elf_interpreter, elf_interpreter, len);
+		}
 		aslr_set->elf_prot = elf_prot;
 		aslr_set->elf_flags = elf_flags;
 		aslr_set->load_addr = load_addr;
