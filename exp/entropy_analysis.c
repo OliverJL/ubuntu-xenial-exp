@@ -145,6 +145,7 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 		{
 			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - filename: %s", filename );
 			len = strlen(filename);
+			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - filename - len: %d", len );
 			if(len > rec_aslr_set_filename_max)
 			{
 				rec_aslr_set_filename_max = len;
@@ -163,6 +164,9 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 		if(elf_interpreter != NULL)
 		{
 			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - elf_interpreter: %s", elf_interpreter );
+			len = strlen(elf_interpreter);
+			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - elf_interpreter - len: %d", len );
+
 			len = strlen(elf_interpreter);
 			if(len > rec_aslr_set_elf_interpreter_max)
 			{
