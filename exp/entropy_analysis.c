@@ -138,6 +138,7 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 	kee_aslr_set * aslr_set;
 	int len;
 	ke_event = kernel_entropy_malloc_event(KEETYPE__ASLR_RND_SET);
+	aslr_set = (kee_aslr_set *)ke_event->event_details;
 
 	if(ke_event != NULL)
 	{
@@ -177,7 +178,7 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 			}
 		}
 		*/
-		aslr_set = (kee_aslr_set *)ke_event->event_details;
+		len = strlen(filename);
 		strncpy(aslr_set->filename, filename, len);
 		/*
 		//strncpy(aslr_set->elf_interpreter, elf_interpreter, len);
