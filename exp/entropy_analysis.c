@@ -200,7 +200,7 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 		aslr_set->start_data = start_data;
 		aslr_set->end_data = end_data;
 		aslr_set->error = error;
-		*/
+
 
 	}else
 	{
