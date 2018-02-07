@@ -141,8 +141,10 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 
 	if(ke_event != NULL)
 	{
+		/*
 		if(filename != NULL)
 		{
+			/*
 			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - filename: %s", filename );
 			len = strlen(filename);
 			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - filename - len: %d", len );
@@ -150,6 +152,7 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 			{
 				rec_aslr_set_filename_max = len;
 			}
+			* /
 			//len = strlen("filename=NULL");
 			//strncpy("filename=NULL", filename, len);
 		}else
@@ -160,8 +163,8 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 		/*
 		len = strlen(elf_interpreter);
 		len = strlen(elf_interpreter);
-		*/
-		if(elf_interpreter != NULL)
+		* /
+		if(elf_interpreter != NULL && 1==0)
 		{
 			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - elf_interpreter: %s", elf_interpreter );
 			len = strlen(elf_interpreter);
@@ -173,8 +176,11 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int el
 				rec_aslr_set_elf_interpreter_max = len;
 			}
 		}
-/*
-		strncpy(aslr_set->elf_interpreter, elf_interpreter, len);
+		*/
+		aslr_set = (kee_aslr_set *)ke_event->event_details;
+		strncpy(aslr_set->filename, filename, len);
+		/*
+		//strncpy(aslr_set->elf_interpreter, elf_interpreter, len);
 		aslr_set->elf_prot = elf_prot;
 		aslr_set->elf_flags = elf_flags;
 		aslr_set->load_addr = load_addr;
