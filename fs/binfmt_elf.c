@@ -1089,23 +1089,23 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
 	//	printk(KERN_EMERG ">>>>>>>>>> load_elf_binary - filename:%s - interp:%s - load_bias: 0x%016lX - loc->elf_ex.e_entry: 0x%016lX\n", bprm->filename, bprm->interp, load_bias, loc->elf_ex.e_entry );
 
-	/*
+
 	int len;
 	if(bprm->filename != NULL)
 	{
 		len = strlen(bprm->filename);
-		//strncpy(&bprm_filename[0], bprm->filename, len);
-		printk(KERN_EMERG ">>>>>>>>>> bprm->filename :%s", bprm->filename);
-		printk(KERN_EMERG ">>>>>>>>>> bprm->filename - len :%d", len);
+		strncpy(&bprm_filename[0], bprm->filename, len);
+	//	printk(KERN_EMERG ">>>>>>>>>> bprm->filename :%s", bprm->filename);
+	//	printk(KERN_EMERG ">>>>>>>>>> bprm->filename - len :%d", len);
 	}
 	if(bprm->interp != NULL)
 	{
 		len = strlen(bprm->interp);
 		strncpy(&bprm_interp[0], bprm->interp, len);
-		printk(KERN_EMERG ">>>>>>>>>> bprm->interp :%s", bprm->interp);
-		printk(KERN_EMERG ">>>>>>>>>> bprm->interp - len :%d", len);
+	//	printk(KERN_EMERG ">>>>>>>>>> bprm->interp :%s", bprm->interp);
+	//	printk(KERN_EMERG ">>>>>>>>>> bprm->interp - len :%d", len);
 	}
-	*/
+	//*/
 
 	loc->elf_ex.e_entry += load_bias;
 	//if(!strcmp(bprm->filename, "/etc/network/if-up.d/openssh-server"))
