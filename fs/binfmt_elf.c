@@ -1094,14 +1094,14 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	if(bprm->filename != NULL)
 	{
 		len = strlen_user(bprm->filename);
-		strncpy_user(&bprm_filename[0], bprm->filename, len);
+		strncpy(&bprm_filename[0], bprm->filename, len);
 	//	printk(KERN_EMERG ">>>>>>>>>> bprm->filename :%s", bprm->filename);
 	//	printk(KERN_EMERG ">>>>>>>>>> bprm->filename - len :%d", len);
 	}
 	if(bprm->interp != NULL)
 	{
 		len = strlen_user(bprm->interp);
-		strncpy_user(&bprm_interp[0], bprm->interp, len);
+		strncpy(&bprm_interp[0], bprm->interp, len);
 	//	printk(KERN_EMERG ">>>>>>>>>> bprm->interp :%s", bprm->interp);
 	//	printk(KERN_EMERG ">>>>>>>>>> bprm->interp - len :%d", len);
 	}
