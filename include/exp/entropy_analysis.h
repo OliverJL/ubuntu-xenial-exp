@@ -129,20 +129,28 @@ typedef struct
 extern bool is_kernel_entropy_recording;
 extern unsigned long kernel_entropy_record_size;
 
-#define KERNEL_ENTROPY_RECORD_MAX 20000
-extern kernel_entropy_event recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
-
+#define KERNEL_ENTROPY_RECORD_MAX 100000
 #define KE_RECORD_MAX__ADD_INT_RND 40000
 #define KE_RECORD_MAX__STACK_CANARY_SET 60000
 #define KE_RECORD_MAX__GET_RANDOM_INT 60000
 #define KE_RECORD_MAX__GET_RANDOM_LONG 60000
 #define KE_RECORD_MAX__ASLR_RND_SET 60000
 
+/*
+#define KERNEL_ENTROPY_RECORD_MAX 20000
+#define KE_RECORD_MAX__ADD_INT_RND 10000
+#define KE_RECORD_MAX__STACK_CANARY_SET 3000
+#define KE_RECORD_MAX__GET_RANDOM_INT 10000
+#define KE_RECORD_MAX__GET_RANDOM_LONG 3000
+#define KE_RECORD_MAX__ASLR_SET 3000
+*/
+extern kernel_entropy_event recorded_kernel_entropy[KERNEL_ENTROPY_RECORD_MAX];
+
 extern kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
 extern kee_stack_canary_set rec_ke_stack_canary[KE_RECORD_MAX__STACK_CANARY_SET];
 extern kee_get_rnd_int rec_ke_get_rnd_int[KE_RECORD_MAX__GET_RANDOM_INT];
 extern kee_get_rnd_long rec_ke_get_rnd_long[KE_RECORD_MAX__GET_RANDOM_LONG];
-
+extern kee_aslr_set rec_ke_aslr_set[KE_RECORD_MAX__ASLR_RND_SET];
 
 extern kernel_entropy_rec_info ke_rec_info;
 

@@ -24,7 +24,7 @@ kee_add_interrupt_rnd rec_ke_add_interrupt_rnd[KE_RECORD_MAX__ADD_INT_RND];
 kee_stack_canary_set rec_ke_stack_canary[KE_RECORD_MAX__STACK_CANARY_SET];
 kee_get_rnd_int rec_ke_get_rnd_int[KE_RECORD_MAX__GET_RANDOM_INT];
 kee_get_rnd_long rec_ke_get_rnd_long[KE_RECORD_MAX__GET_RANDOM_LONG];
-kee_aslr_set rec_ke_aslr_set[KE_RECORD_MAX__ASLR_SET];
+kee_aslr_set rec_ke_aslr_set[KE_RECORD_MAX__ASLR_RND_SET];
 
 
 kee_rnd_int_secret_set rec_ke_rnd_int_secret;
@@ -354,7 +354,7 @@ kee_get_rnd_long * kernel_entropy_malloc_get_rnd_long(void)
 kee_aslr_set * kernel_entropy_malloc_aslr_set(void)
 {
 	kee_aslr_set * rec = NULL;
-	if(ke_rec_info.kee_aslr_set_id >= KE_RECORD_MAX__ASLR_SET)
+	if(ke_rec_info.kee_aslr_set_id >= KE_RECORD_MAX__ASLR_RND_SET)
 	{
 		is_kernel_entropy_recording = 0;
 		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__ASLR_SET reached!!!");
