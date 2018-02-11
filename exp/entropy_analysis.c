@@ -44,8 +44,6 @@ int ret_kernel_entropy_copy_to_user = 0;
 
 kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 {
-
-
 	kernel_entropy_event * rec = NULL;
 
 	if(ke_rec_info.kee_rec_id >= KERNEL_ENTROPY_RECORD_MAX)
@@ -191,7 +189,7 @@ void kernel_entropy_rec_aslr_set(int pid, int elf_prot, int elf_flags, unsigned 
 			strncpy(aslr_set->elf_interpreter, elf_interpreter, len);
 		}
 		*/
-		aslr_set->pid = 99;
+		//aslr_set->pid = 99;
 		aslr_set->elf_prot = elf_prot;
 		aslr_set->elf_flags = elf_flags;
 		aslr_set->load_addr = load_addr;
