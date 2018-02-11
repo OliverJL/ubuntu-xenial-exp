@@ -200,7 +200,7 @@ void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int pi
 		aslr_set->start_data = start_data;
 		aslr_set->end_data = end_data;
 		aslr_set->error = error;
-		aslr_set->pid = pid;
+		//aslr_set->pid = pid;
 
 	}else
 	{
