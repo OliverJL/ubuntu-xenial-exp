@@ -433,7 +433,8 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 			case KEETYPE__STACK_CANARY_SET:
 				ke_event->detail_index = tb_kee_stc_set_cntr;
 				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
-				copy_to_user(&tb_kee_stc_set[tb_kee_stc_set_cntr], &rec_ke_stack_canary[tb_kee_stc_set_cntr], sizeof(kee_stack_canary_set));
+				cpy_ret = copy_to_user(&tb_kee_stc_set[tb_kee_stc_set_cntr], &rec_ke_stack_canary[tb_kee_stc_set_cntr], sizeof(kee_stack_canary_set));
+				printk(KERN_EMERG ">>>>>> KEETYPE__STACK_CANARY_SET pid:%05d - stack_canary:0x%016lX - comm:%s - cpy_ret:%d\n", rec_ke_stack_canary[tb_kee_stc_set_cntr].pid, rec_ke_stack_canary[tb_kee_stc_set_cntr].stack_canary, rec_ke_stack_canary[tb_kee_stc_set_cntr].comm, cpy_ret);
 				tb_kee_stc_set_cntr ++;
 				break;
 			case KEETYPE__ASLR_RND_SET:
