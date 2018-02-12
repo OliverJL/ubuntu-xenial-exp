@@ -101,10 +101,18 @@ typedef struct
 #pragma pack(1)
 typedef struct
 {
- char info[220];
+   int pid;
 } kee_aslr_set;
 #pragma pack()
 
+/*
+#pragma pack(1)
+typedef struct
+{
+ char info[220];
+} kee_aslr_set;
+#pragma pack()
+*/
 
 #pragma pack(1)
 typedef struct
