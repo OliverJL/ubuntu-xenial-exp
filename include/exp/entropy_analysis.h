@@ -77,11 +77,9 @@ typedef struct
 } kee_stack_canary_set;
 #pragma pack()
 
-#pragma pack(1)
+//#pragma pack(1)
 typedef struct
 {
-//   char filename[100];
-//   char elf_interpreter[100];
    int pid;
    int elf_prot;
    int elf_flags;
@@ -96,7 +94,7 @@ typedef struct
    unsigned long end_data;
    unsigned long error;
 } kee_aslr_set;
-#pragma pack()
+//#pragma pack()
 
 #pragma pack(1)
 typedef struct
