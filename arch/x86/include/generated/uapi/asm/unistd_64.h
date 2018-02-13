@@ -327,10 +327,11 @@
 #define __NR_userfaultfd 323
 #define __NR_membarrier 324
 #define __NR_mlock2 325
-#define __NR_kernel_entropy_get_size 326
+#define __NR_kernel_entropy_rec_info 326
 #define __NR_kernel_entropy_get_recorded 327
 #define __NR_kernel_entropy_start_recording 328
 #define __NR_kernel_entropy_stop_recording 329
 #define __NR_kernel_entropy_is_recording 330
+#define __NR_kernel_entropy_get_recordedX 331
 
 #endif /* _ASM_X86_UNISTD_64_H */

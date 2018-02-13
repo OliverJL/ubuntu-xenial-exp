@@ -77,7 +77,7 @@ typedef struct
 } kee_stack_canary_set;
 #pragma pack()
 
-/*
+
 #pragma pack(1)
 typedef struct
 {
@@ -96,23 +96,6 @@ typedef struct
    unsigned long error;
 } kee_aslr_set;
 #pragma pack()
-*/
-
-#pragma pack(1)
-typedef struct
-{
-   int pid;
-} kee_aslr_set;
-#pragma pack()
-
-/*
-#pragma pack(1)
-typedef struct
-{
- char info[220];
-} kee_aslr_set;
-#pragma pack()
-*/
 
 #pragma pack(1)
 typedef struct
@@ -141,6 +124,17 @@ typedef struct
 } kee_get_rnd_long;
 #pragma pack()
 
+#pragma pack(1)
+typedef struct
+{
+	 kee_add_interrupt_rnd * tb_kee_add_int_rnd;
+	 kee_stack_canary_set * tb_kee_stc_set;
+	 kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set;
+	 kee_get_rnd_int * tb_kee_get_rnd_int;
+	 kee_get_rnd_long * tb_kee_get_rnd_long;
+	 kee_aslr_set * tb_kee_aslr_set;
+}kernel_entropy_event_details;
+#pragma pack()
 
 extern bool is_kernel_entropy_recording;
 extern unsigned long kernel_entropy_record_size;
@@ -172,6 +166,7 @@ extern kernel_entropy_rec_info ke_rec_info;
 
 asmlinkage long sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer);
 asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long, kee_aslr_set * tb_kee_aslr_set);
+asmlinkage long sys_kernel_entropy_get_recordedX(kernel_entropy_event * tb_ke_event, kernel_entropy_event_details * tb_ke_event_details);
 asmlinkage long sys_kernel_entropy_start_recording(void);
 asmlinkage long sys_kernel_entropy_stop_recording(void);
 asmlinkage long sys_kernel_entropy_is_recording(void);

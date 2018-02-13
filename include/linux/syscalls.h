@@ -896,6 +896,7 @@ asmlinkage long sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buf
 //asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set);
 //asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long);
 asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long, kee_aslr_set * tb_kee_aslr_set);
+asmlinkage long sys_kernel_entropy_get_recordedX(kernel_entropy_event * tb_ke_event, kernel_entropy_event_details * tb_ke_event_details);
 //asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event);
 asmlinkage long sys_kernel_entropy_start_recording(void);
 asmlinkage long sys_kernel_entropy_stop_recording(void);

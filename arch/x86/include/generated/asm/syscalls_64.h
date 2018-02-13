@@ -314,6 +314,7 @@ __SYSCALL_COMMON(327, sys_kernel_entropy_get_recorded, sys_kernel_entropy_get_re
 __SYSCALL_COMMON(328, sys_kernel_entropy_start_recording, sys_kernel_entropy_start_recording)
 __SYSCALL_COMMON(329, sys_kernel_entropy_stop_recording, sys_kernel_entropy_stop_recording)
 __SYSCALL_COMMON(330, sys_kernel_entropy_is_recording, sys_kernel_entropy_is_recording)
+__SYSCALL_COMMON(331, sys_kernel_entropy_get_recordedX, sys_kernel_entropy_get_recordedX)
 __SYSCALL_X32(512, compat_sys_rt_sigaction, compat_sys_rt_sigaction)
 __SYSCALL_X32(513, stub_x32_rt_sigreturn, stub_x32_rt_sigreturn)
 __SYSCALL_X32(514, compat_sys_ioctl, compat_sys_ioctl)

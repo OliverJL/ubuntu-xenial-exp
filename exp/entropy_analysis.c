@@ -191,8 +191,6 @@ void kernel_entropy_rec_aslr_set(int pid, int elf_prot, int elf_flags, unsigned 
 		}
 		*/
 		aslr_set->pid = pid;
-		/*
-		aslr_set->pid = pid;
 		aslr_set->elf_prot = elf_prot;
 		aslr_set->elf_flags = elf_flags;
 		aslr_set->load_addr = load_addr;
@@ -205,7 +203,7 @@ void kernel_entropy_rec_aslr_set(int pid, int elf_prot, int elf_flags, unsigned 
 		aslr_set->start_data = start_data;
 		aslr_set->end_data = end_data;
 		aslr_set->error = error;
-		*/
+
 		//snprintf(aslr_set->info, "pid:%d - elf_prot:0x%08X - elf_flags:0x%08X - load_addr:0x%016lX - load_bias:0x%016lX - entry_point:0x%016lX - mmap_rnd:0x%016lX - vaddr:0x%016lX\n - start_code:0x%016lX - end_code:0x%016lX - start_data:0x%016lX - end_data:0x%016lX - error:%lu", pid, elf_prot, elf_flags, load_addr, load_bias, entry_point, mmap_rnd, vaddr, start_code, end_code, start_data, end_data, error);
 		//printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET - kernel_entropy_rec_aslr_set - info:%s",  aslr_set->info);
 
@@ -402,6 +400,88 @@ kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void)
 	return rec;
 }
 
+asmlinkage long sys_kernel_entropy_get_recordedX(kernel_entropy_event * tb_ke_event, kernel_entropy_event_details * tb_ke_event_details)
+{
+	int kee_rec_cntr = 0;
+	int kee_add_int_rnd_cntr = 0;
+	int tb_kee_stc_set_cntr = 0;
+	int tb_kee_get_rnd_int_cntr = 0;
+	int tb_kee_get_rnd_long_cntr = 0;
+	int tb_kee_aslr_set_cntr = 0;
+
+	 kee_add_interrupt_rnd * tb_kee_add_int_rnd;
+	 kee_stack_canary_set * tb_kee_stc_set;
+	 kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set;
+	 kee_get_rnd_int * tb_kee_get_rnd_int;
+	 kee_get_rnd_long * tb_kee_get_rnd_long;
+	 kee_aslr_set * tb_kee_aslr_set;
+
+	 kernel_entropy_event * ke_event;
+	 kernel_entropy_event * tb_kee;
+
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_add_int_rnd: 0x%08X", &tb_ke_event_details->tb_kee_add_int_rnd);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_stc_set: 0x%08X", &tb_ke_event_details->tb_kee_stc_set);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_rnd_int_secret_set: 0x%08X", &tb_ke_event_details->tb_kee_rnd_int_secret_set);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_get_rnd_int: 0x%08X", &tb_ke_event_details->tb_kee_get_rnd_int);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_get_rnd_long: 0x%08X", &tb_ke_event_details->tb_kee_get_rnd_long);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_aslr_set: 0x%08X", &tb_ke_event_details->tb_kee_aslr_set);
+
+		while(kee_rec_cntr < ke_rec_info.kee_rec_id )
+		{
+			ke_event = &recorded_kernel_entropy[kee_rec_cntr];
+			tb_kee = &tb_ke_event[kee_rec_cntr];
+
+			switch(ke_event->event_type)
+			{
+				case KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE:
+				case KEETYPE__ADD_INT_RND__FAST_POOL_LT_64:
+				case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
+					ke_event->detail_index = kee_add_int_rnd_cntr;
+					copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
+					copy_to_user(&tb_ke_event_details->tb_kee_add_int_rnd , &rec_ke_add_interrupt_rnd[kee_add_int_rnd_cntr], sizeof(kee_add_interrupt_rnd));
+					tb_ke_event_details->tb_kee_add_int_rnd += sizeof(kee_add_interrupt_rnd);
+					kee_add_int_rnd_cntr ++;
+					break;
+				case KEETYPE__STACK_CANARY_SET:
+					ke_event->detail_index = tb_kee_stc_set_cntr;
+					copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
+					copy_to_user(&tb_ke_event_details->tb_kee_stc_set, &rec_ke_stack_canary[tb_kee_stc_set_cntr], sizeof(kee_stack_canary_set));
+					tb_ke_event_details->tb_kee_stc_set += sizeof(kee_stack_canary_set);
+					tb_kee_stc_set_cntr ++;
+					break;
+				case KEETYPE__ASLR_RND_SET:
+					ke_event->detail_index = tb_kee_aslr_set_cntr;
+					copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
+					copy_to_user(&tb_ke_event_details->tb_kee_aslr_set, &rec_ke_aslr_set[tb_kee_aslr_set_cntr], sizeof(kee_aslr_set));
+					tb_ke_event_details->tb_kee_aslr_set += sizeof(kee_aslr_set);
+					tb_kee_aslr_set_cntr ++;
+					break;
+				case KEETYPE__RANDOM_INT_SECRET_SET:
+					copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
+					copy_to_user(tb_ke_event_details->tb_kee_rnd_int_secret_set, &rec_ke_rnd_int_secret, sizeof(kee_rnd_int_secret_set));
+					break;
+				case KEETYPE__GET_RANDOM_INT:
+					ke_event->detail_index = tb_kee_get_rnd_int_cntr;
+					copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
+					copy_to_user(&tb_ke_event_details->tb_kee_get_rnd_int, &rec_ke_get_rnd_int[tb_kee_get_rnd_int_cntr], sizeof(kee_get_rnd_int));
+					tb_ke_event_details->tb_kee_get_rnd_int += sizeof(kee_get_rnd_int);
+					tb_kee_get_rnd_int_cntr ++;
+					break;
+				case KEETYPE__GET_RANDOM_LONG:
+					ke_event->detail_index = tb_kee_get_rnd_long_cntr;
+					copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
+					copy_to_user(&tb_ke_event_details->tb_kee_get_rnd_long, &rec_ke_get_rnd_long[tb_kee_get_rnd_long_cntr], sizeof(kee_get_rnd_long));
+					tb_ke_event_details->tb_kee_get_rnd_long += sizeof(kee_get_rnd_long);
+					tb_kee_get_rnd_long_cntr ++;
+					break;
+			}
+			//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ kee_rec_cntr++");
+			kee_rec_cntr ++;
+		}
+		return 0;
+
+}
+
 asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long, kee_aslr_set * tb_kee_aslr_set)
 {
 	int kee_rec_cntr = 0;
@@ -415,8 +495,8 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 
 	kernel_entropy_event * ke_event;
 	kernel_entropy_event * tb_kee;
-	kee_add_interrupt_rnd * trg_add_int_rnd_event;
-	kee_add_interrupt_rnd * kee_add_int_rnd;
+	//kee_add_interrupt_rnd * trg_add_int_rnd_event;
+	//kee_add_interrupt_rnd * kee_add_int_rnd;
 
 	while(kee_rec_cntr < ke_rec_info.kee_rec_id )
 	{
