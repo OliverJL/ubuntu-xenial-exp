@@ -426,6 +426,7 @@ asmlinkage long sys_kernel_entropy_get_recordedX(kernel_entropy_event * tb_ke_ev
 	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_get_rnd_long: 0x%08X", tb_ke_event_details->tb_kee_get_rnd_long);
 	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_aslr_set: 0x%08X", tb_ke_event_details->tb_kee_aslr_set);
 
+	 return 0; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		while(kee_rec_cntr < ke_rec_info.kee_rec_id )
 		{
 			ke_event = &recorded_kernel_entropy[kee_rec_cntr];
