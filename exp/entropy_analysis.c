@@ -419,12 +419,12 @@ asmlinkage long sys_kernel_entropy_get_recordedX(kernel_entropy_event * tb_ke_ev
 	 kernel_entropy_event * ke_event;
 	 kernel_entropy_event * tb_kee;
 
-	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_add_int_rnd: 0x%08X", &tb_ke_event_details->tb_kee_add_int_rnd);
-	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_stc_set: 0x%08X", &tb_ke_event_details->tb_kee_stc_set);
-	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_rnd_int_secret_set: 0x%08X", &tb_ke_event_details->tb_kee_rnd_int_secret_set);
-	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_get_rnd_int: 0x%08X", &tb_ke_event_details->tb_kee_get_rnd_int);
-	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_get_rnd_long: 0x%08X", &tb_ke_event_details->tb_kee_get_rnd_long);
-	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_aslr_set: 0x%08X", &tb_ke_event_details->tb_kee_aslr_set);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_add_int_rnd: 0x%08X", tb_ke_event_details->tb_kee_add_int_rnd);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_stc_set: 0x%08X", tb_ke_event_details->tb_kee_stc_set);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_rnd_int_secret_set: 0x%08X", tb_ke_event_details->tb_kee_rnd_int_secret_set);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_get_rnd_int: 0x%08X", tb_ke_event_details->tb_kee_get_rnd_int);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_get_rnd_long: 0x%08X", tb_ke_event_details->tb_kee_get_rnd_long);
+	 printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recordedX - tb_kee_aslr_set: 0x%08X", tb_ke_event_details->tb_kee_aslr_set);
 
 		while(kee_rec_cntr < ke_rec_info.kee_rec_id )
 		{
