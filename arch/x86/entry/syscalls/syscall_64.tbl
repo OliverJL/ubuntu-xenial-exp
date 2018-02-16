@@ -338,6 +338,8 @@
 329 common	kernel_entropy_stop_recording	sys_kernel_entropy_stop_recording
 330 common	kernel_entropy_is_recording	sys_kernel_entropy_is_recording
 331 common	kernel_entropy_get_recordedX	sys_kernel_entropy_get_recordedX
+332 common  kernel_entropy_get_recorded_by_type	sys_kernel_entropy_get_recorded_by_type
+333	common	kernel_entropy_get_recorded_by_typeX sys_kernel_entropy_get_recorded_by_typeX
 
 #
 # x32-specific system call numbers start at 512 to avoid cache impact

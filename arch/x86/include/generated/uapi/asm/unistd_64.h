@@ -333,5 +333,7 @@
 #define __NR_kernel_entropy_stop_recording 329
 #define __NR_kernel_entropy_is_recording 330
 #define __NR_kernel_entropy_get_recordedX 331
+#define __NR_kernel_entropy_get_recorded_by_type 332
+#define __NR_kernel_entropy_get_recorded_by_typeX 333
 
 #endif /* _ASM_X86_UNISTD_64_H */
