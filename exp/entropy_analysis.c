@@ -518,6 +518,7 @@ asmlinkage long sys_kernel_entropy_get_recorded_by_type(kernel_entropy_event * t
 				case KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE:
 				case KEETYPE__ADD_INT_RND__FAST_POOL_LT_64:
 				case KEETYPE__ADD_INT_RND__SPIN_TRYLOCK:
+					printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__begin: ke_event->id: %d \n", ke_event->id);
 					ke_event->detail_index = kee_add_int_rnd_cntr;
 					copy_to_user(tb_eh, ke_event, sizeof(kernel_entropy_event));
 					tb_ed = tb_event_details + (sizeof(kee_add_interrupt_rnd) * kee_add_int_rnd_cntr);
