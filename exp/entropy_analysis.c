@@ -641,6 +641,7 @@ kee_aslr_set * tb_usr_kee_aslr_set;
 asmlinkage long sys_ke_get_recorded__kee_aslr_set(kee_aslr_set * tb_kee_aslr_set)
 {
 	tb_usr_kee_aslr_set = tb_kee_aslr_set;
+	return 0;
 }
 
 //asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long, kee_aslr_set * tb_kee_aslr_set)
