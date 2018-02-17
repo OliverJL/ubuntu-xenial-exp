@@ -575,7 +575,7 @@ asmlinkage long sys_ke_get_recorded__ke_event_heads(kernel_entropy_event * tb_ke
 {
 	int remaining_bytes;
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__ke_event_heads - bytes to copy: %d\n", (sizeof(kernel_entropy_event) * ke_rec_info.kee_rec_id));
-	remaining_bytes = copy_to_user(&tb_ke_event, &recorded_kernel_entropy, (sizeof(kernel_entropy_event) * ke_rec_info.kee_rec_id));
+	remaining_bytes = copy_to_user(tb_ke_event, &recorded_kernel_entropy, (sizeof(kernel_entropy_event) * ke_rec_info.kee_rec_id));
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__ke_event_heads - remaining_bytes: %d\n", remaining_bytes);
 
 }
@@ -584,7 +584,7 @@ asmlinkage long sys_ke_get_recorded__add_interrupt_rnd(kee_add_interrupt_rnd * t
 {
 	int remaining_bytes;
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__add_interrupt_rnd - bytes to copy: %d\n", (sizeof(kee_add_interrupt_rnd) * ke_rec_info.kee_add_interrupt_rnd_id));
-	remaining_bytes = copy_to_user(&tb_kee_add_int_rnd, &rec_ke_add_interrupt_rnd, (sizeof(kee_add_interrupt_rnd) * ke_rec_info.kee_add_interrupt_rnd_id));
+	remaining_bytes = copy_to_user(tb_kee_add_int_rnd, &rec_ke_add_interrupt_rnd, (sizeof(kee_add_interrupt_rnd) * ke_rec_info.kee_add_interrupt_rnd_id));
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__add_interrupt_rnd - remaining_bytes: %d\n", remaining_bytes);
 	return remaining_bytes;
 }
@@ -593,7 +593,7 @@ asmlinkage long sys_ke_get_recorded__stack_canary_set(kee_stack_canary_set * tb_
 {
 	int remaining_bytes;
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__stack_canary_set - bytes to copy: %d\n", (sizeof(kee_stack_canary_set) * ke_rec_info.kee_stack_canary_set_id));
-	remaining_bytes = copy_to_user(&tb_kee_stc_set, &rec_ke_stack_canary, (sizeof(kee_stack_canary_set) * ke_rec_info.kee_stack_canary_set_id));
+	remaining_bytes = copy_to_user(tb_kee_stc_set, &rec_ke_stack_canary, (sizeof(kee_stack_canary_set) * ke_rec_info.kee_stack_canary_set_id));
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__stack_canary_set - remaining_bytes: %d\n", remaining_bytes);
 	return remaining_bytes;
 }
@@ -611,7 +611,7 @@ asmlinkage long sys_ke_get_recorded__kee_get_rnd_int(kee_get_rnd_int * tb_kee_ge
 {
 	int remaining_bytes;
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__kee_get_rnd_int - bytes to copy: %d\n", (sizeof(kee_get_rnd_int) * ke_rec_info.kee_get_random_int_id));
-	remaining_bytes = copy_to_user(&tb_kee_get_rnd_int, &rec_ke_get_rnd_int, (sizeof(kee_get_rnd_int) * ke_rec_info.kee_get_random_int_id));
+	remaining_bytes = copy_to_user(tb_kee_get_rnd_int, &rec_ke_get_rnd_int, (sizeof(kee_get_rnd_int) * ke_rec_info.kee_get_random_int_id));
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__kee_get_rnd_int - remaining_bytes: %d\n", remaining_bytes);
 	return remaining_bytes;
 }
@@ -620,7 +620,7 @@ asmlinkage long sys_ke_get_recorded__kee_get_rnd_long(kee_get_rnd_long * tb_kee_
 {
 	int remaining_bytes;
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__kee_get_rnd_long - bytes to copy: %d\n", (sizeof(kee_get_rnd_long) * ke_rec_info.kee_get_random_long_id));
-	remaining_bytes = copy_to_user(&tb_kee_get_rnd_long, &rec_ke_get_rnd_long, (sizeof(kee_get_rnd_long) * ke_rec_info.kee_get_random_long_id));
+	remaining_bytes = copy_to_user(tb_kee_get_rnd_long, &rec_ke_get_rnd_long, (sizeof(kee_get_rnd_long) * ke_rec_info.kee_get_random_long_id));
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__kee_get_rnd_long - remaining_bytes: %d\n", remaining_bytes);
 	return remaining_bytes;
 }
@@ -629,7 +629,7 @@ asmlinkage long sys_ke_get_recorded__kee_aslr_set(kee_aslr_set * tb_kee_aslr_set
 {
 	int remaining_bytes;
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__kee_aslr_set - bytes to copy: %d\n", (sizeof(kee_aslr_set) * ke_rec_info.kee_aslr_set_id));
-	remaining_bytes = copy_to_user(&tb_kee_aslr_set, &rec_ke_aslr_set, (sizeof(kee_aslr_set) * ke_rec_info.kee_aslr_set_id));
+	remaining_bytes = copy_to_user(tb_kee_aslr_set, &rec_ke_aslr_set, (sizeof(kee_aslr_set) * ke_rec_info.kee_aslr_set_id));
 	printk(KERN_EMERG ">>>>>> sys_ke_get_recorded__kee_aslr_set - remaining_bytes: %d\n", remaining_bytes);
 	return remaining_bytes;
 }
