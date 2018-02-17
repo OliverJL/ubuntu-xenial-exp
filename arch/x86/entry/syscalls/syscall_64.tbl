@@ -339,6 +339,7 @@
 330 	common	kernel_entropy_is_recording	sys_kernel_entropy_is_recording
 331	common	kernel_entropy_set_user_tb_kee_aslr_set	sys_kernel_entropy_set_user_tb_kee_aslr_set
 
+
 #
 # x32-specific system call numbers start at 512 to avoid cache impact
 # for native 64-bit operation.
