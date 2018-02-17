@@ -446,10 +446,17 @@ kee_arch_mmap_rnd * kernel_entropy_malloc_arch_mmap_rnd(void)
 }
 
 kee_aslr_set * tb_user_kee_aslr_set;
+kee_arch_mmap_rnd * tb_user_kee_arch_mmap_rnd;
 
 asmlinkage long sys_kernel_entropy_set_user_tb_kee_aslr_set(kee_aslr_set * tb_kee_aslr_set)
 {
 	tb_user_kee_aslr_set = tb_kee_aslr_set;
+	return 0;
+}
+
+asmlinkage long sys_kernel_entropy_set_user_tb_kee_arch_mmap_rnd(kee_arch_mmap_rnd * tb_kee_arch_mmap_rnd)
+{
+	tb_user_kee_arch_mmap_rnd = tb_kee_arch_mmap_rnd;
 	return 0;
 }
 
@@ -460,6 +467,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 	int tb_kee_stc_set_cntr = 0;
 	int tb_kee_get_rnd_int_cntr = 0;
 	int tb_kee_get_rnd_long_cntr = 0;
+	int tb_kee_arch_mmap_rnd_cntr = 0;
 	int tb_kee_aslr_set_cntr = 0;
 	int cpy_ret = 0;
 	int access_ok = 0;
@@ -522,6 +530,12 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
 				copy_to_user(&tb_kee_get_rnd_long[tb_kee_get_rnd_long_cntr], &rec_ke_get_rnd_long[tb_kee_get_rnd_long_cntr], sizeof(kee_get_rnd_long));
 				tb_kee_get_rnd_long_cntr ++;
+				break;
+			case KEETYPE__ARCH_MMAP_RND:
+				ke_event->detail_index = tb_kee_arch_mmap_rnd_cntr;
+				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
+				copy_to_user(&tb_user_kee_arch_mmap_rnd[tb_kee_arch_mmap_rnd_cntr], &rec_ke_arch_mmap_rnd[tb_kee_arch_mmap_rnd_cntr], sizeof(kee_arch_mmap_rnd));
+				tb_kee_arch_mmap_rnd_cntr ++;
 				break;
 		}
 		//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ kee_rec_cntr++");

@@ -288,6 +288,7 @@
 #define __NR_kernel_entropy_stop_recording (__X32_SYSCALL_BIT + 329)
 #define __NR_kernel_entropy_is_recording (__X32_SYSCALL_BIT + 330)
 #define __NR_kernel_entropy_set_user_tb_kee_aslr_set (__X32_SYSCALL_BIT + 331)
+#define __NR_kernel_entropy_set_user_tb_kee_arch_mmap_rnd (__X32_SYSCALL_BIT + 332)
 #define __NR_rt_sigaction (__X32_SYSCALL_BIT + 512)
 #define __NR_rt_sigreturn (__X32_SYSCALL_BIT + 513)
 #define __NR_ioctl (__X32_SYSCALL_BIT + 514)

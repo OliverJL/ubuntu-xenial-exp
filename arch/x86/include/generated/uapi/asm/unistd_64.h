@@ -333,5 +333,6 @@
 #define __NR_kernel_entropy_stop_recording 329
 #define __NR_kernel_entropy_is_recording 330
 #define __NR_kernel_entropy_set_user_tb_kee_aslr_set 331
+#define __NR_kernel_entropy_set_user_tb_kee_arch_mmap_rnd 332
 
 #endif /* _ASM_X86_UNISTD_64_H */
