@@ -463,19 +463,11 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				ke_event->detail_index = tb_kee_aslr_set_cntr;
 				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
 				//copy_to_user(&tb_kee_aslr_set[tb_kee_aslr_set_cntr], &rec_ke_aslr_set[tb_kee_aslr_set_cntr], sizeof(kee_aslr_set));
-<<<<<<< 7c2203f5006238068d8ef34a231def645aedb1e5
-				cpy_ret = copy_to_user(&tb_usr_kee_aslr_set[tb_kee_aslr_set_cntr], &rec_ke_aslr_set[tb_kee_aslr_set_cntr], sizeof(kee_aslr_set));
-				//printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET pid:%d - elf_prot:0x%08X - elf_flags:0x%08X - load_addr:0x%016lX - load_bias:0x%016lX - entry_point:0x%016lX - mmap_rnd:0x%016lX - vaddr:0x%016lX\n - start_code:0x%016lX - end_code:0x%016lX - start_data:0x%016lX - end_data:0x%016lX - error:%lu - cpy_ret:%d", rec_ke_aslr_set[tb_kee_aslr_set_cntr].pid, rec_ke_aslr_set[tb_kee_aslr_set_cntr].elf_prot, rec_ke_aslr_set[tb_kee_aslr_set_cntr].elf_flags, rec_ke_aslr_set[tb_kee_aslr_set_cntr].load_addr, rec_ke_aslr_set[tb_kee_aslr_set_cntr].load_bias, rec_ke_aslr_set[tb_kee_aslr_set_cntr].entry_point, rec_ke_aslr_set[tb_kee_aslr_set_cntr].mmap_rnd, rec_ke_aslr_set[tb_kee_aslr_set_cntr].vaddr, rec_ke_aslr_set[tb_kee_aslr_set_cntr].start_code, rec_ke_aslr_set[tb_kee_aslr_set_cntr].end_code, rec_ke_aslr_set[tb_kee_aslr_set_cntr].start_data, rec_ke_aslr_set[tb_kee_aslr_set_cntr].end_data, rec_ke_aslr_set[tb_kee_aslr_set_cntr].error, cpy_ret);
-				//printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET %s - cpy_ret:%d", rec_ke_aslr_set[tb_kee_aslr_set_cntr].info, cpy_ret);
-				//access_ok = access_ok(VERIFY_WRITE, &tb_kee_aslr_set[tb_kee_aslr_set_cntr], sizeof(kee_aslr_set));
-				//printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET addr:0x%08X - pid:%d - cpy_ret:%d - access_ok:%d", &tb_kee_aslr_set[tb_kee_aslr_set_cntr], rec_ke_aslr_set[tb_kee_aslr_set_cntr].pid, cpy_ret, access_ok);
-=======
 				cpy_ret = copy_to_user(&tb_user_kee_aslr_set[tb_kee_aslr_set_cntr], &rec_ke_aslr_set[tb_kee_aslr_set_cntr], sizeof(kee_aslr_set));
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET pid:%d - elf_prot:0x%08X - elf_flags:0x%08X - load_addr:0x%016lX - load_bias:0x%016lX - entry_point:0x%016lX - mmap_rnd:0x%016lX - vaddr:0x%016lX\n - start_code:0x%016lX - end_code:0x%016lX - start_data:0x%016lX - end_data:0x%016lX - error:%lu - cpy_ret:%d", rec_ke_aslr_set[tb_kee_aslr_set_cntr].pid, rec_ke_aslr_set[tb_kee_aslr_set_cntr].elf_prot, rec_ke_aslr_set[tb_kee_aslr_set_cntr].elf_flags, rec_ke_aslr_set[tb_kee_aslr_set_cntr].load_addr, rec_ke_aslr_set[tb_kee_aslr_set_cntr].load_bias, rec_ke_aslr_set[tb_kee_aslr_set_cntr].entry_point, rec_ke_aslr_set[tb_kee_aslr_set_cntr].mmap_rnd, rec_ke_aslr_set[tb_kee_aslr_set_cntr].vaddr, rec_ke_aslr_set[tb_kee_aslr_set_cntr].start_code, rec_ke_aslr_set[tb_kee_aslr_set_cntr].end_code, rec_ke_aslr_set[tb_kee_aslr_set_cntr].start_data, rec_ke_aslr_set[tb_kee_aslr_set_cntr].end_data, rec_ke_aslr_set[tb_kee_aslr_set_cntr].error, cpy_ret);
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET - cpy_ret:%d", cpy_ret);
 				access_ok = access_ok(VERIFY_WRITE, &tb_user_kee_aslr_set[tb_kee_aslr_set_cntr], sizeof(kee_aslr_set));
 				printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET addr:0x%08X - pid:%d - cpy_ret:%d - access_ok:%d", &tb_kee_aslr_set[tb_kee_aslr_set_cntr], rec_ke_aslr_set[tb_kee_aslr_set_cntr].pid, cpy_ret, access_ok);
->>>>>>> hard reset to 7a781b5b134c4fd3cd6ac97f9298699931c2180c
 				tb_kee_aslr_set_cntr ++;
 				break;
 			case KEETYPE__RANDOM_INT_SECRET_SET:
