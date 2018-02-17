@@ -332,15 +332,6 @@
 #define __NR_kernel_entropy_start_recording 328
 #define __NR_kernel_entropy_stop_recording 329
 #define __NR_kernel_entropy_is_recording 330
-#define __NR_kernel_entropy_get_recordedX 331
-#define __NR_kernel_entropy_get_recorded_by_type 332
-#define __NR_kernel_entropy_get_recorded_by_typeX 333
-#define __NR_ke_get_recorded__ke_event_heads 334
-#define __NR_ke_get_recorded__add_interrupt_rnd 335
-#define __NR_ke_get_recorded__stack_canary_set 336
-#define __NR_ke_get_recorded__rnd_int_secret_set 337
-#define __NR_ke_get_recorded__kee_get_rnd_int 338
-#define __NR_ke_get_recorded__kee_get_rnd_long 339
-#define __NR_ke_get_recorded__kee_aslr_set 340
+#define __NR_kernel_entropy_set_user_tb_kee_aslr_set 331
 
 #endif /* _ASM_X86_UNISTD_64_H */
