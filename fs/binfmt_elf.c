@@ -1236,8 +1236,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
 	// unsigned long error;
 	 //kernel_entropy_rec_aslr_set(&bprm_filename[0], &bprm_interp[0], current->pid, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
 
-	//kernel_entropy_rec_aslr_set(&bprm_filename[0], &bprm_interp[0], 17, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
-	kernel_entropy_rec_aslr_set(current->pid, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
+	kernel_entropy_rec_aslr_set(&bprm_filename[0], &bprm_interp[0], current->pid, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
+	//kernel_entropy_rec_aslr_set(current->pid, 0, current->flags, load_addr, load_bias, loc->elf_ex.e_entry, mmap_rnd, elf_ppnt->p_vaddr, current->mm->start_code, current->mm->end_code, current->mm->start_data, current->mm->end_data, error );
 
 #ifdef ELF_PLAT_INIT
 	/*

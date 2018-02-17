@@ -85,6 +85,8 @@ typedef struct
 typedef struct
 {
    int pid;
+   char filename[100];
+   char elf_interpreter[100];
    int elf_prot;
    int elf_flags;
    unsigned long load_addr;

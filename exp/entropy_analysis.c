@@ -146,8 +146,8 @@ void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret)
 extern int rec_aslr_set_filename_max;
 extern int rec_aslr_set_elf_interpreter_max;
 
-//void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int pid, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data, unsigned long error )
-void kernel_entropy_rec_aslr_set(int pid, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data, unsigned long error )
+void kernel_entropy_rec_aslr_set(char * filename, char * elf_interpreter, int pid, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data, unsigned long error )
+//void kernel_entropy_rec_aslr_set(int pid, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data, unsigned long error )
 {
 	kernel_entropy_event * ke_event;
 	kee_aslr_set * aslr_set;
@@ -157,54 +157,42 @@ void kernel_entropy_rec_aslr_set(int pid, int elf_prot, int elf_flags, unsigned 
 
 	if(ke_event != NULL)
 	{
-		/*
-		if(filename != NULL)
+
+		if(filename == NULL)
 		{
-			/*
-			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - filename: %s", filename );
+
+			//printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - filename: %s", filename );
 			len = strlen(filename);
-			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - filename - len: %d", len );
+			//printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - filename - len: %d", len );
 			if(len > rec_aslr_set_filename_max)
 			{
 				rec_aslr_set_filename_max = len;
 			}
-			* /
-			//len = strlen("filename=NULL");
-			//strncpy("filename=NULL", filename, len);
+
+			len = strlen("filename=NULL");
+			strncpy(aslr_set->filename, "filename=NULL", len);
 		}else
 		{
-			//len = strlen(filename);
-			//strncpy(aslr_set->filename, filename, len);
+			len = strlen(filename);
+			strncpy(aslr_set->filename, filename, len);
 		}
-		/*
-		len = strlen(elf_interpreter);
-		len = strlen(elf_interpreter);
-		* /
-		if(elf_interpreter != NULL && 1==0)
-		{
-			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - elf_interpreter: %s", elf_interpreter );
-			len = strlen(elf_interpreter);
-			printk(KERN_EMERG ">>>>>>>>>>>>>>> kernel_entropy_rec_aslr_set - elf_interpreter - len: %d", len );
 
+		if(elf_interpreter == NULL)
+		{
 			len = strlen(elf_interpreter);
 			if(len > rec_aslr_set_elf_interpreter_max)
 			{
 				rec_aslr_set_elf_interpreter_max = len;
 			}
-		}
-		*/
-		/*
-		if(filename != NULL)
-		{
-			len = strlen(filename);
-			strncpy(aslr_set->filename, filename, len);
-		}
-		if(elf_interpreter != NULL)
+
+			len = strlen("elf_interpreter=NULL");
+			strncpy(aslr_set->elf_interpreter, "elf_interpreter=NULL", len);
+		}else
 		{
 			len = strlen(elf_interpreter);
 			strncpy(aslr_set->elf_interpreter, elf_interpreter, len);
 		}
-		*/
+
 		aslr_set->pid = pid;
 		aslr_set->elf_prot = elf_prot;
 		aslr_set->elf_flags = elf_flags;
