@@ -33,7 +33,7 @@ extern int print_keent_msg;
 extern unsigned int kernel_entropy_rec_id;
 
 //extern bool is_kernel_entropy_recording;
-
+// -------------------------->
 #pragma pack(1)
 typedef struct
 {
@@ -148,6 +148,7 @@ typedef struct
 	 kee_aslr_set * tb_kee_aslr_set;
 }kernel_entropy_event_details;
 #pragma pack()
+// --------------------------<
 
 extern bool is_kernel_entropy_recording;
 extern unsigned long kernel_entropy_record_size;
