@@ -1096,6 +1096,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		//len = strlen_user(bprm->filename);
 		len = strlen(bprm->filename);
 		strncpy(&bprm_filename[0], bprm->filename, len);
+		bprm_filename[len] = '\0';
 		printk(KERN_EMERG ">>>>>>>>>> bprm->filename :%s", bprm->filename);
 		printk(KERN_EMERG ">>>>>>>>>> bprm_filename :%s", &bprm_filename[0]);
 		printk(KERN_EMERG ">>>>>>>>>> bprm->filename - len :%d", len);
@@ -1105,6 +1106,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		//len = strlen_user(bprm->interp);
 		len = strlen(bprm->interp);
 		strncpy(&bprm_interp[0], bprm->interp, len);
+		bprm_interp[len] = '\0';
 		printk(KERN_EMERG ">>>>>>>>>> bprm->interp :%s", bprm->interp);
 		printk(KERN_EMERG ">>>>>>>>>> bprm_interp :%s", bprm_interp);
 		printk(KERN_EMERG ">>>>>>>>>> bprm->interp - len :%d", len);
