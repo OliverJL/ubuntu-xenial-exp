@@ -75,27 +75,35 @@ unsigned long arch_mmap_rnd(int log)
 	 * 28 bits of randomness in 64bit mmaps, 40 address space bits
 	 */
 	unsigned long get_random_int_value = 0;
+	bool mmap_is_ia32;
+	unsigned long get_random_int_value_after_828_shift;
+
 	if (mmap_is_ia32()){
+		mmap_is_ia32 = 1;
 		get_random_int_value = (unsigned long)get_random_int();
 		if(log)
 			printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - mmap_is_ia32 - get_random_int:%016lX\n", get_random_int_value );
-		rnd = get_random_int_value % (1<<8);
+		get_random_int_value_after_828_shift = get_random_int_value % (1<<8);
 		if(log)
 			printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - mmap_is_ia32 - rnd:%016lX\n", rnd );
 		//org: rnd = (unsigned long)get_random_int() % (1<<8);
 	}
 	else{
+		mmap_is_ia32 = 0;
 		get_random_int_value = (unsigned long)get_random_int();
 		if(log)
 			printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - !mmap_is_ia32 - get_random_int:%016lX\n", get_random_int_value );
-		rnd = get_random_int_value % (1<<28);
+		get_random_int_value_after_828_shift = get_random_int_value % (1<<28);
 		if(log)
 			printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - !mmap_is_ia32 - rnd:%016lX\n", rnd );
 		//rnd = (unsigned long)get_random_int() % (1<<28);
 	}
-	rnd = rnd << PAGE_SHIFT;
+	rnd = get_random_int_value_after_828_shift << PAGE_SHIFT;
 	if(log)
 		printk(KERN_EMERG ">>>>>>>>>> - arch_mmap_rnd - rnd:%016lX\n", rnd );
+
+	kernel_entropy_rec_arch_mmap_rnd(mmap_is_ia32, get_random_int_value, get_random_int_value_after_828_shift, rnd);
+
 	return rnd;
 	//org: return rnd << PAGE_SHIFT;
 }
