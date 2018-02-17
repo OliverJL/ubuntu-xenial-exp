@@ -175,6 +175,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type);
 kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void);
 kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void);
 kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void);
+
 kee_get_rnd_long * kernel_entropy_malloc_get_rnd_long(void);
 kee_aslr_set * kernel_entropy_malloc_aslr_set(void);
 void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, bool print_dmesg);
