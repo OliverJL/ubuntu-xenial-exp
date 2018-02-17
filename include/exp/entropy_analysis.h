@@ -171,6 +171,7 @@ asmlinkage long sys_kernel_entropy_start_recording(void);
 asmlinkage long sys_kernel_entropy_stop_recording(void);
 asmlinkage long sys_kernel_entropy_is_recording(void);
 
+
 kernel_entropy_event * kernel_entropy_malloc_event(short event_type);
 kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void);
 kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void);
