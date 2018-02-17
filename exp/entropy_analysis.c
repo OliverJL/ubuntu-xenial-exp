@@ -26,6 +26,7 @@ kee_stack_canary_set rec_ke_stack_canary[KE_RECORD_MAX__STACK_CANARY_SET];
 kee_get_rnd_int rec_ke_get_rnd_int[KE_RECORD_MAX__GET_RANDOM_INT];
 kee_get_rnd_long rec_ke_get_rnd_long[KE_RECORD_MAX__GET_RANDOM_LONG];
 kee_aslr_set rec_ke_aslr_set[KE_RECORD_MAX__ASLR_RND_SET];
+kee_arch_mmap_rnd rec_ke_arch_mmap_rnd[KE_RECORD_MAX__ARCH_MMAP_RND];
 
 /*
 326 common	kernel_entropy_get_size	sys_kernel_entropy_get_size
@@ -103,6 +104,12 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 			rec->id = ke_rec_info.kee_rec_id ++;
 			rec->event_type = event_type;
 			rec->event_details = kernel_entropy_malloc_get_rnd_long();
+			break;
+		case KEETYPE__ARCH_MMAP_RND:
+			rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
+			rec->id = ke_rec_info.kee_rec_id ++;
+			rec->event_type = event_type;
+			rec->event_details = kernel_entropy_malloc_arch_mmap_rnd();
 			break;
 		}
 	}
@@ -248,6 +255,33 @@ void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int
 	}
 }
 
+void kernel_entropy_rec_arch_mmap_rnd(bool mmap_is_ia32, unsigned long get_random_int_value, unsigned long get_random_int_value_after_828_shift, unsigned long get_random_int_value_after_page_align)
+{
+	kernel_entropy_event * ke_event;
+	kee_arch_mmap_rnd * arch_mmap_rnd;
+
+	ke_event = kernel_entropy_malloc_event(KEETYPE__ARCH_MMAP_RND);
+
+	if(ke_event != NULL)
+	{
+		arch_mmap_rnd = (kee_arch_mmap_rnd *)ke_event->event_details;
+		arch_mmap_rnd->mmap_is_ia32 = mmap_is_ia32;
+		arch_mmap_rnd->get_random_int_value = get_random_int_value;
+		arch_mmap_rnd->get_random_int_value_after_828_shift = get_random_int_value_after_828_shift;
+		arch_mmap_rnd->get_random_int_value_after_page_align = get_random_int_value_after_page_align;
+		/*
+		if(print_rec_rec_get_rnd_int_cntr < print_rec_rec_get_rnd_int_max)
+		{
+			printk(KERN_EMERG ">>>>>>!! kernel_entropy_rec_get_rnd_int pid:%05d - jiffies:0x%016X - rnd_raw:0x%08X - rnd_final:0x%08X\n", pid, jiffies, rnd_raw, rnd_final);
+			printk(KERN_EMERG ">>>>>>?? kernel_entropy_rec_get_rnd_int pid:%05d - jiffies:0x%016X - rnd_raw:0x%08X - rnd_final:0x%08X\n", get_rnd_int->pid, get_rnd_int->jiffies, get_rnd_int->rnd_raw, get_rnd_int->rnd_final);
+			print_rec_rec_get_rnd_int_cntr ++;
+		}
+		*/
+	}else
+	{
+		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_arch_mmap_rnd - ke_event == NULL!!!");
+	}
+}
 
 void kernel_entropy_rec_get_rnd_long(int pid, unsigned long jiffies, unsigned long rnd_raw, unsigned long rnd_final)
 {
@@ -408,6 +442,21 @@ kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void)
 	return rec;
 }
 
+kee_arch_mmap_rnd * kernel_entropy_malloc_arch_mmap_rnd(void)
+{
+	kee_arch_mmap_rnd * rec = NULL;
+	if(ke_rec_info.kee_arch_mmap_rnd_id >= KE_RECORD_MAX__ARCH_MMAP_RND)
+	{
+		is_kernel_entropy_recording = 0;
+		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__ARCH_MMAP_RND reached!!!");
+	}
+	else
+	{
+		rec = &rec_ke_arch_mmap_rnd[ke_rec_info.kee_arch_mmap_rnd_id++];
+	}
+	return rec;
+}
+
 kee_aslr_set * tb_user_kee_aslr_set;
 
 asmlinkage long sys_kernel_entropy_set_user_tb_kee_aslr_set(kee_aslr_set * tb_kee_aslr_set)
@@ -466,8 +515,8 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				cpy_ret = copy_to_user(&tb_user_kee_aslr_set[tb_kee_aslr_set_cntr], &rec_ke_aslr_set[tb_kee_aslr_set_cntr], sizeof(kee_aslr_set));
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET pid:%d - elf_prot:0x%08X - elf_flags:0x%08X - load_addr:0x%016lX - load_bias:0x%016lX - entry_point:0x%016lX - mmap_rnd:0x%016lX - vaddr:0x%016lX\n - start_code:0x%016lX - end_code:0x%016lX - start_data:0x%016lX - end_data:0x%016lX - error:%lu - cpy_ret:%d", rec_ke_aslr_set[tb_kee_aslr_set_cntr].pid, rec_ke_aslr_set[tb_kee_aslr_set_cntr].elf_prot, rec_ke_aslr_set[tb_kee_aslr_set_cntr].elf_flags, rec_ke_aslr_set[tb_kee_aslr_set_cntr].load_addr, rec_ke_aslr_set[tb_kee_aslr_set_cntr].load_bias, rec_ke_aslr_set[tb_kee_aslr_set_cntr].entry_point, rec_ke_aslr_set[tb_kee_aslr_set_cntr].mmap_rnd, rec_ke_aslr_set[tb_kee_aslr_set_cntr].vaddr, rec_ke_aslr_set[tb_kee_aslr_set_cntr].start_code, rec_ke_aslr_set[tb_kee_aslr_set_cntr].end_code, rec_ke_aslr_set[tb_kee_aslr_set_cntr].start_data, rec_ke_aslr_set[tb_kee_aslr_set_cntr].end_data, rec_ke_aslr_set[tb_kee_aslr_set_cntr].error, cpy_ret);
 				//printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET - cpy_ret:%d", cpy_ret);
-				access_ok = access_ok(VERIFY_WRITE, &tb_user_kee_aslr_set[tb_kee_aslr_set_cntr], sizeof(kee_aslr_set));
-				printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET addr:0x%08X - pid:%d - cpy_ret:%d - access_ok:%d", &tb_kee_aslr_set[tb_kee_aslr_set_cntr], rec_ke_aslr_set[tb_kee_aslr_set_cntr].pid, cpy_ret, access_ok);
+				//access_ok = access_ok(VERIFY_WRITE, &tb_user_kee_aslr_set[tb_kee_aslr_set_cntr], sizeof(kee_aslr_set));
+				//printk(KERN_EMERG ">>>>>> KEETYPE__ASLR_RND_SET addr:0x%08X - pid:%d - cpy_ret:%d - access_ok:%d", &tb_kee_aslr_set[tb_kee_aslr_set_cntr], rec_ke_aslr_set[tb_kee_aslr_set_cntr].pid, cpy_ret, access_ok);
 				tb_kee_aslr_set_cntr ++;
 				break;
 			case KEETYPE__RANDOM_INT_SECRET_SET:
@@ -490,6 +539,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 		//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ kee_rec_cntr++");
 		kee_rec_cntr ++;
 	}
+	printk(KERN_EMERG ">>>>>> sys_kernel_entropy_get_recorded - done!");
 	return 0;
 }
 

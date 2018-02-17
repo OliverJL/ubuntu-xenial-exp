@@ -30,6 +30,7 @@
 #include <linux/limits.h>
 #include <linux/sched.h>
 #include <asm/elf.h>
+#include <exp/entropy_analysis.h>
 
 struct va_alignment __read_mostly va_align = {
 	.flags = -1,

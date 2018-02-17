@@ -22,6 +22,8 @@
 #define KEETYPE__RANDOM_INT_SECRET_SET					6
 #define KEETYPE__GET_RANDOM_INT							7
 #define KEETYPE__GET_RANDOM_LONG						8
+#define KEETYPE__ARCH_MMAP_RND							9
+
 
 extern spinlock_t entropy_analysis_lock;
 extern spinlock_t kernel_entropy_malloc_event_lock;
@@ -42,6 +44,7 @@ typedef struct
 	   unsigned int kee_get_random_int_id;
 	   unsigned int kee_get_random_long_id;
 	   unsigned int kee_aslr_set_id;
+	   unsigned int kee_arch_mmap_rnd_id;
 }kernel_entropy_rec_info;
 #pragma pack()
 
@@ -127,6 +130,16 @@ typedef struct
 #pragma pack(1)
 typedef struct
 {
+  bool mmap_is_ia32;
+  unsigned long get_random_int_value;
+  unsigned long get_random_int_value_after_828_shift;
+  unsigned long get_random_int_value_after_page_align;
+} kee_arch_mmap_rnd;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct
+{
 	 kee_add_interrupt_rnd * tb_kee_add_int_rnd;
 	 kee_stack_canary_set * tb_kee_stc_set;
 	 kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set;
@@ -145,6 +158,7 @@ extern unsigned long kernel_entropy_record_size;
 #define KE_RECORD_MAX__GET_RANDOM_INT 60000
 #define KE_RECORD_MAX__GET_RANDOM_LONG 60000
 #define KE_RECORD_MAX__ASLR_RND_SET 60000
+#define KE_RECORD_MAX__ARCH_MMAP_RND 60000
 
 /*
 #define KERNEL_ENTROPY_RECORD_MAX 20000
@@ -161,6 +175,7 @@ extern kee_stack_canary_set rec_ke_stack_canary[KE_RECORD_MAX__STACK_CANARY_SET]
 extern kee_get_rnd_int rec_ke_get_rnd_int[KE_RECORD_MAX__GET_RANDOM_INT];
 extern kee_get_rnd_long rec_ke_get_rnd_long[KE_RECORD_MAX__GET_RANDOM_LONG];
 extern kee_aslr_set rec_ke_aslr_set[KE_RECORD_MAX__ASLR_RND_SET];
+extern kee_arch_mmap_rnd rec_ke_arch_mmap_rnd[KE_RECORD_MAX__ARCH_MMAP_RND];
 
 extern kernel_entropy_rec_info ke_rec_info;
 
@@ -176,6 +191,7 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type);
 kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void);
 kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void);
 kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void);
+kee_arch_mmap_rnd * kernel_entropy_malloc_arch_mmap_rnd(void);
 
 kee_get_rnd_long * kernel_entropy_malloc_get_rnd_long(void);
 kee_aslr_set * kernel_entropy_malloc_aslr_set(void);
@@ -184,6 +200,9 @@ void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pi
 void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret);
 void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int rnd_raw, unsigned int rnd_final);
 void kernel_entropy_rec_get_rnd_long(int pid, unsigned long jiffies, unsigned long rnd_raw, unsigned long rnd_final);
+void kernel_entropy_rec_arch_mmap_rnd(bool mmap_is_ia32, unsigned long get_random_int_value, unsigned long get_random_int_value_after_828_shift, unsigned long get_random_int_value_after_page_align);
+
+
 //void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr );
 //void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data );
 
