@@ -507,6 +507,8 @@ asmlinkage long sys_kernel_entropy_get_recorded_by_type(kernel_entropy_event * t
 	int tb_kee_get_rnd_long_cntr = 0;
 	int tb_kee_aslr_set_cntr = 0;
 
+	return 0; ///////////////
+
 	while(kee_rec_cntr < ke_rec_info.kee_rec_id )
 	{
 		ke_event = &recorded_kernel_entropy[kee_rec_cntr];
