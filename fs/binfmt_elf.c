@@ -651,17 +651,35 @@ out:
 static unsigned long randomize_stack_top(unsigned long stack_top)
 {
 	unsigned long random_variable = 0;
+	unsigned int random_int_raw = 0;
+	unsigned long stack_rnd_mask;
+	unsigned int page_shift;
+	unsigned int random_int_and_stack_mask = 0;
+	unsigned int random_int_and_stack_mask_shifted = 0;
+	unsigned long stack_top_aligned;
+	unsigned long final_ret;
 
 	if ((current->flags & PF_RANDOMIZE) &&
 		!(current->personality & ADDR_NO_RANDOMIZE)) {
-		random_variable = (unsigned long) get_random_int();
+		random_variable = random_int_raw = (unsigned long) get_random_int();
 		random_variable &= STACK_RND_MASK;
+		random_int_and_stack_mask = random_variable;
 		random_variable <<= PAGE_SHIFT;
+		random_int_and_stack_mask_shifted = random_variable;
 	}
+
 #ifdef CONFIG_STACK_GROWSUP
-	return PAGE_ALIGN(stack_top) + random_variable;
+	stack_top_aligned = PAGE_ALIGN(stack_top);
+	final_ret = stack_top_aligned + random_variable;
+	kernel_entropy_rec_randomize_stack_top(random_int_raw, stack_top, STACK_RND_MASK, PAGE_SHIFT, random_int_and_stack_mask, random_int_and_stack_mask_shifted, stack_top_aligned, final_ret);
+	return final_ret;
+	//return PAGE_ALIGN(stack_top) + random_variable;
 #else
-	return PAGE_ALIGN(stack_top) - random_variable;
+	stack_top_aligned = PAGE_ALIGN(stack_top);
+	final_ret = stack_top_aligned - random_variable;
+	kernel_entropy_rec_randomize_stack_top(random_int_raw, stack_top, STACK_RND_MASK, PAGE_SHIFT, random_int_and_stack_mask, random_int_and_stack_mask_shifted, stack_top_aligned, final_ret);
+	return final_ret;
+	//return PAGE_ALIGN(stack_top) - random_variable;
 #endif
 }
 
