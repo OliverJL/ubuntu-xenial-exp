@@ -530,7 +530,7 @@ kee_randomize_stack_top * kernel_entropy_malloc_randomize_stack_top(void)
 	}
 	else
 	{
-		rec = &rec_ke_randomize_range[ke_rec_info.kee_randomize_stack_top_id++];
+		rec = &rec_ke_randomize_stack_top[ke_rec_info.kee_randomize_stack_top_id++];
 	}
 	return rec;
 }
