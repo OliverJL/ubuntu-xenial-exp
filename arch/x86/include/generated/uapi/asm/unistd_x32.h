@@ -290,6 +290,7 @@
 #define __NR_kernel_entropy_set_user_tb_kee_aslr_set (__X32_SYSCALL_BIT + 331)
 #define __NR_kernel_entropy_set_user_tb_kee_arch_mmap_rnd (__X32_SYSCALL_BIT + 332)
 #define __NR_kernel_entropy_set_user_tb_kee_randomize_range (__X32_SYSCALL_BIT + 333)
+#define __NR_kernel_entropy_set_user_tb_kee_randomize_stack_top (__X32_SYSCALL_BIT + 334)
 #define __NR_rt_sigaction (__X32_SYSCALL_BIT + 512)
 #define __NR_rt_sigreturn (__X32_SYSCALL_BIT + 513)
 #define __NR_ioctl (__X32_SYSCALL_BIT + 514)

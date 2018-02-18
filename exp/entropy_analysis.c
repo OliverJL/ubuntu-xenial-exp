@@ -28,6 +28,7 @@ kee_get_rnd_long rec_ke_get_rnd_long[KE_RECORD_MAX__GET_RANDOM_LONG];
 kee_aslr_set rec_ke_aslr_set[KE_RECORD_MAX__ASLR_RND_SET];
 kee_arch_mmap_rnd rec_ke_arch_mmap_rnd[KE_RECORD_MAX__ARCH_MMAP_RND];
 kee_randomize_range rec_ke_randomize_range[KE_RECORD_MAX__RANDOMIZE_RANGE];
+kee_randomize_stack_top rec_ke_randomize_stack_top[KE_RECORD_MAX__STACK_TOP];
 
 /*
 326 common	kernel_entropy_get_size	sys_kernel_entropy_get_size
@@ -118,6 +119,12 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 			rec->event_type = event_type;
 			rec->event_details = kernel_entropy_malloc_randomize_range();
 			break;
+		case KEETYPE__RANDOMIZE_STACK_TOP:
+			rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
+			rec->id = ke_rec_info.kee_rec_id ++;
+			rec->event_type = event_type;
+			rec->event_details = kernel_entropy_malloc_randomize_stack_top();
+		break;
 		}
 	}
 	return rec;
@@ -381,6 +388,29 @@ void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pi
 	}
 }
 
+void kernel_entropy_rec_randomize_stack_top(unsigned int random_int_raw, unsigned long stack_top, unsigned long stack_rnd_mask, unsigned int page_shift, unsigned int  random_int_and_stack_mask, unsigned int random_int_and_stack_mask_shifted, unsigned long stack_top_aligned, unsigned long final_ret)
+{
+	kernel_entropy_event * ke_event;
+	kee_randomize_stack_top * rnd_stack_top;
+	ke_event = kernel_entropy_malloc_event(KEETYPE__RANDOMIZE_STACK_TOP);
+
+	if(ke_event != NULL)
+	{
+		rnd_stack_top = (kee_randomize_stack_top *)ke_event->event_details;
+		rnd_stack_top->random_int_raw = random_int_raw;
+		rnd_stack_top->stack_top = stack_top;
+		rnd_stack_top->stack_rnd_mask = stack_rnd_mask;
+		rnd_stack_top->page_shift = page_shift;
+		rnd_stack_top->random_int_and_stack_mask = random_int_and_stack_mask;
+		rnd_stack_top->random_int_and_stack_mask_shifted = random_int_and_stack_mask_shifted;
+		rnd_stack_top->stack_top_aligned = stack_top_aligned;
+		rnd_stack_top->final_ret = final_ret;
+	}else
+	{
+		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_get_rnd_int - ke_event == NULL!!!");
+	}
+}
+
 kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void)
 {
 	kee_get_rnd_int * rec = NULL;
@@ -487,9 +517,30 @@ kee_randomize_range * kernel_entropy_malloc_randomize_range(void)
 	return rec;
 }
 
+kee_randomize_stack_top * kernel_entropy_malloc_randomize_stack_top(void)
+{
+	kee_randomize_stack_top * rec = NULL;
+	if(ke_rec_info.kee_randomize_stack_top_id >= KE_RECORD_MAX__STACK_TOP)
+	{
+		is_kernel_entropy_recording = 0;
+		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__STACK_TOP reached!!!");
+	}
+	else
+	{
+		rec = &rec_ke_randomize_range[ke_rec_info.kee_randomize_stack_top_id++];
+	}
+	return rec;
+}
+
 kee_aslr_set * tb_user_kee_aslr_set;
 kee_arch_mmap_rnd * tb_user_kee_arch_mmap_rnd;
 kee_randomize_range * tb_user_kee_randomize_range;
+kee_randomize_stack_top * tb_user_kee_randomize_stack_top;
+
+asmlinkage long sys_kernel_entropy_set_user_tb_kee_randomize_stack_top(kee_randomize_stack_top * tb_kee_randomize_stack_top)
+{
+  tb_user_kee_randomize_stack_top = tb_kee_randomize_stack_top;
+}
 
 asmlinkage long sys_kernel_entropy_set_user_tb_kee_aslr_set(kee_aslr_set * tb_kee_aslr_set)
 {
@@ -519,6 +570,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 	int tb_kee_arch_mmap_rnd_cntr = 0;
 	int tb_kee_aslr_set_cntr = 0;
 	int tb_kee_randomize_range_cntr = 0;
+	int tb_kee_randomize_stack_top_cntr = 0;
 	int cpy_ret = 0;
 	int access_ok = 0;
 
@@ -592,6 +644,12 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
 				copy_to_user(&tb_user_kee_randomize_range[tb_kee_randomize_range_cntr], &rec_ke_randomize_range[tb_kee_randomize_range_cntr], sizeof(kee_randomize_range));
 				tb_kee_randomize_range_cntr ++;
+				break;
+			case KEETYPE__RANDOMIZE_STACK_TOP:
+				ke_event->detail_index = tb_kee_randomize_stack_top_cntr;
+				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
+				copy_to_user(&tb_user_kee_randomize_stack_top[tb_kee_randomize_stack_top_cntr], &rec_ke_randomize_stack_top[tb_kee_randomize_stack_top_cntr], sizeof(kee_randomize_stack_top));
+				tb_kee_randomize_stack_top_cntr ++;
 				break;
 		}
 		//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ kee_rec_cntr++");

@@ -335,5 +335,6 @@
 #define __NR_kernel_entropy_set_user_tb_kee_aslr_set 331
 #define __NR_kernel_entropy_set_user_tb_kee_arch_mmap_rnd 332
 #define __NR_kernel_entropy_set_user_tb_kee_randomize_range 333
+#define __NR_kernel_entropy_set_user_tb_kee_randomize_stack_top 334
 
 #endif /* _ASM_X86_UNISTD_64_H */
