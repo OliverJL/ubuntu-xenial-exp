@@ -2046,7 +2046,7 @@ randomize_range(unsigned long start, unsigned long end, unsigned long len)
 	//printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - range = end - len - start - 0x%016lX = 0x%016lX - 0x%016lX - 0x%016lX \n", range, end, len, start );
 	if (end <= start + len)
 	{
-		//printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - return 0; \n" );
+		printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - return 0; \n" );
 		return 0;
 	}
 
