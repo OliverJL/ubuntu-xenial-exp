@@ -302,6 +302,9 @@ void kernel_entropy_rec_randomize_range(unsigned int random_int_raw, unsigned lo
 		randomize_range->add_range_start = add_range_start;
 		randomize_range->mod_rnd_add_range_start = mod_rnd_add_range_start;
 		randomize_range->range_aligned = range_aligned;
+	}else
+	{
+		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_randomize_range - ke_event == NULL!!!");
 	}
 }
 
@@ -407,7 +410,7 @@ void kernel_entropy_rec_randomize_stack_top(unsigned int random_int_raw, unsigne
 		rnd_stack_top->final_ret = final_ret;
 	}else
 	{
-		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_get_rnd_int - ke_event == NULL!!!");
+		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_randomize_stack_top - ke_event == NULL!!!");
 	}
 }
 
