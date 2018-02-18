@@ -234,6 +234,7 @@ kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void);
 kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void);
 kee_arch_mmap_rnd * kernel_entropy_malloc_arch_mmap_rnd(void);
 kee_randomize_range * kernel_entropy_malloc_randomize_range(void);
+kee_randomize_stack_top * kernel_entropy_malloc_randomize_stack_top(void);
 
 kee_get_rnd_long * kernel_entropy_malloc_get_rnd_long(void);
 kee_aslr_set * kernel_entropy_malloc_aslr_set(void);
