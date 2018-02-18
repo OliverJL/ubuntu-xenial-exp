@@ -227,7 +227,7 @@ void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret);
 void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int rnd_raw, unsigned int rnd_final);
 void kernel_entropy_rec_get_rnd_long(int pid, unsigned long jiffies, unsigned long rnd_raw, unsigned long rnd_final);
 void kernel_entropy_rec_arch_mmap_rnd(bool mmap_is_ia32, unsigned long get_random_int_value, unsigned long get_random_int_value_after_828_shift, unsigned long get_random_int_value_after_page_align);
-
+void kernel_entropy_rec_randomize_range(unsigned int random_int_raw, unsigned long start, unsigned long end, unsigned long len, unsigned long add_range_start, unsigned long mod_rnd_add_range_start, unsigned long range_aligned);
 
 //void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr );
 //void kernel_entropy_rec_aslr_set(const char * filename, char * elf_interpreter, int elf_prot, int elf_flags, unsigned long load_addr, unsigned long load_bias, unsigned long entry_point, unsigned long mmap_rnd, unsigned long vaddr, unsigned long start_code, unsigned long end_code, unsigned long start_data, unsigned long end_data );
