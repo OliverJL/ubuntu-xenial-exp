@@ -27,6 +27,7 @@ kee_get_rnd_int rec_ke_get_rnd_int[KE_RECORD_MAX__GET_RANDOM_INT];
 kee_get_rnd_long rec_ke_get_rnd_long[KE_RECORD_MAX__GET_RANDOM_LONG];
 kee_aslr_set rec_ke_aslr_set[KE_RECORD_MAX__ASLR_RND_SET];
 kee_arch_mmap_rnd rec_ke_arch_mmap_rnd[KE_RECORD_MAX__ARCH_MMAP_RND];
+kee_randomize_range rec_ke_randomize_range[KE_RECORD_MAX__RANDOMIZE_RANGE];
 
 /*
 326 common	kernel_entropy_get_size	sys_kernel_entropy_get_size
@@ -110,6 +111,12 @@ kernel_entropy_event * kernel_entropy_malloc_event(short event_type)
 			rec->id = ke_rec_info.kee_rec_id ++;
 			rec->event_type = event_type;
 			rec->event_details = kernel_entropy_malloc_arch_mmap_rnd();
+			break;
+		case KEETYPE__RANDOMIZE_RANGE:
+			rec =  &recorded_kernel_entropy[ke_rec_info.kee_rec_id];
+			rec->id = ke_rec_info.kee_rec_id ++;
+			rec->event_type = event_type;
+			rec->event_details = kernel_entropy_malloc_randomize_range();
 			break;
 		}
 	}
@@ -268,6 +275,26 @@ void kernel_entropy_rec_arch_mmap_rnd(bool mmap_is_ia32, unsigned long get_rando
 	}else
 	{
 		printk(KERN_EMERG ">>>>>> kernel_entropy_rec_arch_mmap_rnd - ke_event == NULL!!!");
+	}
+}
+
+void kernel_entropy_rec_randomize_range(unsigned int random_int_raw, unsigned long start, unsigned long end, unsigned long len, unsigned long add_range_start, unsigned long mod_rnd_add_range_start, unsigned long range_aligned)
+{
+	kernel_entropy_event * ke_event;
+	kee_randomize_range * randomize_range;
+
+	ke_event = kernel_entropy_malloc_event(KEETYPE__RANDOMIZE_RANGE);
+
+	if(ke_event != NULL)
+	{
+		randomize_range = (kee_randomize_range *)ke_event->event_details;
+		randomize_range->random_int_raw = random_int_raw;
+		randomize_range->start = start;
+		randomize_range->end = end;
+		randomize_range->len = len;
+		randomize_range->add_range_start = add_range_start;
+		randomize_range->mod_rnd_add_range_start = mod_rnd_add_range_start;
+		randomize_range->range_aligned = range_aligned;
 	}
 }
 
@@ -445,8 +472,24 @@ kee_arch_mmap_rnd * kernel_entropy_malloc_arch_mmap_rnd(void)
 	return rec;
 }
 
+kee_randomize_range * kernel_entropy_malloc_randomize_range(void)
+{
+	kee_randomize_range * rec = NULL;
+	if(ke_rec_info.kee_randomize_range_id >= KE_RECORD_MAX__RANDOMIZE_RANGE)
+	{
+		is_kernel_entropy_recording = 0;
+		printk(KERN_EMERG ">>>>>> KE_RECORD_MAX__RANDOMIZE_RANGE reached!!!");
+	}
+	else
+	{
+		rec = &rec_ke_randomize_range[ke_rec_info.kee_randomize_range_id++];
+	}
+	return rec;
+}
+
 kee_aslr_set * tb_user_kee_aslr_set;
 kee_arch_mmap_rnd * tb_user_kee_arch_mmap_rnd;
+kee_randomize_range * tb_user_kee_randomize_range;
 
 asmlinkage long sys_kernel_entropy_set_user_tb_kee_aslr_set(kee_aslr_set * tb_kee_aslr_set)
 {
@@ -460,6 +503,12 @@ asmlinkage long sys_kernel_entropy_set_user_tb_kee_arch_mmap_rnd(kee_arch_mmap_r
 	return 0;
 }
 
+asmlinkage long sys_kernel_entropy_set_user_tb_kee_randomize_range(kee_randomize_range * tb_kee_randomize_range)
+{
+	tb_user_kee_randomize_range = tb_kee_randomize_range;
+	return 0;
+}
+
 asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long, kee_aslr_set * tb_kee_aslr_set)
 {
 	int kee_rec_cntr = 0;
@@ -469,6 +518,7 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 	int tb_kee_get_rnd_long_cntr = 0;
 	int tb_kee_arch_mmap_rnd_cntr = 0;
 	int tb_kee_aslr_set_cntr = 0;
+	int tb_kee_randomize_range_cntr = 0;
 	int cpy_ret = 0;
 	int access_ok = 0;
 
@@ -536,6 +586,12 @@ asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_eve
 				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
 				copy_to_user(&tb_user_kee_arch_mmap_rnd[tb_kee_arch_mmap_rnd_cntr], &rec_ke_arch_mmap_rnd[tb_kee_arch_mmap_rnd_cntr], sizeof(kee_arch_mmap_rnd));
 				tb_kee_arch_mmap_rnd_cntr ++;
+				break;
+			case KEETYPE__RANDOMIZE_RANGE:
+				ke_event->detail_index = tb_kee_arch_mmap_rnd_cntr;
+				copy_to_user(tb_kee, ke_event, sizeof(kernel_entropy_event));
+				copy_to_user(&tb_user_kee_randomize_range[tb_kee_randomize_range_cntr], &rec_ke_randomize_range[tb_kee_randomize_range_cntr], sizeof(kee_randomize_range));
+				tb_kee_randomize_range_cntr ++;
 				break;
 		}
 		//printk(KERN_EMERG ">>>>>> KEETYPE__ADD_INT_RND__ kee_rec_cntr++");

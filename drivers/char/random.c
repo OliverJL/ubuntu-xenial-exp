@@ -2055,6 +2055,9 @@ randomize_range(unsigned long start, unsigned long end, unsigned long len)
 	unsigned long add_range_start = range + start;
 	unsigned long mod_rnd_add_range_start = rnd % add_range_start;
 	unsigned long ret = PAGE_ALIGN(mod_rnd_add_range_start);
+
+	kernel_entropy_rec_randomize_range(rnd, start, end, len, add_range_start, mod_rnd_add_range_start, ret);
+
 	//printk(KERN_EMERG ">>>>>>>>>> random.c - randomize_range - PAGE_ALIGN(rnd MOD add_range_start) - mod_rnd_add_range_start =  0x%016lX - 0x%016lX = PAGE_ALIGN(%x MOD 0x%016lX)\n", mod_rnd_add_range_start, ret, rnd, add_range_start );
 	return ret;
 	// org: return PAGE_ALIGN(get_random_int() % range + start);

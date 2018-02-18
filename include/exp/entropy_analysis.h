@@ -23,6 +23,7 @@
 #define KEETYPE__GET_RANDOM_INT							7
 #define KEETYPE__GET_RANDOM_LONG						8
 #define KEETYPE__ARCH_MMAP_RND							9
+#define KEETYPE__RANDOMIZE_RANGE						10
 
 
 extern spinlock_t entropy_analysis_lock;
@@ -45,6 +46,7 @@ typedef struct
 	   unsigned int kee_get_random_long_id;
 	   unsigned int kee_aslr_set_id;
 	   unsigned int kee_arch_mmap_rnd_id;
+	   unsigned int kee_randomize_range_id;
 }kernel_entropy_rec_info;
 #pragma pack()
 
@@ -142,6 +144,19 @@ typedef struct
 #pragma pack(1)
 typedef struct
 {
+  unsigned int  random_int_raw;
+  unsigned long start;
+  unsigned long end;
+  unsigned long len;
+  unsigned long add_range_start;
+  unsigned long mod_rnd_add_range_start;
+  unsigned long range_aligned;
+} kee_randomize_range;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct
+{
 	 kee_add_interrupt_rnd * tb_kee_add_int_rnd;
 	 kee_stack_canary_set * tb_kee_stc_set;
 	 kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set;
@@ -162,6 +177,8 @@ extern unsigned long kernel_entropy_record_size;
 #define KE_RECORD_MAX__GET_RANDOM_LONG 60000
 #define KE_RECORD_MAX__ASLR_RND_SET 60000
 #define KE_RECORD_MAX__ARCH_MMAP_RND 60000
+#define KE_RECORD_MAX__RANDOMIZE_RANGE 60000
+
 
 /*
 #define KERNEL_ENTROPY_RECORD_MAX 20000
@@ -179,13 +196,17 @@ extern kee_get_rnd_int rec_ke_get_rnd_int[KE_RECORD_MAX__GET_RANDOM_INT];
 extern kee_get_rnd_long rec_ke_get_rnd_long[KE_RECORD_MAX__GET_RANDOM_LONG];
 extern kee_aslr_set rec_ke_aslr_set[KE_RECORD_MAX__ASLR_RND_SET];
 extern kee_arch_mmap_rnd rec_ke_arch_mmap_rnd[KE_RECORD_MAX__ARCH_MMAP_RND];
+extern kee_randomize_range rec_ke_randomize_range[KE_RECORD_MAX__RANDOMIZE_RANGE];
 
 extern kernel_entropy_rec_info ke_rec_info;
 
 asmlinkage long sys_kernel_entropy_rec_info(kernel_entropy_rec_info * target_buffer);
 asmlinkage long sys_kernel_entropy_get_recorded(kernel_entropy_event * tb_ke_event, kee_add_interrupt_rnd * tb_kee_add_int_rnd, kee_stack_canary_set * tb_kee_stc_set, kee_rnd_int_secret_set * tb_kee_rnd_int_secret_set, kee_get_rnd_int * tb_kee_get_rnd_int, kee_get_rnd_long * tb_kee_get_rnd_long, kee_aslr_set * tb_kee_aslr_set);
+
 asmlinkage long sys_kernel_entropy_set_user_tb_kee_aslr_set(kee_aslr_set * tb_kee_aslr_set);
 asmlinkage long sys_kernel_entropy_set_user_tb_kee_arch_mmap_rnd(kee_arch_mmap_rnd * tb_kee_arch_mmap_rnd);
+asmlinkage long sys_kernel_entropy_set_user_tb_kee_randomize_range(kee_randomize_range * tb_kee_randomize_range);
+
 asmlinkage long sys_kernel_entropy_start_recording(void);
 asmlinkage long sys_kernel_entropy_stop_recording(void);
 asmlinkage long sys_kernel_entropy_is_recording(void);
@@ -196,6 +217,7 @@ kee_add_interrupt_rnd * kernel_entropy_malloc_interrupt(void);
 kee_stack_canary_set * kernel_entropy_malloc_stack_canary(void);
 kee_get_rnd_int * kernel_entropy_malloc_get_rnd_int(void);
 kee_arch_mmap_rnd * kernel_entropy_malloc_arch_mmap_rnd(void);
+kee_randomize_range * kernel_entropy_malloc_randomize_range(void);
 
 kee_get_rnd_long * kernel_entropy_malloc_get_rnd_long(void);
 kee_aslr_set * kernel_entropy_malloc_aslr_set(void);
