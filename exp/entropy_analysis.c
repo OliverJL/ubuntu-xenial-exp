@@ -337,9 +337,8 @@ void kernel_entropy_rec_get_rnd_long(int pid, unsigned long jiffies, unsigned lo
 }
 
 
-void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, bool print_dmesg)
+void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, short time_after_exceeded, unsigned char fast_pool_count, unsigned int c_high, unsigned  int j_high, bool print_dmesg)
 {
-
 	kernel_entropy_event * ke_event;
 	kee_add_interrupt_rnd * int_rnd_event;
 
@@ -353,6 +352,10 @@ void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t 
 		int_rnd_event->cycles = cycles;
 		int_rnd_event->now_jiffies = now_jiffies;
 		int_rnd_event->ip = ip;
+		int_rnd_event->fast_pool_count = fast_pool_count;
+		int_rnd_event->time_after_exceeded = time_after_exceeded;
+		int_rnd_event->c_high = c_high;
+		int_rnd_event->j_high = j_high;
 		/*
 		if(print_rec_interrupt_cntr < print_rec_interrupt_max)
 		{

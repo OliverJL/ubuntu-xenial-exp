@@ -70,6 +70,10 @@ typedef struct
    cycles_t cycles;
    unsigned long now_jiffies;
    __u64 ip;
+   short time_after_exceeded;
+   unsigned char fast_pool_count;
+   unsigned int c_high;
+   unsigned  int j_high;
 
 } kee_add_interrupt_rnd;
 #pragma pack()
@@ -238,7 +242,8 @@ kee_randomize_stack_top * kernel_entropy_malloc_randomize_stack_top(void);
 
 kee_get_rnd_long * kernel_entropy_malloc_get_rnd_long(void);
 kee_aslr_set * kernel_entropy_malloc_aslr_set(void);
-void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, bool print_dmesg);
+//void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, bool print_dmesg);
+void kernel_entropy_rec_interrupt(short event, int irq, int irq_flags, cycles_t cycles, unsigned long now_jiffies, __u64 ip, short time_after_exceeded, unsigned char fast_pool_count, unsigned int c_high, unsigned  int j_high, bool print_dmesg);
 void kernel_entropy_rec_stack_canary(unsigned long stack_canary, char * comm, pid_t pid, bool print_dmesg);
 void kernel_entropy_rec_random_int_secret_set(u32 * random_int_secret);
 void kernel_entropy_rec_get_rnd_int(int pid, unsigned long jiffies, unsigned int rnd_raw, unsigned int rnd_final);

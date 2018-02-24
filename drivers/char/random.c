@@ -953,6 +953,7 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	__u64			ip;
 	unsigned long		seed;
 	int			credit = 0;
+	short time_after_exceeded = 0;
 
 	if (cycles == 0)
 		cycles = get_reg(fast_pool, regs);
@@ -984,14 +985,16 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	fast_mix(fast_pool);
 	add_interrupt_bench(cycles); // ???? No effect ?
 
-	if ((fast_pool->count < 64) &&
-	    !time_after(now, fast_pool->last + HZ))
+	time_after_exceeded = !time_after(now, fast_pool->last + HZ);
+//	if ((fast_pool->count < 64) &&
+//	    !time_after(now, fast_pool->last + HZ))
+	if((fast_pool->count < 64) && time_after_exceeded)
 	{
 		if(print_keent_msg)
 			//printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return (fast_pool->count < 64)... !!!!!!\n", irq, irq_flags);
 			printk(KERN_EMERG ">>>>>> add_interrupt_randomness 1 irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", irq, irq_flags, cycles, now, ip);
 		if(is_kernel_entropy_recording)
-			kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__FAST_POOL_LT_64, irq, irq_flags, cycles, now, ip, print_keent_msg);
+			kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__FAST_POOL_LT_64, irq, irq_flags, cycles, now, ip, time_after_exceeded, fast_pool->count, c_high, j_high, print_keent_msg);
 		return;
 	}
 
@@ -1002,7 +1005,7 @@ void add_interrupt_randomness(int irq, int irq_flags)
 			//printk(KERN_EMERG ">>>>>> add_interrupt_randomness - return spin_trylock(&r->lock)... !!!!!!\n", irq, irq_flags);
 			printk(KERN_EMERG ">>>>>> add_interrupt_randomness 2 irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", irq, irq_flags, cycles, now, ip);
 		if(is_kernel_entropy_recording)
-			kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__SPIN_TRYLOCK, irq, irq_flags, cycles, now, ip, print_keent_msg);
+			kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__SPIN_TRYLOCK, irq, irq_flags, cycles, now, ip, time_after_exceeded, fast_pool->count, c_high, j_high, print_keent_msg);
 		return;
 	}
 
@@ -1032,7 +1035,7 @@ void add_interrupt_randomness(int irq, int irq_flags)
 		printk(KERN_EMERG ">>>>>> add_interrupt_randomness 2 irq: 0x%08X - irq_flags: 0x%08X - cycles: 0x%08X - now: 0x%08X - ip: 0x%016X \n", irq, irq_flags, cycles, now, ip);
 
 	if(is_kernel_entropy_recording)
-		kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE, irq, irq_flags, cycles, now, ip, print_keent_msg);
+		kernel_entropy_rec_interrupt(KEETYPE__ADD_INT_RND__FAST_POOL_COMPLETE, irq, irq_flags, cycles, now, ip, time_after_exceeded, fast_pool->count, c_high, j_high, print_keent_msg);
 }
 EXPORT_SYMBOL_GPL(add_interrupt_randomness);
 
@@ -1898,7 +1901,7 @@ int random_int_secret_init(void)
 	get_random_bytes(random_int_secret, sizeof(random_int_secret));
 	kernel_entropy_rec_random_int_secret_set(&random_int_secret);
 	//printk(KERN_EMERG "random_int_secret_init - random_int_secret : %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
-	printk(KERN_EMERG "random_int_secret_init - random_int_secret : %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
+	printk(KERN_EMERG "random_int_secret_init - random_int_secret : %08X %08X %08X %08X %08X %08X %08X %08X %08X %08X %08X %08X %08X %08X %08X %08X\n", random_int_secret[0], random_int_secret[1], random_int_secret[2], random_int_secret[3], random_int_secret[4], random_int_secret[5], random_int_secret[6], random_int_secret[7], random_int_secret[8], random_int_secret[9], random_int_secret[10], random_int_secret[11], random_int_secret[12], random_int_secret[13], random_int_secret[14], random_int_secret[15] );
 
 	return 0;
 }
