@@ -414,7 +414,7 @@ static struct fasync_struct *fasync;
 static DEFINE_SPINLOCK(random_ready_list_lock);
 static LIST_HEAD(random_ready_list);
 
-int print_keent_msg = 1;
+int print_keent_msg = 0;
 
 int rec_aslr_set_filename_max = 0;
 int rec_aslr_set_elf_interpreter_max = 0;
